@@ -56,7 +56,6 @@ INSTALLED_APPS = [
 
 #Local apps
 INSTALLED_APPS += [
-  
 ]
 
 MIDDLEWARE = [
