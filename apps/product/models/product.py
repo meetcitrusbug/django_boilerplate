@@ -21,14 +21,15 @@ class Product(ActivityTracking):
     )
     
     name = models.CharField(_('name'), max_length=255)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(get_user_model(), db_index=True, on_delete=models.CASCADE, 
+                                        null=True, blank=True)
     product_number = models.CharField( max_length=25, null=True, blank=True)
     description = models.TextField(_("description"), blank=True, null=True)
-    sub_category = models.ForeignKey("category.SubCategory", on_delete=models.CASCADE)
+    sub_category = models.ForeignKey("category.SubCategory", db_index=True, on_delete=models.CASCADE)
     product_shipping_method = models.CharField(_('product_shipping_method'),max_length=128 ,
                                                choices=SHIPPING_METHOD_CHOICES, null=True,
                                                blank=True)
-    status = models.CharField(_("status"), max_length=128,choices=STATUS_CHOICES,
+    status = models.CharField(_("status"), db_index=True, max_length=128,choices=STATUS_CHOICES,
                                 null=True, blank=True, default='PENDING')
     price = models.FloatField(null=True, blank=True)
     is_refundable = models.BooleanField(
