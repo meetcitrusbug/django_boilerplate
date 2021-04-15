@@ -1,2 +1,4 @@
-from .product import (ProductListSerializer,)
-from .product_details import (PorductDetailsSerializer)
+from .product import ProductListSerializer
+from .product_details import PorductDetailsSerializer
+from .product_create import ProductCreateSerializer
+from .product_update import ProductUpdateSerializer
