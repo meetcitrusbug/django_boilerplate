@@ -111,7 +111,7 @@ env.bak/
 venv.bak/
 
 #media file
-media
+media/
 
 # Spyder project settings
 .spyderproject
