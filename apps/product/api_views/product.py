@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from product.serializers import ProductListSerializer
 from apps.utils.pagination import ProductPagination
+from django.db.models import Q
 
 class ProductListViewAPI(ListAPIView):
     
@@ -34,12 +35,29 @@ class ProductListViewAPI(ListAPIView):
         search = self.request.query_params.get('search')
         filter_ = self.request.query_params.get('filter')
         sort = self.request.query_params.get('sort')
+        category = self.request.query_params.get('category')
+        sub_category = self.request.query_params.get('sub_category')
+        price = self.request.query_params.get('price')
+        price_gt = self.request.query_params.get('price_gt')
+        price_lt = self.request.query_params.get('price_lt')
+        price_range = self.request.query_params.get('price_range')
+
         
         if search:
-            queryset = queryset.filter(name__icontains=search)
+            queryset = queryset.filter(Q(name__icontains=search) | Q(product_number__icontains=search))
         if filter_:
             queryset = queryset.filter(status=filter_)
         if sort:
             queryset = queryset.order_by(sort)
+        if category:
+            queryset = queryset.filter(sub_category__category=category)
+        if sub_category:
+            queryset = queryset.filter(sub_category=sub_category)
+        if price:
+            queryset = queryset.filter(price=price)
+        if price_gt:
+            queryset = queryset.filter(price__gte=price_gt)
+        if price_lt:
+            queryset = queryset.filter(price__lte=price_lt)
             
         return queryset

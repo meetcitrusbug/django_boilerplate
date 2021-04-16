@@ -1,0 +1,32 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}"/>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <header>
+      <a href="#">Django boilerplate</a>
+    </header>
+    <ul class="nav">
+      <li>
+        <a class="" href="#">
+          <i class="zmdi zmdi-view-dashboard"></i> Dashboard
+        </a>
+      </li>
+      <li>
+        <a class="" href="#">
+          <i class="zmdi zmdi-view-dashboard"></i> Category
+        </a>
+      </li>
+      <li>
+        <a class="" href="#">
+          <i class="zmdi zmdi-view-dashboard"></i> Sub category
+        </a>
+      </li>
+      <li>
+        <a class="{% if 'product' in request.path   %}active{% endif %}" href="#">
+          <i class="zmdi zmdi-view-dashboard"></i> Product
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- Content -->

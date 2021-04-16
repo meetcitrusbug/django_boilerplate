@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'crispy_forms',
+    'widget_tweaks',
 ]
 
 #Local apps
@@ -72,11 +74,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_boilerplate.urls'
-
+print(BASE_DIR)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+             BASE_DIR +'/django_boilerplate/templates/'
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,8 +141,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = str(BASE_DIR)  "static")
-# STATICFILES_DIRS = [(str(APP_DIR)+ "/static")]
+STATIC_ROOT = (str(BASE_DIR)+ "/static")
+STATICFILES_DIRS = [(str(BASE_DIR)+ "/django_boilerplate/static")]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -146,6 +150,8 @@ STATICFILES_FINDERS = [
 
 MEDIA_ROOT = (str(BASE_DIR)+ "/media")
 MEDIA_URL = "/media/"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

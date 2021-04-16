@@ -7,7 +7,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Product
-        fields = ['id', 'name',  'image', 'status', 'sub_category', 'price', 'is_refundable']
+        fields = ['id', 'name', 'product_number', 'image', 'status', 'sub_category', 'price', 'is_refundable']
         
     def get_image(self, obj):
         image_obj = ProductImage.objects.select_related('product').filter(product=obj).first()
