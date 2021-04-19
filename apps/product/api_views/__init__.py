@@ -3,4 +3,5 @@ from .product_details import PorductDetailsAPIView
 from .prodcut_create import PrductCreateAPIView
 from .product_update import ProductUpdateAPIView
 from .product_delete import ProductDeleteAPIView
-from .product_image_delete import ProductImageDeleteAPIView
+from .product_image import ProductImageDeleteAPIView, ProductImageAddAPIView
+from .product_status import ProductStatusAPIView

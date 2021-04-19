@@ -8,6 +8,10 @@ class ProductAdmin(admin.ModelAdmin):
     
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'image']
+    
+class ProductTagAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tag', 'product']
 
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.ProductImage, ProductImageAdmin)
+admin.site.register(models.ProductTag, ProductTagAdmin)

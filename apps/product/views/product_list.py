@@ -5,9 +5,10 @@ from django.views.generic import View
 from django_datatables_too.mixins import DataTableMixin
 from product.models import Product, ProductImage
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class IndexView(View):
+class ProductListView(LoginRequiredMixin, View):
     
     template = 'index.html'
     model = Product

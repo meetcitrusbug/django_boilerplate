@@ -21,6 +21,9 @@ class SubCategoryListAPIView(ListAPIView):
         
     def filter_queryset(self, queryset):
         category = self.request.query_params.get('category')
+        search = self.request.query_params.get('search')
         if category:
-            queryset = queryset.filter(category=category)        
+            queryset = queryset.filter(category=category)
+        if search:
+            queryset = queryset.filter(category=category, name__icontains=search)
         return queryset.filter(is_active=True)

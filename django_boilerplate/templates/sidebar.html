@@ -8,12 +8,7 @@
     </header>
     <ul class="nav">
       <li>
-        <a class="" href="#">
-          <i class="zmdi zmdi-view-dashboard"></i> Dashboard
-        </a>
-      </li>
-      <li>
-        <a class="" href="#">
+        <a class="{% if 'category' in request.path %}active{% endif %}" href="{% url 'category-list' %}">
           <i class="zmdi zmdi-view-dashboard"></i> Category
         </a>
       </li>
@@ -23,7 +18,7 @@
         </a>
       </li>
       <li>
-        <a class="{% if 'product' in request.path   %}active{% endif %}" href="#">
+        <a class="{% if 'product' in request.path   %}active{% endif %}" href="{% url 'product-list' %}">
           <i class="zmdi zmdi-view-dashboard"></i> Product
         </a>
       </li>

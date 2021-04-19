@@ -21,4 +21,5 @@ class CategoryListAPIView(ListAPIView):
         
     
     def filter_queryset(self, queryset):
-        return queryset.filter(is_active=True)
+        search = self.request.query_params.get('search')
+        return queryset.filter(is_active=True, name__icontains=search)

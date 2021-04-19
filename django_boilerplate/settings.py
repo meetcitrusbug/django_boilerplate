@@ -169,3 +169,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+LOGIN_URL = 'admin:index'
