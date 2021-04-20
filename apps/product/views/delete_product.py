@@ -8,7 +8,7 @@ class DeleteProductView(DeleteView):
     model = Product
     form_class = AddProductForm
     template_name = 'delete_product.html'
-    permission_required = ("core.delete_product",)
+    permission_required = ("delete_product",)
     
     def get_context_data(self, object):
         context = super(DeleteProductView, self).get_context_data(object=object)

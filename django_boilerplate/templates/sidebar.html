@@ -8,12 +8,12 @@
     </header>
     <ul class="nav">
       <li>
-        <a class="{% if 'category' in request.path %}active{% endif %}" href="{% url 'category-list' %}">
+        <a class="{% if '/category/' == request.path  %}active{% endif %}" href="{% url 'category-list' %}">
           <i class="zmdi zmdi-view-dashboard"></i> Category
         </a>
       </li>
       <li>
-        <a class="" href="#">
+        <a class="{% if '/sub-category/' == request.path   %}active{% endif %}" href="{% url 'subcategory-list' %}">
           <i class="zmdi zmdi-view-dashboard"></i> Sub category
         </a>
       </li>

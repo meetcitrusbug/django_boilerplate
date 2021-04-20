@@ -1,14 +1,14 @@
 from django.views import View
 from django.shortcuts import render, reverse
-from category.models import Category
+from category.models import SubCategory
 from django_datatables_too.mixins import DataTableMixin
 from django.http import JsonResponse
 from django.db.models import Q
 
-class CategoryListView(View):
+class SubCategoryListView(View):
     
-    template = 'category_list.html'
-    model = Category
+    template = 'subcategory/subcategory_list.html'
+    model = SubCategory
     context = {}
     
     def get(self, request, *args, **kwargs):
@@ -22,15 +22,15 @@ class CategoryListView(View):
         return self.context
     
     
-class CategoryDataTablesAjaxPagination(DataTableMixin, View):
+class SubCategoryDataTablesAjaxPagination(DataTableMixin, View):
     
-    model = Category
-    queryset = Category.objects.all().order_by('-id')
+    model = SubCategory
+    queryset = SubCategory.objects.all().order_by('-id')
 
     def _get_actions(self, obj):
         """Get action buttons w/links."""
-        edit_url = reverse("edit-category", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-category", kwargs={'pk':obj.pk})
+        edit_url = reverse("edit-subcategory", kwargs={'pk':obj.pk})
+        delete_url = reverse("delete-subcategory", kwargs={'pk':obj.pk})
         return f"""
                     <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
                         <i class="fa fa-pencil"></i>
