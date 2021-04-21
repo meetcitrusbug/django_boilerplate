@@ -10,8 +10,8 @@ class SubCategoryEditView(UpdateView):
     template_name = 'subcategory/subcategory_edit.html'
     permission_required = ("edit_subcategory",)
     
-    def get_context_data(self):
-        context = super(SubCategoryEditView, self).get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super(SubCategoryEditView, self).get_context_data(**kwargs)
         context['model_name'] = self.model._meta.model_name
         return context
     

@@ -5,4 +5,4 @@ class AddSubCategoryForm(forms.ModelForm):
     
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'category']
+        fields = ['id', 'name', 'category', 'image']

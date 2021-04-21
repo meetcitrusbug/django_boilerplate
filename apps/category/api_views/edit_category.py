@@ -1,31 +1,30 @@
-from product.models import Product
-from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.generics import UpdateAPIView
-from product.serializers import ProductUpdateSerializer
+from category.serializers import AddCategorySerializer
+from category.models import Category
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
-
-
-class ProductUpdateAPIView(UpdateAPIView):
+class EditCategoryAPIView(UpdateAPIView):
     
-    queryset = Product.objects.all()
-    serializer_class = ProductUpdateSerializer
+    serializer_class = AddCategorySerializer
+    model = Category
+    permission_classes = [IsAuthenticated]
     lookup_field = 'id'
-
-
+    
+    
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance,data=request.data, partial=partial)
         is_valid = serializer.is_valid()
         
         if not is_valid: 
             return  Response({"status":False,
-                            "code":status.HTTP_200_OK,
+                            "code":HTTP_200_OK,
                             "message":"Please fill missing field or solve error",
                             "data":serializer.errors,
-                            }, status.HTTP_200_OK )
+                            }, HTTP_200_OK )
             
         self.perform_update(serializer)
 
@@ -33,7 +32,11 @@ class ProductUpdateAPIView(UpdateAPIView):
             instance._prefetched_objects_cache = {}
 
         return  Response({ "status":True,
-                        "code":status.HTTP_200_OK,
-                        "message":"Product updated successfully",
+                        "code":HTTP_200_OK,
+                        "message":"Category updated successfully",
                         "data":serializer.data,
-                        }, status.HTTP_200_OK )
+                        }, HTTP_200_OK )
+    
+    def get_queryset(self):
+        
+        return self.model.objects.all()

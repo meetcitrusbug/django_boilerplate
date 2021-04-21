@@ -1,7 +1,8 @@
-from django import forms
+from rest_framework import serializers
 from category.models import Category
 
-class AddCategoryForm(forms.ModelForm):
+
+class AddCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Category

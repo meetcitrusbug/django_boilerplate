@@ -9,7 +9,7 @@
             <h3>Edit {{model_name }}</h3>
             <span class="clearfix"></span>
         </div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="container align-center">
                     <div class="row align-items-center">
@@ -20,6 +20,11 @@
                     <div class="row align-items-center">
                         <div class="col-sm-6">
                             {{form.category | attr:'required' |as_crispy_field}}
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            {{form.image | attr:'required' |as_crispy_field}}
                         </div>
                     </div>
                     <div class="row align-items-center">

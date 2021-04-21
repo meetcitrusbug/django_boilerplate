@@ -1,4 +1,4 @@
-from product.models import Product
+from product.models import Product, ProductTag
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
@@ -44,15 +44,18 @@ class ProductListViewAPI(ListAPIView):
 
         
         if search:
-            queryset = queryset.filter(Q(name__icontains=search) | Q(product_number__icontains=search))
+            product_id = ProductTag.objects.filter(tag__icontains=search).values_list('product', flat=True)
+            queryset = queryset.filter(Q(id__in=product_id) | Q(name__icontains=search) | Q(product_number__icontains=search))
         if filter_:
             queryset = queryset.filter(status=filter_)
         if sort:
             queryset = queryset.order_by(sort)
         if category:
-            queryset = queryset.filter(sub_category__category=category)
+            category = category.split(',')
+            queryset = queryset.filter(sub_category__category__in=category)
         if sub_category:
-            queryset = queryset.filter(sub_category=sub_category)
+            sub_category = sub_category.split(',')
+            queryset = queryset.filter(sub_category__in=sub_category)
         if price:
             queryset = queryset.filter(price=price)
         if price_gt:

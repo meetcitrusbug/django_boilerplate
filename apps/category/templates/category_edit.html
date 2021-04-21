@@ -6,15 +6,25 @@
 <div class="content">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Add {{model_name }}</h3>
+            <h3>Edit {{model_name }}</h3>
             <span class="clearfix"></span>
         </div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="container align-center">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
                             {{form.name | attr:'required' |as_crispy_field}}
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            {{form.image |as_crispy_field}}
+                        </div>
+                        <div class="col-sm-6">
+                            {% if form.image and form.image.value %}
+                                <image height="150" width="150" src="{{ form.image.value.url }}"></image>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="row align-items-center">

@@ -22,4 +22,10 @@ class CategoryListAPIView(ListAPIView):
     
     def filter_queryset(self, queryset):
         search = self.request.query_params.get('search')
-        return queryset.filter(is_active=True, name__icontains=search)
+        sort = self.request.query_params.get('sort')
+        
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        if sort:
+            queryset = queryset.order_by(sort)
+        return queryset.filter(is_active=True)

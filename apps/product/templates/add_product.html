@@ -48,30 +48,30 @@
                     </div>
                 </div>
                 {{ formset.management_form }}
-                <div class="row form-row spacer align-items-center">
+                <!-- <div class="row form-row spacer align-items-center">
                     {% for form in formset %}
                         <div class="col-4">
                             <div class="input-group">
                                 {{form.tag | attr:'required' | as_crispy_field}}
-                                <!-- <div class="row spacer">
+                                <div class="row spacer">
                                     <div class="col-sm-3 input-group-append">
                                         <button class="btn btn-success add-form-row">+</button>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
-                </div>
+                </div> -->
                 <div class="row align-items-center pull-right">
                     <div class="col-sm-3">
                         <button type="submit" class="btn btn-primary btn-lg">submit</button>
                     </div>
                 </div>
-                <div class="row spacer">
+                <!-- <div class="row spacer">
                     <div class="col-sm-3 input-group-append">
                         <button class="btn btn-success add-form-row">+</button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>
