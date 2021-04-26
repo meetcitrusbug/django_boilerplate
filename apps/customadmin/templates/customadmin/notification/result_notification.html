@@ -1,0 +1,14 @@
+{% extends 'customadmin/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center" style="margin-top: 100px; font-family:'Segoe UI';">
+        {% if flag == True %}
+        <h3 style="color: green;"> Notification sent successfully! </h3>
+        {% else %}
+        <h3 style="color: red;"> Notification isn't sent successfully! </h3>
+        {% endif %}
+        <a href="{% url 'notification-list' %}" class="btn btn-primary" style="margin-top: 10px;">Notifications</a>
+    </div>
+</div>
+{% endblock %}

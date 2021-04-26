@@ -1,0 +1,28 @@
+{% extends 'customadmin/base.html' %}
+
+
+{% block content %}
+<div class="content">
+    <form method="post">
+        {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Delete - {{model_name | title}}</h3>
+                <span class="clearfix"></span>
+            </div>
+            <div class="container align-center">
+                <div class="row align-items-start">
+                    <div class="col-lg-8">
+                        <h4>Are you sure you want to delete <samp style="color: blue; margin-left: 5px;">
+                                {{object.group_name}}</samp></h4>
+                    </div>
+                    <div class="col-lg-4 align-items-center pull-right">
+                        <button class="btn btn-danger" style="margin: 5px;">Yes I'm sure!</button>
+                        <a href="{% url 'group-list' %}" class="btn btn-info" style="margin: 5px;">No I don't!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

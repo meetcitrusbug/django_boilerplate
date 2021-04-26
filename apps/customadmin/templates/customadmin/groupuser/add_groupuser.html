@@ -1,0 +1,33 @@
+{% extends 'customadmin/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Add - {{model_name | title }}</h3>
+            <span class="clearfix"></span>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="container align-center">
+                <div class="row align-items-start">
+                    <div class="col-sm-12">
+                        {{form.group_name | attr:'required' |as_crispy_field}}
+                    </div>
+                    <div class="col-sm-12">
+                        {{form.user | attr:'required' |as_crispy_field}}
+                    </div>
+                </div>
+                <div class="row align-items-center text-center">
+                    <div class="col-sm-12">
+                        <button class="btn btn-success btn-lg" style="margin: 5px;">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock  %}

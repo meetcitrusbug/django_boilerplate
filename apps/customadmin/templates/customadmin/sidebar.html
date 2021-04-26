@@ -1,0 +1,27 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'customadmin/css/sidebar.css' %}" />
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <header>
+    <a href="{% url 'notification-list' %}">CUSTOMADMIN PANEL</a>
+  </header>
+  <ul class="nav">
+    <li>
+      <a class="{% if request.path == '/customadmin/' %} active {% endif %}" href="{% url 'notification-list' %}">
+        <i class="zmdi zmdi-view-dashboard"></i><i class="fa fa-bell"></i> Notifications
+      </a>
+    </li>
+    <li>
+      <a class="{% if request.path == '/customadmin/group' %} active {% endif %}" href="{% url 'group-list' %}">
+        <i class="zmdi zmdi-view-dashboard"></i><i class="fa fa-address-book"></i> Group Names
+      </a>
+    </li>
+    <li>
+      <a class="{% if request.path == '/customadmin/groupuser'%} active {% endif %}" href="{% url 'groupuser-list' %}">
+        <i class="zmdi zmdi-view-dashboard"></i><i class="fa fa-users"></i> Group Users
+      </a>
+    </li>
+  </ul>
+</div>
+<!-- Content -->
