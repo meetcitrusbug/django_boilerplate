@@ -8,7 +8,7 @@ class CategoryAddView(CreateView):
     model = Category
     form_class = AddCategoryForm
     template_name = 'category_add.html'
-    permission_required = ("core.add_category",)
+    permission_required = ("add_category",)
     
     def get_context_data(self):
         context = super(CategoryAddView, self).get_context_data()

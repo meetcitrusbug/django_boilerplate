@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content">
+  		<div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>{{model_name | capfirst}}</h3>
+                <div class="btn-group pull-right">
+                    <a href="{% url 'add-'|add:model_name %}" class="btn btn-default btn-bg">Add {{model_name}}</a>
+                </div>
+                <span class="clearfix"></span>
+            </div>
+            <div class="panel-body">
+                <table id="{{model_name}}-table" class="row-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Product Name</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <th>Product Name</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+  	</div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).ready(function() {
+        //$('#example').DataTable();
+        $('#{{model_name}}-table').DataTable({
+            columnDefs: [{
+                orderable: false,
+                targets: [-2,-1]
+            }, ],
+
+            // Ajax for pagination
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{% url model_name|add:"-list-ajax" %}',
+                type: 'get',
+            },
+            columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'product', name: 'product' },
+                    { data: 'image', name: 'image' },
+                    { data: 'actions', name: 'actions' },
+                ]
+            });
+        });
+    </script>
+{% endblock  %}
+  

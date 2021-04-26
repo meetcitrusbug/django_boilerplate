@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
@@ -10,41 +10,15 @@
             <h3>Add {{model_name }}</h3>
             <span class="clearfix"></span>
         </div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="container align-center">
                 <div class="row align-items-start">
                     <div class="col-sm-6">
-                    {{form.name | attr:'required' |as_crispy_field}}
+                        {{form.tag | attr:'required' |as_crispy_field}}
                     </div>
                     <div class="col-sm-6">
-                        {{form.product_number | attr:'required' | as_crispy_field}}
-                    </div>
-                    <div class="col-sm-6">
-                        {{form.user | attr:'required' | as_crispy_field}}
-                    </div>
-                    <div class="col-sm-6">
-                        {{form.sub_category | attr:'required' | as_crispy_field}}
-                    </div>
-                    <div class="col-sm-6">
-                        {{form.product_shipping_method | attr:'required' | as_crispy_field}}
-                    </div>
-                    <div class="col-sm-6">
-                        {{form.status | attr:'required' | as_crispy_field}}
-                    </div>
-                    <div class="col-sm-6">
-                        {{form.price | attr:'required' |  as_crispy_field}}
-                    </div>
-                    <div class="col-sm-3">
-                        {{form.is_refundable|as_crispy_field}}
-                    </div>
-                    <div class="col-sm-3">
-                        {{form.is_active| as_crispy_field}}
-                    </div>
-                </div>
-                <div class="row align-items-center">
-                    <div class="col-sm-12">
-                        {{form.description|attr:'required'| as_crispy_field}}
+                        {{form.product | attr:'required' | as_crispy_field}}
                     </div>
                 </div>
                 <div class="row align-items-center pull-right">

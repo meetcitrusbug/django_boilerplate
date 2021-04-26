@@ -8,7 +8,7 @@ class CategoryEditView(UpdateView):
     model = Category
     form_class = AddCategoryForm
     template_name = 'category_edit.html'
-    permission_required = ("core.edit_category",)
+    permission_required = ("edit_category",)
     
     def get_context_data(self):
         context = super(CategoryEditView, self).get_context_data()

@@ -18,8 +18,18 @@
         </a>
       </li>
       <li>
-        <a class="{% if 'product' in request.path   %}active{% endif %}" href="{% url 'product-list' %}">
+        <a class="{% if 'product' in request.path and 'tag' not in request.path and 'image' not in request.path  %}active{% endif %}" href="{% url 'product-list' %}">
           <i class="zmdi zmdi-view-dashboard"></i> Product
+        </a>
+      </li>
+      <li>
+        <a class="{% if 'product/image/' in request.path   %}active{% endif %}" href="{% url 'product-image' %}">
+          <i class="zmdi zmdi-view-dashboard"></i> Product Image
+        </a>
+      </li>
+      <li>
+        <a class="{% if 'product/tag/' in request.path   %}active{% endif %}" href="{% url 'product-tag' %}">
+          <i class="zmdi zmdi-view-dashboard"></i> Product Tag
         </a>
       </li>
     </ul>
