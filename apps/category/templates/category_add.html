@@ -3,32 +3,25 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="content">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3>Edit {{model_name }}</h3>
-            <span class="clearfix"></span>
-        </div>
-        <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="container align-center">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            {{form.name | attr:'required' |as_crispy_field}}
-                        </div>
-                    </div>
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            {{form.image | attr:'required' |as_crispy_field}}
-                        </div>
-                    </div>
-                    <div class="row align-items-center">
-                        <div class="col-sm-6">
-                            <button class="btn btn-primary btn-lg">submit</button>
-                        </div>
+
+<form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="ibox float-e-margins">
+
+            {% include "partials/ibox_title.html" with ibox_title="Category Details" icon_class="fas fa-sign-in-alt" only %}
+            <div class="ibox-content">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        {{form.name | attr:'required' |as_crispy_field}}
                     </div>
                 </div>
-        </form>
-    </div>
-</div>
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        {{form.image | attr:'required' |as_crispy_field}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include "partials/form_footer.html" %}
+</form>
 {% endblock %}

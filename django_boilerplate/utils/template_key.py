@@ -1,0 +1,5 @@
+registration='d-91bbcad7c67341c38a26ccac85c89c59'
+forgot_password='d-4fcd396de0c448b2b2709ae202d5d653'
+invitation='d-61253115f56f484f88585937661923c1'
+instructor_approval_email='d-2e6b8f78a50a4d8c94df877e15b7420e'
+instructor_removal_email='d-b4185391aee74816bb8ff33234de43c1'

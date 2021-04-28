@@ -2,6 +2,7 @@ from django.db import models
 from django_boilerplate.models import ActivityTracking
 from django.utils.translation import ugettext_lazy as _
 from apps.utils.get_user_model import get_user_model
+from product.models.product_image import ProductImage
 
 class Product(ActivityTracking):
     
@@ -44,3 +45,11 @@ class Product(ActivityTracking):
     def __str__(self):
         
         return self.name
+   
+    @property 
+    def image(self):
+        image = ''
+        product_image = ProductImage.objects.filter(product__pk=self.pk).order_by('-id').first()
+        if product_image and product_image.image:
+            image = product_image.image.url
+        return image

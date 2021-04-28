@@ -1,37 +1,53 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}"/>
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
 
-  <!-- Sidebar -->
-  <div id="sidebar">
-    <header>
-      <a href="#">Django boilerplate</a>
-    </header>
-    <ul class="nav">
-      <li>
-        <a class="{% if '/category/' == request.path  %}active{% endif %}" href="{% url 'category-list' %}">
-          <i class="zmdi zmdi-view-dashboard"></i> Category
-        </a>
-      </li>
-      <li>
-        <a class="{% if '/sub-category/' == request.path   %}active{% endif %}" href="{% url 'subcategory-list' %}">
-          <i class="zmdi zmdi-view-dashboard"></i> Sub category
-        </a>
-      </li>
-      <li>
-        <a class="{% if 'product' in request.path and 'tag' not in request.path and 'image' not in request.path  %}active{% endif %}" href="{% url 'product-list' %}">
-          <i class="zmdi zmdi-view-dashboard"></i> Product
-        </a>
-      </li>
-      <li>
-        <a class="{% if 'product/image/' in request.path   %}active{% endif %}" href="{% url 'product-image' %}">
-          <i class="zmdi zmdi-view-dashboard"></i> Product Image
-        </a>
-      </li>
-      <li>
-        <a class="{% if 'product/tag/' in request.path   %}active{% endif %}" href="{% url 'product-tag' %}">
-          <i class="zmdi zmdi-view-dashboard"></i> Product Tag
-        </a>
-      </li>
-    </ul>
-  </div>
-  <!-- Content -->
+            <li class="nav-header">
+                <a href="#">
+                    <img class="nav-image" src="{% static 'img/django-logo-white.svg' %}" width="100%" />
+                </a>
+
+                <div class="logo-element">
+                    UC
+                </div>
+            </li>
+
+            <li class="{% if 'category' in request.path and 'sub' not in request.path %}active{% endif %}">
+                <a href="{% url 'category-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Category</span>
+                </a>
+            </li>
+
+            <li class="{% if 'sub-category' in request.path %}active{% endif %}">
+                <a href="{% url 'subcategory-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Sub Category</span>
+                </a>
+            </li>
+
+            <li class="{% if 'product' in request.path and 'tag' not in request.path and 'image' not in request.path  %}active{% endif %}">
+                <a href="{% url 'product-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Product</span>
+                </a>
+            </li>
+
+            <li class="{% if 'product/image/' in request.path   %}active{% endif %}">
+                <a href="{% url 'productimage-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Product Image</span>
+                </a>
+            </li>
+
+            <li class="{% if 'product/tag/' in request.path   %}active{% endif %}">
+                <a href="{% url 'producttag-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Product Tag</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</nav>

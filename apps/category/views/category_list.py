@@ -4,22 +4,22 @@ from category.models import Category
 from django_datatables_too.mixins import DataTableMixin
 from django.http import JsonResponse
 from django.db.models import Q
+from django_boilerplate.views.generic import (
+    MyListView,
+)
 
-class CategoryListView(View):
+
+class CategoryListView(MyListView):
     
-    template = 'category_list.html'
+    template_name = 'category_list.html'
     model = Category
-    context = {}
+    queryset = model.objects.all()
+    ordering = ["id"]
+    permission_required = ("view_category",)
     
-    def get(self, request, *args, **kwargs):
+    # def get(self, request, *args, **kwargs):
         
-        return render(request, self.template, context=self.get_context())
-
-    
-    def get_context(self):
-        context = self.context
-        context["model_name"] = self.model._meta.model_name
-        return self.context
+    #     return render(request, self.template, context=self.get_context())
     
     
 class CategoryDataTablesAjaxPagination(DataTableMixin, View):
@@ -29,11 +29,11 @@ class CategoryDataTablesAjaxPagination(DataTableMixin, View):
 
     def _get_actions(self, obj):
         """Get action buttons w/links."""
-        edit_url = reverse("edit-category", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-category", kwargs={'pk':obj.pk})
+        edit_url = reverse("category-update", kwargs={'pk':obj.pk})
+        delete_url = reverse("category-delete", kwargs={'pk':obj.pk})
         return f"""
                     <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-pencil-square"></i>
                     </a>
                     <a data-title="{delete_url}" title="Delete" href="{delete_url}" class="btn btn-danger btn-xs btn-delete">
                         <i class="fa fa-trash"></i>

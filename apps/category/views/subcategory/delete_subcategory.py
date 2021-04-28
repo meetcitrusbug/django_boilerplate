@@ -2,12 +2,15 @@ from django.views.generic import  DeleteView
 from category.models import SubCategory
 from category.forms import AddSubCategoryForm
 from django.shortcuts import reverse
+from django_boilerplate.views.generic import (
+    MyDeleteView,
+)
 
-class SubCategoryDeleteView(DeleteView):
+class SubCategoryDeleteView(MyDeleteView):
     
     model = SubCategory
     form_class = AddSubCategoryForm
-    template_name = "subcategory/subcategory_delete.html"
+    template_name = "confirm_delete.html"
     permission_required = ("delete_subcategory")
     
     

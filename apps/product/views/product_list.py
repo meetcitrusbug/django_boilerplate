@@ -1,27 +1,25 @@
 from django.views import View
 from django.shortcuts import render, reverse
 from django.http import JsonResponse
-from django.views.generic import View
 from django_datatables_too.mixins import DataTableMixin
-from product.models import Product, ProductImage
+from product.models import Product, ProductImage, ProductTag
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django_boilerplate.views.generic import MyListView
 
-
-class ProductListView(LoginRequiredMixin, View):
+class ProductListView(MyListView):
     
-    template = 'index.html'
+    template_name = 'product_list.html'
     model = Product
-    context = {
-        'model_name':model._meta.model_name
-    }
+    queryset = model.objects.all()
+    ordering = ["id"]
+    permission_required = ("view_product",)
     
-    def get(self, request):
+    # def get(self, request):
         
-        return render(request, self.template, context=self.updateContext())
+    #     return render(request, self.template, context=self.updateContext())
 
-    def updateContext(self):
-        return self.context
+    # def updateContext(self):
+    #     return self.context
      
     
 class DataTablesAjaxPagination(DataTableMixin, View):
@@ -31,11 +29,11 @@ class DataTablesAjaxPagination(DataTableMixin, View):
 
     def _get_actions(self, obj):
         """Get action buttons w/links."""
-        edit_url = reverse("edit-product", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-product", kwargs={'pk':obj.pk})
+        edit_url = reverse("product-update", kwargs={'pk':obj.pk})
+        delete_url = reverse("product-delete", kwargs={'pk':obj.pk})
         return f"""
                     <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-pencil-square"></i>
                     </a>
                     <a data-title="{delete_url}" title="Delete" href="{delete_url}" class="btn btn-danger btn-xs btn-delete">
                         <i class="fa fa-trash"></i>

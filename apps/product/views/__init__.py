@@ -12,3 +12,7 @@ from .product_tag.product_tag_list import ProdcutTagListView, ProductTagDataTabl
 from .product_tag.product_tag_add import AddProductTagView
 from .product_tag.product_tag_edit import EditProductTagView
 from .product_tag.product_tag_delete import DeleteProdcutTagView
+
+
+from .products import ProductView
+from .product_details import ProductDetails

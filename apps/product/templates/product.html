@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Products</title>
+
+  <!-- Start bare minimum -->
+  <link href="{% static 'css/select2.min.css' %}" rel="stylesheet">
+  <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'font-awesome-5/css/all.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
+
+  <!-- Toastr style -->
+  <link href="{% static 'css/plugins/toastr/toastr.min.css' %}" rel="stylesheet">
+
+  <!-- Gritter -->
+  <link href="{% static 'js/plugins/gritter/jquery.gritter.css' %}" rel="stylesheet">
+
+  <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <!-- End bare minimum -->
+
+  <!-- Date-time picker -->
+  <!-- <link href="{% static 'date-time-phone/jquery-ui.css' %}" rel="stylesheet">
+  <link href="{% static 'date-time-phone/jquery-ui-timepicker-addon.css' %}" rel="stylesheet"> -->
+
+  <!-- Cropper -->
+  <link href="{% static 'css/cropper.min.css' %}" rel="stylesheet">
+  <link href="{% static 'fonts/helvetica-neue/helvetica-neue-font.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="{% static 'css/common-style.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.css"/>
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #eee
+        }
+
+        .ratings i {
+            font-size: 16px;
+            color: red
+        }
+
+        .strike-text {
+            color: red;
+            text-decoration: line-through
+        }
+
+        .product-image {
+            width: 100%
+        }
+
+        .dot {
+            height: 7px;
+            width: 7px;
+            margin-left: 6px;
+            margin-right: 6px;
+            margin-top: 3px;
+            background-color: blue;
+            border-radius: 50%;
+            display: inline-block
+        }
+
+        .green-dot {
+            height: 7px;
+            width: 7px;
+            margin-left: 6px;
+            margin-right: 6px;
+            margin-top: 3px;
+            background-color: green;
+            border-radius: 50%;
+            display: inline-block
+        }
+        .red-dot{
+            height: 7px;
+            width: 7px;
+            margin-left: 6px;
+            margin-right: 6px;
+            margin-top: 3px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block
+        }
+
+        .spec-1 {
+            color: #938787;
+            font-size: 15px
+        }
+
+        h5 {
+            font-weight: 400
+        }
+
+        .para {
+            font-size: 16px
+        }
+        
+    </style>
+</head>
+<body>
+<form id="query_params">
+    <!-- Input form -->
+    <input name="min" id="min_value_hidden" type="hidden" value="{{min}}"/>
+    <input name="max" id="max_value_hidden" type="hidden" value="{{max}}"/>
+    <input name="search" id="search_value_hidden" type="hidden" value="{{serach}}"/>
+    <input name="page" id="page_value_hidden" type="hidden" value="{{page_obj.number}}"/>
+    <!-- Input form -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Django</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+                <div class="w-100">
+                    <div class="col-12">
+                        <select class="js-example-basic-multiple w-100" name="selected_category" multiple="multiple" placeholder="select category">
+                            {% for cat in category %}
+                                <option value="{{cat.id}}" {% if cat.id  in selected_category %}selected{% endif %}><img src=""/>{{cat.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <input class="form-control col-sm-1" type="number" id="min_value" placeholder="Min" name="min" value="{{min}}" aria-label="Min">
+                <input class="form-control col-sm-1" type="number" placeholder="Max" id="max_value" name="max" value="{{max}}" aria-label="Max">
+                <input class="form-control col-sm-2" type="search" placeholder="Search" id="search_value" name="search" value="{{search}}" aria-label="Search">
+                <button id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Go</button>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10">
+            {% for product in page_obj  %}
+            <div class="row p-2 bg-white border rounded">
+                <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="{{product.image}}"></div>
+                <div class="col-md-6 mt-1">
+                    <h5>{{product.name}}</h5>
+                    <div class="d-flex flex-row">
+                        <div class="ratings mr-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+                    </div>
+                    <div class="mt-1 mb-1 spec-1">
+                        <span>Category</span><span class="dot"></span><span>{{product.sub_category.category.name}}</span>
+                    </div>
+                    <div class="mt-1 mb-1 spec-1">
+                        <span>Sub category</span><span class="dot"></span><span>{{product.sub_category.name}}</span>
+                    </div>
+                    <div class="mt-1 mb-1 spec-1">
+                        {% if product.is_refundable %}
+                            <span class="green-dot"></span><span>Refundable</span>
+                        {% endif %}
+                        {% if product.status == "SOLD" %}
+                            <span class="red-dot"></span><span>SOLD</span>
+                        {% endif %}
+                        {% if product.status == "OFS" %}
+                            <span class="red-dot"></span><span>Out of stock</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-justify text-truncate para mb-0">{{product.description}}<br><br></p>
+                </div>
+                <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                    <div class="d-flex flex-row align-items-center">
+                        <h4 class="mr-1">${{product.price}}</h4>  <!-- <span class="strike-text">$20.99</span> -->
+                    </div>
+                    <h6 class="text-success">{{product.product_shipping_method | title }}  </h6>
+                    <div class="d-flex flex-column mt-4"><a  href="{% url 'product-details' product.pk %}" class="btn btn-primary btn-sm">Details</a><button class="btn btn-outline-primary btn-sm mt-2" type="button">Add to wishlist</button></div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.paginator.num_pages != 1 %}
+                    <li class="page-item"><a class="page-link" href="1">First</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">First</a></li>
+                {% endif %}
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                {% endif %}
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+                    {% elif page_obj.number > i|add:"-5" and page_obj.number < i|add:"+5"%}
+                        <li class="page-item"><a class="page-link" href="{{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="{{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                {% endif %}
+                {% if page_obj.paginator.num_pages != page_obj.number %}
+                    <li class="page-item"><a class="page-link" href="{{ page_obj.paginator.num_pages }}">Last</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %} 
+    </div>
+</form>
+
+</body>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.js-example-basic-multiple').select2();
+       
+        function submitForm(){
+            $('#query_params').submit();
+        }
+
+
+        $('.page-link').click(function(){
+            var page = $(this).attr('href');
+            if(page !== '#'){
+                $('#page_value_hidden').val(page);
+                submitForm();
+                console.log("sunmitting forms");
+            }
+            return false
+        });
+
+       $('#go_button').click(function(){
+            var min_value = $('#min_value').val();
+            var max_value = $('#max_value').val();
+            var search = $('#search_value').val();
+
+            $('#min_value_hidden').val(min_value);
+            $('#max_value_hidden').val(max_value);
+            $('#search_value_hidden').val(search);
+            $('#page_value_hidden').val('');
+
+            submitForm();
+           return false;
+       });
+    });
+</script>
+</html>

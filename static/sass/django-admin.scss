@@ -1,0 +1,136 @@
+/*
+    DJANGO Admin style overrides
+*/
+
+$header-gradient: linear-gradient(to bottom,#005fc7 0,#0374f0 100%);
+$breadcrumb-gradient: linear-gradient(to right,#3554a3 0,#1c3385 100%);
+
+$primary-color: #9d1b55;
+$secondary-color: #04004d;
+
+$primary-btn-color: #016ce2;
+$primary-btn-hover-color: #0066cc;
+$secondary-btn-color: rgb(153,153,153);
+$secondary-btn-hover-color: rgb(102,102,102);
+
+
+.button.default,
+input[type=submit].default,
+.submit-row input.default {
+    background: $primary-btn-color;
+}
+
+.button.default:active,
+input[type=submit].default:active,
+.button.default:focus,
+input[type=submit].default:focus,
+.button.default:hover,
+input[type=submit].default:hover {
+    background: $primary-btn-hover-color;
+}
+
+/* Secondary buttons */
+.button,
+input[type=submit],
+.submit-row input {
+    background: $secondary-btn-color;
+}
+
+.button:active,
+input[type=submit]:active,
+.button:focus,
+input[type=submit]:focus,
+.button:hover,
+input[type=submit]:hover {
+    background: $secondary-btn-hover-color;
+}
+
+/* MODULES */
+
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: $breadcrumb-gradient;
+}
+
+/* BREADCRUMBS */
+
+div.breadcrumbs {
+    background: $breadcrumb-gradient;
+}
+
+/* HEADER */
+
+#header {
+    background: $header-gradient;
+}
+
+#header a:link, #header a:visited {
+    color: #fff;
+}
+
+#user-tools {
+    color: #fff;
+    a {
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255, 0.25);
+        &:hover {
+            border-bottom: 1px solid rgba(255,255, 255, 1);
+        }
+    }
+}
+
+
+.object-tools {
+  a {
+      &:hover {
+          background-color: $secondary-color !important;
+      }
+  }
+}
+
+
+/* admin/static/admin/css/login.css */
+body.login {
+    background: #f8f8f8;
+    #branding {
+      float: none;
+    }
+}
+
+body.login #header {
+    background: $header-gradient;
+    .logo-login {
+      width: 100%;
+      height: auto;
+      // margin: 10px auto;
+      display: block;
+    }
+}
+
+#branding {
+  .logo {
+    height: 40px;
+    width: auto;
+  }
+}
+
+
+/* admin/static/admin/css/widgets.css */
+.selector-chosen h2 {
+    color: #fff;
+    background: $secondary-color !important;
+}
+
+.calendar caption {
+    color: #fff !important;
+    background: $secondary-color !important;
+}
+
+.calendar td.selected a {
+    background: $primary-color !important;
+}
+
+.calendar td a:hover {
+    background: $primary-color !important;
+}

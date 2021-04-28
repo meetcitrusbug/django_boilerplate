@@ -30,6 +30,12 @@ class ProductListViewAPI(ListAPIView):
         }, status.HTTP_200_OK )
         
     def filter_queryset(self, queryset):
+        
+        # queryset = queryset.filter(
+        #     Q(status="ACTIVE") | Q(status="SOLD") | Q(status="OFS")
+        #     ,is_active=True)
+        
+        
         queryset = queryset.filter(is_active=True)
         
         search = self.request.query_params.get('search')
@@ -40,9 +46,7 @@ class ProductListViewAPI(ListAPIView):
         price = self.request.query_params.get('price')
         price_gt = self.request.query_params.get('price_gt')
         price_lt = self.request.query_params.get('price_lt')
-        price_range = self.request.query_params.get('price_range')
 
-        
         if search:
             product_id = ProductTag.objects.filter(tag__icontains=search).values_list('product', flat=True)
             queryset = queryset.filter(Q(id__in=product_id) | Q(name__icontains=search) | Q(product_number__icontains=search))

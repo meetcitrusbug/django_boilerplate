@@ -1,0 +1,230 @@
+{% extends './base.html' %}
+
+{% load static %}
+{% load admin_extras %}
+{% load misc_filters %}
+{% load i18n %}
+
+{% load admin_extras %}
+
+{% block title %}Dashboard{% endblock%}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+    {% now "Y" as year_arg %}
+    {% now "M" as month_arg %}
+    {% now "d" as day_arg %}
+
+    <div class="wrapper wrapper-content" style="padding-bottom: 0">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                            <!-- <span class="label label-success float-right">Monthly</span> -->
+                        </div>
+                        <h5>Users</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h3 class="no-margins">{{ user_count }}</h3>
+                        <!-- <div class="stat-percent font-bold text-success">{{ genre_percent }}% <i class="fa fa-bolt"></i></div> -->
+                        <small>Total users</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                        </div>
+                        <h5>Insturctors</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h3 class="no-margins">{{ instructor_count }}</h3>
+                        <div class="stat-percent font-bold text-info"></div>
+                        <small>Total instructors</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                        </div>
+                        <h5>Programs</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h3 class="no-margins">{{ program_count }}</h3>
+                        <div class="stat-percent font-bold text-navy"></div>
+                        <small>Total programs</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                        </div>
+                        <h5>Videos</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h3 class="no-margins">{{ video_count }}</h3>
+                        <small>Total Videos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content" style="padding-top: 0">
+        <div class="row">
+            {% for o in live_data %}
+                <div class="col-lg-3">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <div class="ibox-tools">
+                                <span class="label label-primary float-right">NEW</span>
+                            </div>
+                            <h5><a href="{% url 'core:livestreaming-detail' o.pk %}">{{ o.name|truncatewords:4 }}</a></h5>
+                        </div>
+                        <div class="ibox-content">
+                            <img src="{{ o.image }}" alt="Live Stream Image" width="50px;" height="50px;"/>
+                            <div class="stat-percent font-bold text-success">Date - {{ o.date }}<br/>Time - {{ o.time }}<br/>{{ o.category.title }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div style="width: 100%;">
+                        <canvas  id="mySubscriptionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div style="width: 100%;">
+                        <canvas  id="myProgramRateChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('mySubscriptionChart').getContext('2d');
+
+            const subscriptionCharLabel = {{ subscription_label | safe}};
+            const subscriptionCharData = {{ subscription_data | safe}};
+            
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: subscriptionCharLabel,
+                    datasets: [{
+                        label: 'Suscriptions of this month',
+                        data: subscriptionCharData,
+                        backgroundColor: '#FAE1B1',
+                        borderColor:'#FAE1B1', 
+                        borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Number of subscriptions'
+                                }
+                            }],
+                            xAxes: [{
+                                categoryPercentage: 0.99,
+                                barPercentage: 0.99,
+                                gridLines: {
+                                    display: false
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Day of month'
+                                }
+                            }]
+                        },
+                        showLines: true,
+                        legend: {
+                            labels: {
+                                boxWidth: 0
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('myProgramRateChart').getContext('2d');
+
+            const programChartLabel = {{ program_label | safe}};
+            const programChartData = {{ program_rates | safe}};
+            
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: programChartLabel,
+                    datasets: [{
+                        label: 'Top rated programs',
+                        data: programChartData,
+                        backgroundColor: '#FAE1B1',
+                        borderColor:'#FAE1B1', 
+                        borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+  ticks: {fixedStepSize: 1
+             },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Rate'
+                                }
+                            }],
+                            xAxes: [{
+                                categoryPercentage: 0.99,
+                                barPercentage: 0.99,
+                                gridLines: {
+                                    display: false
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Programs'
+                                }
+                            }]
+                        },
+                        showLines: true,
+                        legend: {
+                            labels: {
+                                boxWidth: 0
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+{% endblock %}

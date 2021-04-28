@@ -74,7 +74,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_boilerplate.urls'
-print(BASE_DIR)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

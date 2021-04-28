@@ -4,21 +4,15 @@ from django.shortcuts import render, reverse
 from django_datatables_too.mixins import DataTableMixin
 from django.views import View
 from django.http import JsonResponse
+from django_boilerplate.views.generic import MyListView
 
-class ProductImageListView(ListView):
+class ProductImageListView(MyListView):
     
     template_name = "product_image/list.html"
     model = ProductImage
-    context = {}
-    
-    def get(self, request):        
-        return render(request, self.template_name, context=self.get_context_data())
-
-    def get_context_data(self):
-        context=  self.context
-        context["model_name"] = self.model._meta.model_name     
-        return context
-    
+    queryset = model.objects.all()
+    ordering = ["id"]
+    permission_required = ("view_productimage",)   
     
 class ProductImageDataTablesAjaxPagination(DataTableMixin, View):
     
@@ -27,11 +21,11 @@ class ProductImageDataTablesAjaxPagination(DataTableMixin, View):
 
     def _get_actions(self, obj):
         """Get action buttons w/links."""
-        edit_url = reverse("edit-productimage", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-productimage", kwargs={'pk':obj.pk})
+        edit_url = reverse("productimage-update", kwargs={'pk':obj.pk})
+        delete_url = reverse("productimage-delete", kwargs={'pk':obj.pk})
         return f"""
                     <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-pencil-square"></i>
                     </a>
                     <a data-title="{delete_url}" title="Delete" href="{delete_url}" class="btn btn-danger btn-xs btn-delete">
                         <i class="fa fa-trash"></i>
