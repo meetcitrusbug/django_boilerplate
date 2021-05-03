@@ -20,7 +20,7 @@
                 </a>
             </li>
 
-            <li class="{% if 'sub-category' in request.path %}active{% endif %}">
+            <li class="{% if 'subcategory' in request.path %}active{% endif %}">
                 <a href="{% url 'subcategory-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Sub Category</span>
@@ -34,14 +34,14 @@
                 </a>
             </li>
 
-            <li class="{% if 'product/image/' in request.path   %}active{% endif %}">
+            <li class="{% if 'image' in request.path   %}active{% endif %}">
                 <a href="{% url 'productimage-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Product Image</span>
                 </a>
             </li>
 
-            <li class="{% if 'product/tag/' in request.path   %}active{% endif %}">
+            <li class="{% if 'tag' in request.path   %}active{% endif %}">
                 <a href="{% url 'producttag-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Product Tag</span>

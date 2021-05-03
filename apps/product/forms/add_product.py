@@ -8,9 +8,6 @@ class AddProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'user', 'product_number', 'description', 'sub_category',
                   'product_shipping_method', 'status', 'price', 'is_refundable', 'is_active']
-    
-    # def save(self):
-    #     print(self.cleaned_data)
-    #     instance = super(AddProductForm, self).save()
-    #     return instance
-         
+        widgets = {
+                'price': forms.NumberInput(attrs={'min': '0'}),
+            }

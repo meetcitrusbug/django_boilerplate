@@ -23,11 +23,13 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
+    path('', include('django_boilerplate.urls_auth')),
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_router)),
     path('product/', include('product.urls')),
-    path('category/', include('category.urls')),
-    path('sub-category/', include('category.urls2')),
+    path('customadmin/', include('product.urls2')),
+    path('customadmin/', include('category.urls')),
+    path('customadmin/', include('category.urls2')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

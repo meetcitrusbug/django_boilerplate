@@ -12,6 +12,3 @@ class AddProductView(MyNewFormsetCreateView):
     template_name = 'add_product.html'
     permission_required = ("add_product",)
     
-    # def get_success_url(self):
-    #     """Get success URL"""
-    #     return reverse("product-list")

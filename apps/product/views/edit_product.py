@@ -10,7 +10,3 @@ class EditProductView(MyNewFormsetUpdateView):
     form_class = AddProductForm
     template_name = 'edit_product.html'
     permission_required = ("edit_product",)
-    
-    # def get_success_url(self):
-    #     """Get success URL"""
-    #     return reverse("product-list")

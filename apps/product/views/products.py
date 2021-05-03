@@ -25,10 +25,11 @@ class ProductView(ListView):
                
         query = self.model.objects.filter(is_active=True)
         
-        products =  ProductTag.objects.filter().values_list('product__id', flat=True)
+        products =  ProductTag.objects.filter(tag__icontains=context['search']).values_list('product__id', flat=True)
                
         if context['search']:
-            query = query.filter(Q(name__icontains=context['search']) | Q(id__in=products) |
+            query = query.filter(Q(name__icontains=context['search']) 
+                                 | Q(id__in=products) |
                                     Q(sub_category__category__name__icontains=context['search']) |
                                     Q(sub_category__name__icontains=context['search'])) 
         if context['selected_category']:

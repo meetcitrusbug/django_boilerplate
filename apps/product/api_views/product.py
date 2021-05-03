@@ -31,11 +31,6 @@ class ProductListViewAPI(ListAPIView):
         
     def filter_queryset(self, queryset):
         
-        # queryset = queryset.filter(
-        #     Q(status="ACTIVE") | Q(status="SOLD") | Q(status="OFS")
-        #     ,is_active=True)
-        
-        
         queryset = queryset.filter(is_active=True)
         
         search = self.request.query_params.get('search')

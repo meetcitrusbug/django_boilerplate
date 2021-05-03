@@ -14,13 +14,6 @@ class ProductListView(MyListView):
     ordering = ["id"]
     permission_required = ("view_product",)
     
-    # def get(self, request):
-        
-    #     return render(request, self.template, context=self.updateContext())
-
-    # def updateContext(self):
-    #     return self.context
-     
     
 class DataTablesAjaxPagination(DataTableMixin, View):
     
@@ -65,7 +58,7 @@ class DataTablesAjaxPagination(DataTableMixin, View):
         for o in qs:
             image = ''
             
-            product_image = ProductImage.objects.select_related('product').filter(product=o).first()
+            product_image = ProductImage.objects.select_related('product').filter(product=o).order_by('id').first()
             
             if product_image:
                 image = '<image src="%s" height="50" widht="50"/>' % product_image.image.url

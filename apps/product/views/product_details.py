@@ -23,4 +23,4 @@ class ProductDetails(View):
             return None
         
     def get_images(self, pk):
-        return ProductImage.objects.filter(product__pk=pk)
+        return ProductImage.objects.filter(product__pk=pk).order_by('id')

@@ -39,7 +39,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_URL = "auth:auth_login"
+LOGOUT_REDIRECT_URL = "auth:auth_login"
+LOGIN_REDIRECT_URL = "product-list"
 
 
 # Application definition
