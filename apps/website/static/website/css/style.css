@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.container {
+    width: 100%;
+    padding: 0px 15px;
+    margin: 70px auto;
+    max-width: 700px;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
+}
+
+.logo {
+    width: 10%;
+    border-radius: 50%;
+}
+
+input[type=file],
+input[type=text],
+input[type=email],
+input[type=password],
+textarea {
+    width: 100%;
+    padding: 3px 20px;
+    margin: 0px 0px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background-color: rgb(232, 240, 254);
+    color: black;
+}
+
+::placeholder {
+    color: gray;
+    opacity: 1;
+}
+
+.btn-success {
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.btn-div {
+    background-color: #f1f1f1
+}
+
+.cbtn,
+.lbtn,
+.fbtn {
+    width: 160px;
+
+}
+
+
+.m-lr {
+    margin: 0px 90px;
+}
+
+
+.h3 {
+    color: black;
+    font-size: 34px;
+    font-weight: 800;
+}
+
+.para {
+    color: grey;
+    font-size: 18px;
+    font-weight: 500;
+}

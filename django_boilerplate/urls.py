@@ -25,6 +25,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_router)),
+
+    path("api/v1/", include("api.urls")),
+    path("", include("website.urls")),
+
+    path('social-auth/', include('social_django.urls', namespace="social")),
+    path("accounts/", include("allauth.urls"), name='socialaccount_signup'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()

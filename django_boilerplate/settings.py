@@ -52,11 +52,30 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+
+    'django.contrib.sites',
+    'social_django',
 ]
 
 #Local apps
 INSTALLED_APPS += [
+    'api',
+	'website',
+
+	'rest_framework.authtoken',
+    'rest_auth',
+
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.apple',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,6 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'django_boilerplate.urls'
@@ -93,7 +114,14 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'socialmedia',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PASSWORD': 'admin',
+        'PORT': '5432'
+    }
 }
 
 
@@ -115,6 +143,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.apple.AppleIdAuth',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -132,7 +169,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
+STATIC_ROOT = path.join(BASE_DIR, 'static').replace('\\', '/')
 STATIC_URL = '/static/'
 # STATIC_ROOT = str(BASE_DIR)  "static")
 # STATICFILES_DIRS = [(str(APP_DIR)+ "/static")]
@@ -160,3 +197,39 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+AUTH_USER_MODEL = 'api.User'
+# =============== FACEBOOK =============== 
+# My
+SOCIAL_AUTH_FACEBOOK_KEY = '289765542840643'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '56e91e5eee1c78fe0469e8bee41574e4'  # App Secret
+
+# Rachit
+# SOCIAL_AUTH_FACEBOOK_KEY = '1668463020029321'  # App ID
+# SOCIAL_AUTH_FACEBOOK_SECRET = '6ac0e34f9fe685db23eee0c50babcd98'  # App Secret
+# ACCESSTOKEN => EAAXtdVGhNYkBAF4bsuZAuez0HzTYgF2S3HxQcLwyZCpsUz5zCPHRg8oTmxg9dG3hDVJbbd17XCo1uZAQfFZB2kdBjIEwjuazn8JUXZB3x73ZAFDsFkPJQvSY1K4Bu6ZBBFZBfYPBTo49dSxC4h8MA14BTZBZBPLn9XWuGSFufqpOjaDFJ9GREP7Wg7AyEUlrlENQkKjQDsQkEyDFE4CozeUA1ovxDmxrglJcV9edzZAQwJR5QZDZD
+
+# =============== GOOGLE =============== 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '563987567432-e1v2f1rrdrgtpsm6mbgp6mff9tjiqqpd.apps.googleusercontent.com'  # App ID
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'wjAZAmmhfqPVJpe3j-sTVwIF'  # App Secret
+
+# =============== TWITTER =============== 
+SOCIAL_AUTH_TWITTER_KEY = "zdJcHdoxwNs0T5KZ4r2Ynqeik" # App ID
+SOCIAL_AUTH_TWITTER_SECRET = "dJxT4LnsbrNFKDKjh7nMtbJSecvinRgPmEP5q7WHIDHNBOzgwa" # App Secret
+
+# =============== APPLE =============== 
+SOCIAL_AUTH_APPLE_ID_CLIENT = 'com.mediyoga'             # Your client_id com.application.your, aka "Service ID"
+SOCIAL_AUTH_APPLE_ID_TEAM = 'CPCQ32Z2TQ'               # Your Team ID, ie K2232113
+SOCIAL_AUTH_APPLE_ID_KEY = 'L53YS3ALGA'                # Your Key ID, ie Y2P99J3N81K
+SOCIAL_AUTH_APPLE_ID_SECRET = "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgm05jjbNmcrTIOFwOOHf3v0f+90wQoYu+CIhcP5YDcGagCgYIKoZIzj0DAQehRANCAATzyV5vs91FGN3p4J3xHq3kFmyG+s/JmSJsNxDg+4VYpbJNJSU4mxfKgVAGStM4t2jujxQ1jqIvwO927sKVqyT7"
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'home'
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/'
