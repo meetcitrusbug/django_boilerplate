@@ -29,4 +29,4 @@ def send_html_template_email(to_email, sendgrid_temlpate_id, dynamic_data_for_te
         response = sg.client.mail.send.post(request_body=mail.get())
     except exceptions.BadRequestsError as e:
         print(e.body)
-        exit()
+        exit() 
