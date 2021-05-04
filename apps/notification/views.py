@@ -17,12 +17,10 @@ class NotificationListView(APIView):
 
     def get(self, request):
         notifications = Notification.objects.all().order_by('-id')
-        # notifications = Notification.objects.filter(user=request.user.pk).order_by('-id')
         serializer = self.serializer_class(notifications, many=True, context= {"request": request})
         result={}
         result['notifications'] = serializer.data
         result['unread_count'] = Notification.objects.filter(is_read=False).count()
-        # result['unread_count'] = Notification.objects.filter(user=request.user.pk, is_read=False).count()
         message = "Notifications fetched successfully!"
         return custom_response(True, status.HTTP_200_OK, message, result)
 
@@ -53,7 +51,6 @@ class ReadAllNotificationView(APIView):
     
     def post(self, request, format=None):
         Notification.objects.filter(is_read=False).update(is_read=True)
-        # Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         message = "All Notifications Marked as Read Successfully!"            
         return custom_response(True, status.HTTP_200_OK, message)
 
@@ -82,7 +79,6 @@ class RemoveAllNotificationView(APIView):
     
     def delete(self, request, format=None):
         Notification.objects.all().delete()
-        # Notification.objects.filter(user=request.user).delete()
         message = "All Notifications removed Successfully!"            
         return custom_response(True, status.HTTP_200_OK, message)
 
@@ -104,7 +100,6 @@ class SendNotificationView(APIView):
             message_title = "Citrusbug update!"
             message_body = "Hope you're having fun this weekend, don't forget to check today's news"
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
-            # print(result, "============================")
         else:
             push_service = FCMNotification(api_key=api_key)
             for credential in credentials:
@@ -113,7 +108,6 @@ class SendNotificationView(APIView):
             message_title = "Citrusbug update!"
             message_body = "Hi john, your customized news for today is ready"
             result = push_service.notify_single_device(registration_id=registration_ids, message_title=message_title, message_body=message_body)
-            # print(result, "============================")
 
         if result['success'] == 1:
             message = "Notification sent successfully!"          
@@ -121,28 +115,3 @@ class SendNotificationView(APIView):
         else:
             message = "Notification isn't sent successfully!"
             return custom_response(False, status.HTTP_200_OK, message)
-
-
-# class SendMultiNotificationView(APIView):
-#     """
-#     Send Notifications to multiple device
-#     """
-#     permission_classes = (IsAccountOwner,)
-    
-#     def post(self, request):
-#         api_key = "AAAA-F3kDws:APA91bENHxS72ai1So4PXQ1htHc2XhApysw_KksmyQWWy_aZe-Pq_-BrVP4yxY3dG452oPt3YLGzecjhLGL0ufs3rELk0Gidq9ZamPwl7caLyWKewE-3Vpv1EYKpBmmdv_EzrqxkLjeR"
-#         registration_id = ["<device registration_id 1>", "<device registration_id 2>"]
-
-#         push_service = FCMNotification(api_key=api_key)
-#         registration_ids = registration_id
-#         message_title = "Uber update"
-#         message_body = "Hope you're having fun this weekend, don't forget to check today's news"
-#         result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
-#         print(result, "============================")
- 
-#         if result['success'] == 1:
-#             message = "Notifications sent to all Successfully!"          
-#             return custom_response(True, status.HTTP_200_OK, message)
-#         else:
-#             message = "Notifications aren't sent Successfully!"
-#             return custom_response(False, status.HTTP_200_OK, message)
