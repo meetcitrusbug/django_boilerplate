@@ -1,0 +1,57 @@
+{% extends 'customadmin/change_list.html' %}
+{% load static %}
+{% load admin_extras %}
+{% load misc_filters %}
+{% load i18n %}
+
+<title>{% block title %}Detail Notification - Notification{% endblock %}</title>
+{% block page_content %}
+{% csrf_token %}
+
+<div class="ibox float-e-margins">
+
+    <div class="ibox-content">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover" id="{{ opts.model_name }}-table">
+                <thead>
+                    <tr>
+                        <td colspan="2" class="h5 text-left border-white">{{notification_detail.username|capfirst}}</td>
+                        </b><a href="{% url 'customadmin:notification-list' %}"
+                            class="btn btn-secondary float-right">Back</a>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-left">
+                        <td class="h6">
+                            <b> Title :</b> {{notification_detail.title}}
+                            <hr>
+                            <b> Description :</b> {{notification_detail.description}}
+                            <hr>
+                            <b> Is read? :</b> {{notification_detail.is_read}}
+                            <hr>
+                            <b> Is single user? :</b> {{notification_detail.is_singleuser}}
+                            <hr>
+                            {% if notification_detail.group %}
+                            <b> Group:</b> {{notification_detail.group}}
+                            {% endif %}
+                            {% if notification_detail.user %}
+                            <b> User :</b> {{notification_detail.user}}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="h5 text-center" colspan="2">
+                            <a href="{% url 'customadmin:notification-send' pk=notification_detail.pk %}"
+                                class="btn btn-lg btn-success">Send Notification</a>
+                            <a href="{% url 'customadmin:notification-list' %}" class="btn btn-lg btn-danger">Cancel</a>
+                        </td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
