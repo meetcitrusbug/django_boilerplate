@@ -11,13 +11,13 @@ class IndexView(View):
         notifications = UserNotification.objects.filter(user=request.user)
         unread_notification = UserNotification.objects.filter(user=request.user, read=False).count()
         all_notification = UserNotification.objects.filter(user=request.user).count()
-        return render(request, 'website/index.html', {"notifications":notifications, 'unread_notification':unread_notification, 'all_notification':all_notification})
+        return render(request, 'django_template/index.html', {"notifications":notifications, 'unread_notification':unread_notification, 'all_notification':all_notification})
 
 
 class LoginPageView(View):
     def get(self, request):
         form = AuthenticationForm()
-        return render(request=request, template_name="website/userlogin.html", context={"login_form":form})
+        return render(request=request, template_name="django_template/userlogin.html", context={"login_form":form})
 
     def post(self, request):
         form = AuthenticationForm(request, data=request.POST)

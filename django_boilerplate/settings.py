@@ -33,6 +33,7 @@ sys.path.insert(0, path.join(BASE_DIR, 'apps'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
+FIREBASE_API_KEY = env.str('FIREBASE_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -56,6 +57,12 @@ INSTALLED_APPS = [
 
 #Local apps
 INSTALLED_APPS += [
+    'notification',
+    'customadmin',
+    'django_template',   
+
+    'widget_tweaks',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -93,9 +100,15 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'notification',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PASSWORD': 'admin',
+        'PORT': '5432'
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -160,3 +173,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+AUTH_USER_MODEL = 'customadmin.User'
+
+LOGIN_URL = "auth:auth_login"
+AUTH_USER_MODEL = 'customadmin.User'
+LOGOUT_REDIRECT_URL = "auth:auth_login"

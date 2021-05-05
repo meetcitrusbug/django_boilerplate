@@ -1,88 +1,85 @@
-from notification.models import Group
-from customadmin.forms import CreateGroupForm
-from django.shortcuts import reverse, render
-from django.views import View
-from django.http import JsonResponse
-from django.views.generic import View, CreateView, UpdateView, DeleteView
-from django_datatables_too.mixins import DataTableMixin
+# -*- coding: utf-8 -*-
+from customadmin.mixins import HasPermissionsMixin
+from customadmin.views.generic import (
+    MyCreateView,
+    MyDeleteView,
+    MyListView,
+    MyLoginRequiredView,
+    MyUpdateView,
+)
 from django.db.models import Q
+from django.template.loader import get_template
+from django_datatables_too.mixins import DataTableMixin
 
+from customadmin.forms import GroupChangeForm, GroupCreationForm
+from django.shortcuts import reverse
 
-class GroupListView(View):
-    template = 'customadmin/group/list_group.html'
+from notification.models import Group
+
+# -----------------------------------------------------------------------------
+# Group
+# -----------------------------------------------------------------------------
+
+class GroupListView(MyListView):
+    """View for Group listing"""
+
+    ordering = ["id"]
     model = Group
-    context = {
-        'model_name':model._meta.model_name
-    }
+    queryset = model.objects.all()
+    template_name = "customadmin/group/group_list.html"
+    permission_required = ("customadmin.view_group",)
+
+    def get_queryset(self):
+        return self.model.objects.all().exclude(is_active=False)
+
+class GroupCreateView(MyCreateView):
+    """View to create Group"""
     
-    def get(self, request):
-        return render(request, self.template, context=self.updateContext())
-
-    def updateContext(self):
-        return self.context
-     
-
-class AddGroupView(CreateView):
     model = Group
-    form_class = CreateGroupForm
-    template_name = 'customadmin/group/add_group.html'
-    permission_required = ("core.add_group",)
-    
-    def get_context_data(self):
-        context = super(AddGroupView, self).get_context_data()
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
+    form_class = GroupCreationForm
+    template_name = "customadmin/group/group_form.html"
+    permission_required = ("customadmin.add_group",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("group-list")
+        return reverse("customadmin:group-list")
 
+class GroupUpdateView(MyUpdateView):
+    """View to update Group"""
 
-class EditGroupView(UpdateView):
     model = Group
-    form_class = CreateGroupForm
-    template_name = 'customadmin/group/edit_group.html'
-    permission_required = ("core.edit_group",)
-    
-    def get_context_data(self):
-        context = super(EditGroupView, self).get_context_data()
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
-    def get_success_message(self):
-        """Get success message"""
-        print("-=-=-=-=-=-=-=-=-=priting message=-=-=-=-=-=-=-=-=-")
-        return "{0} save successfully".format(self.model._meta.model_name)
-    
+    form_class = GroupChangeForm
+    template_name = "customadmin/group/group_form.html"
+    permission_required = ("customadmin.change_group",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("group-list")
+        return reverse("customadmin:group-list")
 
+class GroupDeleteView(MyDeleteView):
+    """View to delete Group"""
 
-class DeleteGroupView(DeleteView):
     model = Group
-    form_class = CreateGroupForm
-    template_name = 'customadmin/group/delete_group.html'
-    permission_required = ("core.delete_group",)
-    
-    def get_context_data(self, object):
-        context = super(DeleteGroupView, self).get_context_data(object=object)
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
+    template_name = "customadmin/confirm_delete.html"
+    permission_required = ("customadmin.delete_group",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("group-list")
+        return reverse("customadmin:group-list")
 
+class GroupAjaxPagination(DataTableMixin, HasPermissionsMixin, MyLoginRequiredView):
+    """Built this before realizing there is
+    https://bitbucket.org/pigletto/django-datatables-view."""
 
-class GroupDataTablesAjaxPagination(DataTableMixin, View):
     model = Group
-    queryset = Group.objects.all().order_by('-id')
+    queryset = Group.objects.all().order_by("created_at")
+
+    def _get_is_superuser(self, obj):
+        """Get boolean column markup."""
+        t = get_template("customadmin/partials/list_boolean.html")
+        return t.render({"bool_val": obj.is_superuser})
 
     def _get_actions(self, obj):
         """Get action buttons w/links."""
-        edit_url = reverse("edit-group", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-group", kwargs={'pk':obj.pk})
+        edit_url = reverse("customadmin:group-update", kwargs={'pk':obj.pk})
+        delete_url = reverse("customadmin:group-delete", kwargs={'pk':obj.pk})
         return f"""
                     <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
                         <i class="fa fa-pencil"></i>
@@ -92,35 +89,31 @@ class GroupDataTablesAjaxPagination(DataTableMixin, View):
                     </a>
                 """
 
-    def is_orderable(self):
-        """Check if order is defined in dictionary."""
-        return True
-
     def filter_queryset(self, qs):
         """Return the list of items for this view."""
         # If a search term, filter the query
         if self.search:
             return qs.filter(
-                Q(group_name__icontains=self.search))
+                Q(username__icontains=self.search)
+                | Q(first_name__icontains=self.search)
+                | Q(last_name__icontains=self.search)
+                # | Q(state__icontains=self.search)
+                # | Q(year__icontains=self.search)
+            )
         return qs
 
     def prepare_results(self, qs):
         # Create row data for datatables
-
         data = []
         for o in qs:
-            data.append({
-                'group_name': o.group_name,
-                'actions':self._get_actions(o),
-            })
+            data.append(
+                {
+                    "username": o.username,
+                    "first_name": o.first_name,
+                    "last_name": o.last_name,
+                    "is_superuser": self._get_is_superuser(o),
+                    # "modified": o.modified.strftime("%b. %d, %Y, %I:%M %p"),
+                    "actions": self._get_actions(o),
+                }
+            )
         return data
-    
-    
-    def boolean_icon(self, flag):
-            if flag:
-                return "<i style='color:green;' class='fa fa-check'></i>&nbsp; Yes"
-            return "<i style='color:red;' class='fa fa-times'></i>&nbsp; No"
-
-    def get(self, request, *args, **kwargs):
-        context_data = self.get_context_data(request)
-        return JsonResponse(context_data)

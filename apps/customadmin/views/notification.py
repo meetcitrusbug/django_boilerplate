@@ -1,87 +1,142 @@
-from notification.models import Notification, Group, GroupUser
-from customadmin.forms import CreateNotificationForm
-from django.shortcuts import reverse, render
-from django.views import View
-from django.http import JsonResponse
-from django.views.generic import View, CreateView, UpdateView, DeleteView
-from django_datatables_too.mixins import DataTableMixin
+# -*- coding: utf-8 -*-
+from customadmin.mixins import HasPermissionsMixin
+from customadmin.views.generic import (
+    MyCreateView,
+    MyDeleteView,
+    MyListView,
+    MyLoginRequiredView,
+    MyUpdateView,
+    MyDetailView,
+)
 from django.db.models import Q
+from django.template.loader import get_template
+from django_datatables_too.mixins import DataTableMixin
+
+from customadmin.forms import NotificationChangeForm, NotificationCreationForm
+from django.shortcuts import reverse, render
+from notification.models import Notification, Group, GroupUser, UserNotification
 
 from pyfcm import FCMNotification
+from django.views import View
+from django.conf import settings
 
 
-class NotificationListView(View):
-    template = 'customadmin/notification/list_notification.html'
+# -----------------------------------------------------------------------------
+# Notification
+# -----------------------------------------------------------------------------
+
+class NotificationDetailView(MyDetailView):
+    template_name = "customadmin/notification/notification_detail.html"
+    context = {}
+
+    def get(self, request, pk):
+        self.context['notification_detail'] = Notification.objects.filter(pk=pk).first()
+        return render(request, self.template_name, self.context)
+        
+class NotificationListView(MyListView):
+    """View for Notification listing"""
+
+    ordering = ["id"]
     model = Notification
-    context = {
-        'model_name':model._meta.model_name
-    }
-    
-    def get(self, request):
-        return render(request, self.template, context=self.updateContext())
+    queryset = model.objects.all()
+    template_name = "customadmin/notification/notification_list.html"
+    permission_required = ("customadmin.view_notification",)
 
-    def updateContext(self):
-        return self.context
-     
+    def get_queryset(self):
+        return self.model.objects.all().exclude(is_active=False)
 
-class AddNotificationView(CreateView):
+class NotificationCreateView(MyCreateView):
+    """View to create Notification"""
+
     model = Notification
-    form_class = CreateNotificationForm
-    template_name = 'customadmin/notification/add_notification.html'
-    permission_required = ("core.add_notification",)
-    
-    def get_context_data(self):
-        context = super(AddNotificationView, self).get_context_data()
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
+    form_class = NotificationCreationForm
+    template_name = "customadmin/notification/notification_form.html"
+    permission_required = ("customadmin.add_notification",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("notification-list")
+        return reverse("customadmin:notification-list")
 
+class NotificationUpdateView(MyUpdateView):
+    """View to update Notification"""
 
-class EditNotificationView(UpdateView):
     model = Notification
-    form_class = CreateNotificationForm
-    template_name = 'customadmin/notification/edit_notification.html'
-    permission_required = ("core.edit_notification",)
-    
-    def get_context_data(self):
-        context = super(EditNotificationView, self).get_context_data()
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
-    def get_success_message(self):
-        """Get success message"""
-        print("-=-=-=-=-=-=-=-=-=priting message=-=-=-=-=-=-=-=-=-")
-        return "{0} save successfully".format(self.model._meta.model_name)
-    
+    form_class = NotificationChangeForm
+    template_name = "customadmin/notification/notification_form.html"
+    permission_required = ("customadmin.change_notification",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("notification-list")
+        return reverse("customadmin:notification-list")
 
+class NotificationDeleteView(MyDeleteView):
+    """View to delete Notification"""
 
-class DeleteNotificationView(DeleteView):
     model = Notification
-    form_class = CreateNotificationForm
-    template_name = 'customadmin/notification/delete_notification.html'
-    permission_required = ("core.delete_notification",)
-    
-    def get_context_data(self, object):
-        context = super(DeleteNotificationView, self).get_context_data(object=object)
-        context['model_name'] = self.model._meta.model_name
-        return context
-    
+    template_name = "customadmin/confirm_delete.html"
+    permission_required = ("customadmin.delete_notification",)
+
     def get_success_url(self):
-        """Get success URL"""
-        return reverse("notification-list")
+        return reverse("customadmin:notification-list")
+
+class NotificationAjaxPagination(DataTableMixin, HasPermissionsMixin, MyLoginRequiredView):
+    """Built this before realizing there is
+    https://bitbucket.org/pigletto/django-datatables-view."""
+
+    model = Notification
+    queryset = Notification.objects.all().order_by("created_at")
+
+    def _get_is_superuser(self, obj):
+        """Get boolean column markup."""
+        t = get_template("customadmin/partials/list_boolean.html")
+        return t.render({"bool_val": obj.is_superuser})
+
+    def _get_actions(self, obj):
+        """Get action buttons w/links."""
+        edit_url = reverse("customadmin:notification-update", kwargs={'pk':obj.pk})
+        delete_url = reverse("customadmin:notification-delete", kwargs={'pk':obj.pk})
+        return f"""
+                    <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-title="{delete_url}" title="Delete" href="{delete_url}" class="btn btn-danger btn-xs btn-delete">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                """
+
+    def filter_queryset(self, qs):
+        """Return the list of items for this view."""
+        # If a search term, filter the query
+        if self.search:
+            return qs.filter(
+                Q(username__icontains=self.search)
+                | Q(first_name__icontains=self.search)
+                | Q(last_name__icontains=self.search)
+                # | Q(state__icontains=self.search)
+                # | Q(year__icontains=self.search)
+            )
+        return qs
+
+    def prepare_results(self, qs):
+        # Create row data for datatables
+        data = []
+        for o in qs:
+            data.append(
+                {
+                    "username": o.username,
+                    "first_name": o.first_name,
+                    "last_name": o.last_name,
+                    "is_superuser": self._get_is_superuser(o),
+                    # "modified": o.modified.strftime("%b. %d, %Y, %I:%M %p"),
+                    "actions": self._get_actions(o),
+                }
+            )
+        return data
 
 class NotificationSendView(View):
     def get(self, request, pk):
         notification = Notification.objects.get(pk=pk)
         message_title = notification.title
         message_body = notification.description
-        api_key = "AAAA-F3kDws:APA91bENHxS72ai1So4PXQ1htHc2XhApysw_KksmyQWWy_aZe-Pq_-BrVP4yxY3dG452oPt3YLGzecjhLGL0ufs3rELk0Gidq9ZamPwl7caLyWKewE-3Vpv1EYKpBmmdv_EzrqxkLjeR"
+        api_key = settings.FIREBASE_API_KEY
         
         if notification.is_singleuser == False:
             group_name = Group.objects.get(pk=notification.group.pk)
@@ -91,104 +146,40 @@ class NotificationSendView(View):
                 user_objects.append(i.user)
             registration_ids = []
             for i in user_objects:
-                registration_ids.append(i.username)
+                registration_ids.append(i.credentials)
+
             push_service = FCMNotification(api_key=api_key)
-            message_title = notification.title
-            message_body = notification.description
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
+            
+            for i in user_objects:
+                usernotification = UserNotification()
+                usernotification.user = i.email
+                usernotification.notification = f"{message_title}: {message_body}"
+                usernotification.save()
+
             print(registration_ids, "----------------------")
             print(result, "============================")
         else:
-            registration_id = notification.user.username
+            registration_id = notification.user.credentials
+
             push_service = FCMNotification(api_key=api_key)
-            message_title = notification.title
-            message_body = notification.description
             result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+
+            usernotification = UserNotification()
+            usernotification.user = notification.user.email
+            usernotification.notification = f"{message_title}: {message_body}"
+            usernotification.save()
+
             print(registration_id, "----------------------")
             print(result, "============================")
 
         flag = False
-        if result['success'] == 1:
+        if result['success'] > 0:
             flag = True
-            message = "Notification sent successfully!"          
+            message = "Notification sent successfully!"
             print(message)
         else:
             message = "Notification isn't sent successfully!"
             print(message)
         
         return render(request,"customadmin/notification/result_notification.html", {'flag':flag})
-
-
-
-class NotificationDataTablesAjaxPagination(DataTableMixin, View):
-    model = Notification
-    queryset = Notification.objects.all().order_by('-id')
-
-    def _get_actions(self, obj):
-        """Get action buttons w/links."""
-        edit_url = reverse("edit-notification", kwargs={'pk':obj.pk})
-        delete_url = reverse("delete-notification", kwargs={'pk':obj.pk})
-        send_url = reverse("notification-send", kwargs={'pk':obj.pk}) 
-        return f"""
-                    <a href="{send_url}" title="Send" class="btn btn-warning btn-xs">
-                        <i class="fa fa-bell"></i>
-                    </a>
-                    <a href="{edit_url}" title="Edit" class="btn btn-primary btn-xs">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <a data-title="{delete_url}" title="Delete" href="{delete_url}" class="btn btn-danger btn-xs btn-delete">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                """
-
-    def is_orderable(self):
-        """Check if order is defined in dictionary."""
-        return True
-
-    def filter_queryset(self, qs):
-        """Return the list of items for this view."""
-        # If a search term, filter the query
-        if self.search:
-            return qs.filter(
-                Q(title__icontains=self.search) |
-                Q(is_read__icontains=self.search) |
-                Q(notification_type__icontains=self.search) |
-                Q(description__icontains=self.search) |
-                Q(is_singleuser__icontains=self.search) |
-                Q(status__icontains=self.search)
-            )
-        return qs
-
-    def prepare_results(self, qs):
-        # Create row data for datatables
-
-        data = []
-        for o in qs:
-            # image = ''
-            
-            # profile_image = Notification.objects.all()
-            
-            # if profile_image:
-            #     image = '<image src="%s" height="50" widht="50"/>' % profile_image.image.url
-
-            data.append({
-                'title': o.title,
-                'is_read': self.boolean_icon(o.is_read),
-                'notification_type': o.notification_type,
-                'description': o.description,
-                'profile': "o.profile_image",
-                'is_singleuser': o.is_singleuser,
-                'status': o.status,
-                'actions':self._get_actions(o),
-            })
-        return data
-    
-    
-    def boolean_icon(self, flag):
-            if flag:
-                return "<i style='color:green;' class='fa fa-check'></i>"
-            return "<i style='color:red;' class='fa fa-times'></i>"
-
-    def get(self, request, *args, **kwargs):
-        context_data = self.get_context_data(request)
-        return JsonResponse(context_data)

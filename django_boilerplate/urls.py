@@ -28,6 +28,7 @@ urlpatterns = [
 
     path('api/v1/', include("notification.urls")),
     path('customadmin/', include('customadmin.urls')),
+    path('', include('django_template.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
