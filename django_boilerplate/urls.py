@@ -27,7 +27,7 @@ urlpatterns = [
     path('api/v1/', include(api_router)),
 
     path("api/v1/", include("api.urls")),
-    path("", include("website.urls")),
+    path("", include("django_template.urls")),
 
     path('social-auth/', include('social_django.urls', namespace="social")),
     path("accounts/", include("allauth.urls"), name='socialaccount_signup'),

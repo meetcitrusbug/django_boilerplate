@@ -41,22 +41,13 @@ def modify_api_response(response):
         ]
     }
     """
-    # # If errors we got this from the exception handler which already modified the response
-    # if status.is_client_error(response.status_code) or status.is_server_error(
-    #     response.status_code
-    # ):
-    #     return response
-
-    # Modify the response data
     modified_data = {}
     modified_data["code"] = response.status_code
-    # modified_data["status"] = get_status(response.status_code)
 
     if response.data.get("errors"):
         modified_data["status"] = "FAIL"
         modified_data["message"] = response.data.get("errors")[0].get("detail")
         modified_data["data"] = []
-        # modified_data["errors"] = response.data.get("errors")
 
     else:
         if response.data.get("status") is None:

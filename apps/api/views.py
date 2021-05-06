@@ -36,24 +36,17 @@ class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
 
 
-
-
-# .................................................................................
-# Apple Login API
-# .................................................................................
-
 class AppleLoginAPIView(MyAPIView):
     """
     API View to login using Apple ID.
     """
-
     permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
-        """POST method to create the data."""
+        success_message = "User verified successfully!"
+        unsuccess_message = "It seems like this Email address is already registered with different login method!"
         try:
             token = request.data["access_token"]
-
             if "email" in request.data and request.data["email"] != "":
                 email = request.data["email"]
 
@@ -68,7 +61,7 @@ class AppleLoginAPIView(MyAPIView):
                     serializer = JWTSerializer(instance=data)
                     return Response({
                         "status": "OK",
-                        "message": "User verified successfully",
+                        "message": success_message,
                         "data": serializer.data
                     })
 
@@ -86,7 +79,7 @@ class AppleLoginAPIView(MyAPIView):
                     serializer = JWTSerializer(instance=data)
                     return Response({
                         "status": "OK",
-                        "message": "User verified successfully",
+                        "message": success_message,
                         "data": serializer.data
                     })
 
@@ -103,7 +96,7 @@ class AppleLoginAPIView(MyAPIView):
                     serializer = JWTSerializer(instance=data)
                     return Response({
                         "status": "OK",
-                        "message": "User verified successfully",
+                        "message": success_message,
                         "data": serializer.data
                     })
 
@@ -123,7 +116,7 @@ class AppleLoginAPIView(MyAPIView):
                     serializer = JWTSerializer(instance=data)
                     return Response({
                         "status": "OK",
-                        "message": "User verified successfully",
+                        "message": success_message,
                         "data": serializer.data
                     })
 
@@ -131,6 +124,6 @@ class AppleLoginAPIView(MyAPIView):
             print(inst)
             return Response({
                 "status": "FAIL",
-                "message": "It seems like this Email address is already registered with different login method.",
+                "message": unsuccess_message,
                 "data": []
             })

@@ -60,7 +60,7 @@ INSTALLED_APPS = [
 #Local apps
 INSTALLED_APPS += [
     'api',
-	'website',
+	'django_template',
 
 	'rest_framework.authtoken',
     'rest_auth',
