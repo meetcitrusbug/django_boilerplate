@@ -4,6 +4,7 @@ from product.models import Product, ProductImage, ProductTag
 from category.models import Category
 from django.db.models import Q
 from django.views.generic import ListView
+from django_boilerplate.utils.cart_item_counter import get_cart_item_count
 
 
 class ProductView(ListView):
@@ -49,6 +50,7 @@ class ProductView(ListView):
         min_ = self.request.GET.get('min','')
         max_ = self.request.GET.get('max','')
         page = self.request.GET.get('page','')
+        cart_count =  get_cart_item_count(self.request) 
         
         selected_category = self.list_string_to_integer(
                                 self.request.GET.getlist('selected_category',''))
@@ -62,7 +64,8 @@ class ProductView(ListView):
             "max":max_,
             "page":page,
             "category":category,
-            "selected_category":selected_category
+            "selected_category":selected_category,
+            "cart_count":cart_count
         }
         return context
     

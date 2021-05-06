@@ -118,7 +118,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Django</a>
-        <a class="navbar-brand" href="{% url 'cart-list' %}">
+        <a class="navbar-brand" href="#">
             <i class="fas fa-shopping-cart"></i>
             {% if cart_count %}
                 {{cart_count}}
@@ -132,136 +132,69 @@
             <ul class="navbar-nav mr-auto">
             </ul>
                 <div class="w-100">
-                    <div class="col-12">
-                        <select class="js-example-basic-multiple w-100" name="selected_category" multiple="multiple" placeholder="select category">
-                            {% for cat in category %}
-                                <option value="{{cat.id}}" {% if cat.id  in selected_category %}selected{% endif %}><img src=""/>{{cat.name}}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="col-12 align-items-center">
                     </div>
                 </div>
-                <input class="form-control col-sm-1" type="number" id="min_value" placeholder="Min" name="min" value="{{min}}" aria-label="Min">
-                <input class="form-control col-sm-1" type="number" placeholder="Max" id="max_value" name="max" value="{{max}}" aria-label="Max">
-                <input class="form-control col-sm-2" type="search" placeholder="Search" id="search_value" name="search" value="{{search}}" aria-label="Search">
-                <button id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Go</button>
+                <a href="{% url 'cart-remove-all' %}" class="form-control col-sm-2" >
+                    Remove all items
+                </a>
+                <button id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Checkout</button>
         </div>
     </nav>
 
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-10">
-            {% for product in page_obj  %}
+            {% if  not query %}
+                <h1>No items found</h1>
+            {% endif %}
+            {% for item in query  %}
             <div class="row p-2 bg-white border rounded">
-                <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="{{product.image}}"></div>
+                <div class="col-md-3 mt-1">
+                    <img class="img-fluid img-responsive rounded product-image" src="{{item.product.image}}"/>
+                </div>
                 <div class="col-md-6 mt-1">
-                    <h5>{{product.name}}</h5>
+                    <h5>{{item.product.name}}</h5>
                     <div class="d-flex flex-row">
                         <div class="ratings mr-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
                     </div>
                     <div class="mt-1 mb-1 spec-1">
-                        <span>Category</span><span class="dot"></span><span>{{product.sub_category.category.name}}</span>
+                        <span>Category</span><span class="dot"></span><span>{{item.product.sub_category.category.name}}</span>
                     </div>
                     <div class="mt-1 mb-1 spec-1">
-                        <span>Sub category</span><span class="dot"></span><span>{{product.sub_category.name}}</span>
+                        <span>Sub category</span><span class="dot"></span><span>{{item.product.sub_category.name}}</span>
                     </div>
                     <div class="mt-1 mb-1 spec-1">
-                        {% if product.is_refundable %}
+                        {% if item.product.is_refundable %}
                             <span class="green-dot"></span><span>Refundable</span>
                         {% endif %}
-                        {% if product.status == "SOLD" %}
+                        {% if item.product.status == "SOLD" %}
                             <span class="red-dot"></span><span>SOLD</span>
                         {% endif %}
-                        {% if product.status == "OFS" %}
+                        {% if item.product.status == "OFS" %}
                             <span class="red-dot"></span><span>Out of stock</span>
                         {% endif %}
                     </div>
-                    <p class="text-justify text-truncate para mb-0">{{product.description}}<br><br></p>
+                    <p class="text-justify text-truncate para mb-0">{{item.product.description}}<br><br></p>
                 </div>
                 <div class="align-items-center align-content-center col-md-3 border-left mt-1">
                     <div class="d-flex flex-row align-items-center">
-                        <h4 class="mr-1">${{product.price}}</h4>  <!-- <span class="strike-text">$20.99</span> -->
+                        <h4 class="mr-1">${{item.product.price}}</h4>  <!-- <span class="strike-text">$20.99</span> -->
                     </div>
-                    <h6 class="text-success">{{product.product_shipping_method | title }}  </h6>
+                    <h6 class="text-success">{{item.product.product_shipping_method | title }}  </h6>
+                    <h6 class="text-success">{{item.quantity}} Qty</h6>
                     <div class="d-flex flex-column mt-4">
-                        <a  href="{% url 'product-details' product.pk %}" class="btn btn-primary btn-sm">Details</a>
-                        <a href="{% url 'add-to-cart' product.pk %}?next={{request.path}}?{{request.GET.urlencode}}" class="btn btn-outline-primary btn-sm mt-2" type="button">Add to cart</a>
+                        <a  href="{% url 'cart-remove' item.product.id %}" class="btn btn-danger btn-sm">Remove</a>
+                        <!-- <a href="#" class="btn btn-outline-primary btn-sm mt-2" type="button">Add to cart</a> -->
                     </div>
                 </div>
             </div>
             {% endfor %}
             </div>
         </div>
-        {% if page_obj.paginator.num_pages > 1 %}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.paginator.num_pages != 1 %}
-                    <li class="page-item"><a class="page-link" href="1">First</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#">First</a></li>
-                {% endif %}
-                {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link" href="{{ page_obj.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
-                {% endif %}
-                {% for i in page_obj.paginator.page_range %}
-                    {% if page_obj.number == i %}
-                        <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
-                    {% elif page_obj.number > i|add:"-5" and page_obj.number < i|add:"+5"%}
-                        <li class="page-item"><a class="page-link" href="{{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item"><a class="page-link" href="{{ page_obj.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
-                {% endif %}
-                {% if page_obj.paginator.num_pages != page_obj.number %}
-                    <li class="page-item"><a class="page-link" href="{{ page_obj.paginator.num_pages }}">Last</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %} 
     </div>
 </form>
-
 </body>
 <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('.js-example-basic-multiple').select2();
-       
-        function submitForm(){
-            $('#query_params').submit();
-        }
-
-
-        $('.page-link').click(function(){
-            var page = $(this).attr('href');
-            if(page !== '#'){
-                $('#page_value_hidden').val(page);
-                submitForm();
-                console.log("sunmitting forms");
-            }
-            return false
-        });
-
-       $('#go_button').click(function(){
-            var min_value = $('#min_value').val();
-            var max_value = $('#max_value').val();
-            var search = $('#search_value').val();
-
-            $('#min_value_hidden').val(min_value);
-            $('#max_value_hidden').val(max_value);
-            $('#search_value_hidden').val(search);
-            $('#page_value_hidden').val('');
-
-            submitForm();
-           return false;
-       });
-    });
-</script>
 </html>
