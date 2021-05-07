@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "049cfbe4-9b0a-4151-a6ab-c057724ee37f",
+		"name": "django boilerplate cart",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "{{base_url}}/api/v1/cart-list/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 653b3e9b6cd010ed298d8d960ee088b269e19223",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/cart-list/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart-list",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/cart-add-items/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 653b3e9b6cd010ed298d8d960ee088b269e19223",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"user\":1,\r\n        \"product\":64,\r\n        \"quantity\":12\r\n    },\r\n    {\r\n        \"user\":1,\r\n        \"product\":65,\r\n        \"quantity\":12\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/cart-add-items/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart-add-items",
+						""
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Token 653b3e9b6cd010ed298d8d960ee088b269e19223",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/cart-remove-items/",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 653b3e9b6cd010ed298d8d960ee088b269e19223",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\":[\r\n        6]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/cart-remove-items/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart-remove-items",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/cart-remove-all-items/",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 653b3e9b6cd010ed298d8d960ee088b269e19223",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/cart-remove-all-items/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cart-remove-all-items",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
