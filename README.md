@@ -10,10 +10,14 @@
   pip install -r requirement/production.txt
 
 ## Make .env file
-- Paste all environment varialble from environment.txt
+-  Make .env file in root of folder
+ paste all environment varialble from environment.txt
 
 ## Setup database
 - Setup database with name 'django_boilerplate'
+
+## Run migratation
+- Run command : python manage.py migrate
 
 ## Check server is running
 - python manage.py runserver

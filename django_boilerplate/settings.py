@@ -64,6 +64,7 @@ INSTALLED_APPS += [
     'category',
     'product',   
     'cart',
+    'django_template',
 ]
 
 MIDDLEWARE = [
