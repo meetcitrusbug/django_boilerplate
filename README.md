@@ -10,7 +10,7 @@
   pip install -r requirement/production.txt
 
 ## Make .env file
--  Make .env file in root of folder
+-  Make .env file in root of project
  paste all environment varialble from environment.txt
 
 ## Setup database
