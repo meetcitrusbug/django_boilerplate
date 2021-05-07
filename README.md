@@ -11,7 +11,7 @@
 
 ## Make .env file
 -  Make .env file in root of project
- paste all environment varialble from environment.txt
+ paste all environment variable from environment.txt
 
 ## Setup database
 - Setup database with name 'django_boilerplate'
