@@ -15,6 +15,7 @@ from django_datatables_too.mixins import DataTableMixin
 from customadmin.forms import NotificationChangeForm, NotificationCreationForm
 from django.shortcuts import reverse, render
 from notification.models import Notification, Group, GroupUser, UserNotification
+from customadmin.models import User
 
 from pyfcm import FCMNotification
 from django.views import View
@@ -51,9 +52,10 @@ class NotificationCreateView(MyCreateView):
     model = Notification
     form_class = NotificationCreationForm
     template_name = "customadmin/notification/notification_form.html"
-    permission_required = ("customadmin.add_notification",)
-
+    permission_required = ("customadmin.add_notification", )
+    
     def get_success_url(self):
+        flag = NotificationSendView.send(self.request, self.object.pk)
         return reverse("customadmin:notification-list")
 
 class NotificationUpdateView(MyUpdateView):
@@ -65,6 +67,7 @@ class NotificationUpdateView(MyUpdateView):
     permission_required = ("customadmin.change_notification",)
 
     def get_success_url(self):
+        flag = NotificationSendView.send(self.request, self.object.pk)
         return reverse("customadmin:notification-list")
 
 class NotificationDeleteView(MyDeleteView):
@@ -132,7 +135,7 @@ class NotificationAjaxPagination(DataTableMixin, HasPermissionsMixin, MyLoginReq
         return data
 
 class NotificationSendView(View):
-    def get(self, request, pk):
+    def send(request, pk):
         notification = Notification.objects.get(pk=pk)
         message_title = notification.title
         message_body = notification.description
@@ -152,13 +155,13 @@ class NotificationSendView(View):
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
             
             for i in user_objects:
+                user = User.objects.get(email=i)
+                notification = Notification.objects.get(title=message_title, description=message_body)
                 usernotification = UserNotification()
-                usernotification.user = i.email
-                usernotification.notification = f"{message_title}: {message_body}"
+                usernotification.user = user
+                usernotification.notification = notification 
                 usernotification.save()
 
-            print(registration_ids, "----------------------")
-            print(result, "============================")
         else:
             registration_id = notification.user.credentials
 
@@ -166,20 +169,15 @@ class NotificationSendView(View):
             result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
 
             usernotification = UserNotification()
-            usernotification.user = notification.user.email
-            usernotification.notification = f"{message_title}: {message_body}"
+            usernotification.user = User.objects.get(email=notification.user.email)
+            usernotification.notification = Notification.objects.get(title=message_title, description=message_body)
             usernotification.save()
-
-            print(registration_id, "----------------------")
-            print(result, "============================")
 
         flag = False
         if result['success'] > 0:
             flag = True
             message = "Notification sent successfully!"
-            print(message)
         else:
             message = "Notification isn't sent successfully!"
-            print(message)
         
-        return render(request,"customadmin/notification/result_notification.html", {'flag':flag})
+        return flag

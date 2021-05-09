@@ -82,26 +82,14 @@ class GroupUser(ActivityTracking):
         ordering = ["-created_at"]
 
 class UserNotification(ActivityTracking):
-    user = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        default="",
-        verbose_name=_("User"),
-    )
-    notification = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        default="",
-        verbose_name=_("Notification"),
-    )
+    user = models.ForeignKey("customadmin.User", on_delete=models.CASCADE, null=True, blank=True)
+    notification = models.ForeignKey("Notification", on_delete=models.CASCADE, null=True, blank=True)
     read = models.BooleanField(
         default=False,
     )
     
     def __str__(self):
-        return self.user
+        return str(self.user)
 
     class Meta:
         verbose_name = _("User Notification")

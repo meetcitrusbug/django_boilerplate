@@ -17,6 +17,7 @@ class UserNotificationCreationForm(forms.ModelForm):
         fields = [
             "user",
             "notification",
+            "read",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -26,6 +27,15 @@ class UserNotificationCreationForm(forms.ModelForm):
         cleaned_data = super(UserNotificationCreationForm, self).clean()
         user = cleaned_data.get("user")
         notification = cleaned_data.get("notification")
+
+        if not user :
+            raise forms.ValidationError(
+                "Please select a user!."
+            )
+        if not notification :
+            raise forms.ValidationError(
+                "Please select a notification!."
+            )
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -42,12 +52,22 @@ class UserNotificationChangeForm(forms.ModelForm):
         fields = [
             "user",
             "notification",
+            "read",
         ]
 
     def clean(self):
         cleaned_data = super(GroupChangeForm, self).clean()
         user = cleaned_data.get("user")
         notification = cleaned_data.get("notification")
+
+        if not user :
+            raise forms.ValidationError(
+                "Please select a user!."
+            )
+        if not notification :
+            raise forms.ValidationError(
+                "Please select a notification!."
+            )
 
     def save(self, commit=True):
         instance = super().save(commit=False)

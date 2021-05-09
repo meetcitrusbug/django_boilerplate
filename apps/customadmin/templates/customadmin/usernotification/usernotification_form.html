@@ -7,8 +7,9 @@
 
     <div class="ibox-content">
       <div class="row">
-        <div class="col-sm-3">{{ form.user|as_crispy_field }}</div>
-        <div class="col-sm-9">{{ form.notification|as_crispy_field }}</div>
+        <div class="col-sm-4">{{ form.user|as_crispy_field }}</div>
+        <div class="col-sm-6">{{ form.notification|as_crispy_field }}</div>
+        <div class="col-sm-2">{{ form.read|as_crispy_field }}</div>
       </div>
     </div>
     <!-- /ibox-content -->

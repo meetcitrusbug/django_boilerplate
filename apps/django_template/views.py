@@ -8,10 +8,10 @@ from django.views import View
 
 class IndexView(View):
     def get(self, request):
-        notifications = UserNotification.objects.filter(user=request.user)
-        unread_notification = UserNotification.objects.filter(user=request.user, read=False).count()
-        all_notification = UserNotification.objects.filter(user=request.user).count()
-        return render(request, 'django_template/index.html', {"notifications":notifications, 'unread_notification':unread_notification, 'all_notification':all_notification})
+        notifications = UserNotification.objects.filter(user__pk=request.user.pk)
+        unread_notification = UserNotification.objects.filter(user__pk=request.user.pk, read=False).count()
+        all_notification = UserNotification.objects.filter(user__pk=request.user.pk).count()
+        return render(request, 'django_template/index.html',{"notifications":notifications, 'unread_notification':unread_notification, 'all_notification':all_notification})
 
 
 class LoginPageView(View):

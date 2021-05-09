@@ -74,14 +74,13 @@ class RemoveNotificationView(APIView):
 
 
 class RemoveAllNotificationView(APIView):
-    """
+    """ 
     Remove all Notifications
     """
     permission_classes = (AllowAny,)
     
     def delete(self, request, format=None):
         Notification.objects.all().delete()
-        # Notification.objects.filter(user=request.user).delete()
         message = "All Notifications removed Successfully!"            
         return custom_response(True, status.HTTP_200_OK, message)
 
@@ -95,7 +94,7 @@ class SendNotificationView(APIView):
     def post(self, request):
         api_key = settings.FIREBASE_API_KEY
         cred1 = "eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM"
-        # cred2 = "f1XwkdJ5TEZotso-s3BO_X:APA91bHCv5jeXfaMszcOan2MoU0pJTbzkVBifCW_tJ_p1hcprhzLAFOcuOT86g8Kk-48RZu5bKaSuhaq-Qk557ILKgJeW3Y6tuCSO54fWfFKGQTPTjGEStMB-nnOOqAPg_rUMBC8kOR4"
+        # cred2 = "eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM"
 
         credentials = [cred1]
         # credentials = [cred1, cred2]
@@ -103,11 +102,10 @@ class SendNotificationView(APIView):
         if len(credentials) > 1:
             push_service = FCMNotification(api_key=api_key)
             registration_ids = credentials
-
+            
             message_title = "Citrusbug Notification API!"
             message_body = "Hope you're having fun this weekend, don't forget to check today's news"
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
-            print(result, "============================")
         else:
             push_service = FCMNotification(api_key=api_key)
             for credential in credentials:
@@ -116,7 +114,6 @@ class SendNotificationView(APIView):
             message_title = "Citrusbug Notification API!"
             message_body = "Hi john, your customized news for today is ready"
             result = push_service.notify_single_device(registration_id=registration_ids, message_title=message_title, message_body=message_body)
-            print(result, "============================")
 
         if result['success'] == 1:
             message = "Notification sent successfully!"          
