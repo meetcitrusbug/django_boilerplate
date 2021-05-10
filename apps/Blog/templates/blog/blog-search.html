@@ -1,0 +1,26 @@
+{% load static %}
+{% if blog %}
+{% for blog in blog %}
+<div class="col-md-4">
+    <div class="card mb-2">
+        <a href="{% url 'blog-detail' blog.id %}"><img class="card-img-top" style="height: 250px;" src="{{ blog.image.url }}"></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: 25px;font-weight: 600;">{{ blog.blog_title }}</h5>
+            <p style="font-size: 12px;font-weight: 600;">{{ blog.author }}|{{ blog.publish }}</p>
+            <p style="font-size: 17px;font-weight: 600;opacity: 0.6;" class="card-text">{{ blog.blog|slice:200 }}</p>
+            <a href="{% url 'blog-detail' blog.id %}" class="btn btn-primary">
+                Read More
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div>
+    <div>
+        <div>
+            <h2 style="margin-top: 30px;">No Blog With That Content Available</h2>
+        </div>
+    </div>
+</div>
+{% endif %}

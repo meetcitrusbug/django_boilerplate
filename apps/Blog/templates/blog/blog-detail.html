@@ -1,0 +1,30 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row" style="justify-content: center;">
+    <div class="col-lg-10 col-md-8 card mb-4  mt-3 left  top">
+      <div class="card-body">
+        <h1 style="font-weight: 600;">{% block title %} {{ blog.blog_title }} {% endblock title %}</h1>
+        <p class=" text-muted" style="font-weight: 600;">{{ blog.author }} | {{ blog.publish }}</p>
+        <img class="card-img-top" style="max-height: 400px;margin-bottom: 30px;" src="{{ blog.image.url }}">
+        <p class="card-text" style="font-size: 25px;font-family: auto;">{{ blog.blog | safe }}</p>
+      </div>
+      <ul class='d-flex list-unstyled'>
+        <li>
+          <div class="col-sm-offset-2 col-sm-10">
+            <a href="{% url 'blog-listing' %}" class="btn btn-warning">Back</a>
+          </div>
+        </li>
+        <li>
+          <div class="col-sm-offset-2 col-sm-10">
+            <a href="{% url 'blog-update' blog.id %}" class="btn btn-info">Update</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

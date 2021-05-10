@@ -1,0 +1,76 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-6 col-md-10 mx-auto">
+            <div class="site-heading">
+                <div class="col-lg-12 col-md-6 search">
+                    <input id="blog_content" type="text" placeholder="Blog title, keyword, Year">
+                    <button id="search_btn" class="btn btn-primary" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 dropdown">
+            <label for="category-Filter">Filter By Category:</label>
+            <select id="category-Filter">
+                <option value="History">History</option>
+                <option value="Travel">Travel</option>
+                <option value="Food">Food</option>
+                <option value="Technology">Technology</option>
+                <option value="Sports">Sports</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Science">Science</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Photography">Photography</option>
+                <option value="Music">Music</option>
+            </select>
+        </div>
+        <div class="col-lg-6 col-md-6 dropdown">
+            <label for="category-Filter">Filter By Month:</label>
+            <select id="month-Filter">
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            <a href="{% url 'blog-listing' %}" id="reset_btn" class="btn btn-warning">Reset</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="maindiv">
+        <div class="row blog-list">
+            {% for blog in blog %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card mb-2">
+                    <a href="{% url 'blog-detail' blog.id %}"><img class="card-img-top" style="height: 250px;" src="{{ blog.image.url }}"></a>
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 25px;font-weight: 600;">{{ blog.blog_title }}</h5>
+                        <p style="font-size: 12px;font-weight: 600;">{{ blog.author }}|{{ blog.publish }}</p>
+                        <p style="font-size: 17px;font-weight: 600;opacity: 0.6;" class="card-text">{{ blog.blog|slice:200 }}</p>
+                        <a href="{% url 'blog-detail' blog.id %}"
+                            class="btn btn-primary">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/jquery-3.5.1.js' %}"></script>
+<script src="{% static 'js/blog_search.js' %}"></script>
+{%endblock%}

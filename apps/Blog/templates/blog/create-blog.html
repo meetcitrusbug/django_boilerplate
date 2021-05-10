@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Blog</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        #keyword-word{
+            font-size: 14px;
+            color: #222221;
+            letter-spacing: 0;
+            background: #CBCBCB;
+            border-radius: 12.5px;
+            padding: 6px 40px 6px 15px;
+             display: block;
+            line-height: 16px;
+            margin: 0 0 10px 10px;
+            display: inline-block;
+            text-decoration: none;
+            z-index: 9;
+            position: relative;
+            font-family: "futurabook";
+        }
+        #keyword-word span{
+            height: 28px;
+            width: 28px;
+            border-radius: 100px;
+            background-color: #727272;
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        ul li{
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container jumbotron">
+        <h1>Post Your Blog Here</h1>
+        <form class="form-horizontal" id="blog-form" method="POST" enctype="multipart/form-data" novalidate>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Blog Title</label>
+                {{ form.blog_title }}
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Blog</label>
+                {{ form.blog }}
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Keywords</label>
+                {{ form.keyword }}
+                <div class="keyword-list">
+                    <ul id="keyword-list-display" style="list-style-type: none;padding: 0px;display: flex;">
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Language</label>
+                {{ form.language }}
+                </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Image</label>
+                <div class="col-sm-10">
+                    {{ form.image }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Select Category</label>
+                {{ form.category }}
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Author</label>
+                {{ form.author }}
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">Publish</button>
+                    </div>
+                    <div class="col-lg-6 col-sm-offset-2 col-sm-10" style="text-align: end;">
+                        <a href="{% url 'blog-listing' %}" class="btn btn-warning">Back</a>
+                    </div>
+                </div>
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha512-UdIMMlVx0HEynClOIFSyOrPggomfhBKJE28LKl8yR3ghkgugPnG6iLfRfHwushZl1MOPSY6TsuBDGPK2X4zYKg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/form_validatin.js' %}"></script>
+    <script>
+        $('#keyword').keypress(function(event){
+          if(event.key === 'Enter'){
+              var keyword = $("#keyword").val();
+              $("#keyword-list-display").append("<li><a id='keyword-word' href='#'>" + keyword + "<span class='remove-keyword'><i class='fa fa-times'></i></span></a></li>");
+              $("#keyword").val("");
+          }
+          event.stopPropagation();
+      });
+      $('#keyword-list-display').on("click", " li i ",function(){
+        $(this).parent().parent().remove();
+      });
+    </script>
+</body>
+
+</html>
