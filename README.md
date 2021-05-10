@@ -16,6 +16,10 @@ To read all notifications: (POST) http://127.0.0.1:8000/api/v1/notification/read
 To remove a notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/1/
 To remove all notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/
 
-Note: To test send notification API for single user you can test directly, but for multi user, go to the notification.view and uncomment cred2 and multi credential list and do comment the single credential list.  
-
 To send notification: (POST) http://127.0.0.1:8000/api/v1/notification/send/
+Note: Postman > boday > form-data
+notification: Notification1
+notification: Quick brown fox jumps over the lazy dog!
+access_token:eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM
+
+Postman collection link: https://www.getpostman.com/collections/b06160de7411f328a7a4

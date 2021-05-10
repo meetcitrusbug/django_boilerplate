@@ -3,7 +3,7 @@ from . import views
 
 # app_name = 'notification'
 urlpatterns = [
-    path('notification/notifications/', views.NotificationListView.as_view(), name='notification-list'),
+    path('notification/notification-list/', views.NotificationListView.as_view(), name='notification-list'),
     path('notification/read/<int:pk>/', views.ReadNotificationView.as_view(), name='notification-read'),
     path('notification/read/', views.ReadAllNotificationView.as_view(), name='notifications-read-all'),
     path('notification/remove/<int:pk>/', views.RemoveNotificationView.as_view(), name='notifications-read'),

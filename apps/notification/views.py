@@ -93,7 +93,8 @@ class SendNotificationView(APIView):
     
     def post(self, request):
         api_key = settings.FIREBASE_API_KEY
-        cred1 = "eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM"
+        cred1 = request.POST.get('access_token')
+        # cred1 = "eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM"
         # cred2 = "eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM"
 
         credentials = [cred1]
@@ -103,16 +104,16 @@ class SendNotificationView(APIView):
             push_service = FCMNotification(api_key=api_key)
             registration_ids = credentials
             
-            message_title = "Citrusbug Notification API!"
-            message_body = "Hope you're having fun this weekend, don't forget to check today's news"
+            message_title = request.POST.get('notification')
+            message_body = request.POST.get('description')
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
         else:
             push_service = FCMNotification(api_key=api_key)
             for credential in credentials:
                 registration_ids = credential
 
-            message_title = "Citrusbug Notification API!"
-            message_body = "Hi john, your customized news for today is ready"
+            message_title = request.POST.get('notification')
+            message_body = request.POST.get('description')
             result = push_service.notify_single_device(registration_id=registration_ids, message_title=message_title, message_body=message_body)
 
         if result['success'] == 1:
