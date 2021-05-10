@@ -35,3 +35,6 @@ Client id: *take it from credentials.txt*
 Secret key: *take it from credentials.txt*
 Key: *leave empty*
 Sites: localhost:8000/
+
+
+Postman collection link: https://www.getpostman.com/collections/8f12d6444c075405d671

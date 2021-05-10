@@ -1,4 +1,4 @@
-SECRET_KEY="django-insecure-ppis6@_pee!w$mcgfjmeg-3xn07)tron)dqy9d!@5g3ajkb@5y"
+SECRET_KEY=django-insecure-ppis6@_pee!w$mcgfjmeg-3xn07)tron)dqy9d!@5g3ajkb@5y
 
 SOCIAL_AUTH_FACEBOOK_KEY=289765542840643
 SOCIAL_AUTH_FACEBOOK_SECRET=56e91e5eee1c78fe0469e8bee41574e4
