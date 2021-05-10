@@ -9,7 +9,13 @@ Step6: While creating new user you need credential that you can get from credent
 Note: We have only one credential you can use this same for all users.
 Step7: Now migrate the migration (python manage.py migrate)
 
-Note: To test send notification API for single user you can test directly, but for multi user cred2 and multi credential list and comment the single credential list.  
+NOTE: To test notification API use these urls with postman.
+To get all notifications: (GET) http://127.0.0.1:8000/api/v1/notification/notifications/
+To read a notification: (POST) http://127.0.0.1:8000/api/v1/notification/read/1/
+To read all notifications: (POST) http://127.0.0.1:8000/api/v1/notification/read/
+To remove a notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/1/
+To remove all notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/
 
-save and send at the same time
-new notification without reload 
+Note: To test send notification API for single user you can test directly, but for multi user, go to the notification.view and uncomment cred2 and multi credential list and do comment the single credential list.  
+
+To send notification: (POST) http://127.0.0.1:8000/api/v1/notification/send/
