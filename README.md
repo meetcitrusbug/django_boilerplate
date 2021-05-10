@@ -10,16 +10,16 @@ Note: We have only one credential you can use this same for all users.
 Step7: Now migrate the migration (python manage.py migrate)
 
 NOTE: To test notification API use these urls with postman.
+Note: Postman > Authorization > Type: Basic Auth
+username: ----
+assword: ----
+
 To get all notifications: (GET) http://127.0.0.1:8000/api/v1/notification/notifications/
 To read a notification: (POST) http://127.0.0.1:8000/api/v1/notification/read/1/
 To read all notifications: (POST) http://127.0.0.1:8000/api/v1/notification/read/
 To remove a notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/1/
 To remove all notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/
-
 To send notification: (POST) http://127.0.0.1:8000/api/v1/notification/send/
-Note: Postman > boday > form-data
-notification: Notification1
-notification: Quick brown fox jumps over the lazy dog!
-access_token:eURcBgsSckRFrYhgE-O7yo:APA91bF64RceddvQLvzOmUAqmp88PrneQN5m38L2ImSiLeQhdrT7k1qkDoea3v6nQx7tdJ3PJ6aJhKfvBlF_MZ01zkwF1AsVcYJft5ERaTVKRpBl3l_cCpJtiunO98gS__-aAcsh3CFM
+
 
 Postman collection link: https://www.getpostman.com/collections/b06160de7411f328a7a4
