@@ -68,7 +68,7 @@ class NotificationCreationForm(forms.ModelForm):
                 notification.description = cleaned_data.get("description")
                 notification.is_read = cleaned_data.get("is_read")
                 notification.is_singleuser = cleaned_data.get("is_singleuser")
-                notification.group = cleaned_data.get("group")
+                notification.group = i.group_name
                 notification.user = i.user
                 notification.save()
                 instance = notification
