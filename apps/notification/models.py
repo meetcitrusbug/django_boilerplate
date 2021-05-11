@@ -80,18 +80,3 @@ class GroupUser(ActivityTracking):
         verbose_name = _("Group User")
         verbose_name_plural = _("Group Users")
         ordering = ["-created_at"]
-
-class UserNotification(ActivityTracking):
-    user = models.ForeignKey("customadmin.User", on_delete=models.CASCADE, null=True, blank=True)
-    notification = models.ForeignKey("Notification", on_delete=models.CASCADE, null=True, blank=True)
-    read = models.BooleanField(
-        default=False,
-    )
-    
-    def __str__(self):
-        return str(self.user)
-
-    class Meta:
-        verbose_name = _("User Notification")
-        verbose_name_plural = _("User Notifications")
-        ordering = ["-created_at"]

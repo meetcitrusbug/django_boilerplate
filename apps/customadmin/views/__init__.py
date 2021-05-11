@@ -35,11 +35,3 @@ from .notification import (
     NotificationDetailView,
     NotificationSendView,
 )
-
-from .usernotification import (
-    UserNotificationAjaxPagination,
-    UserNotificationCreateView,
-    UserNotificationDeleteView,
-    UserNotificationListView,
-    UserNotificationUpdateView,
-)

@@ -155,9 +155,9 @@
                                 <a href=" {% url 'read' pk=i.pk %}">
                                     <li>
                                         <div class="top-text-block">
-                                            {% if i.read == True %}
+                                            {% if i.is_read == True %}
                                             <div class="row">
-                                                <div class="col-lg-10 top-text-heading" style="color: black;">{{i.notification}}</div>
+                                                <div class="col-lg-10 top-text-heading" style="color: black;">{{i.title}}: {{i.description}}</div>
                                                 <div class="col-sm-2">
                                                     <a href="{% url 'remove' pk=i.pk %}" class="close"
                                                         aria-hidden="true">&times;</a>
@@ -165,7 +165,7 @@
                                             </div>
                                             {% else %}
                                             <div class="row" style="background-color:#ecf8fe; opacity: 0.8">
-                                                <div class="col-lg-10 top-text-heading">{{i.notification}}</div>
+                                                <div class="col-lg-10 top-text-heading">{{i.title}}: {{i.description}}</div>
                                                 <div class="col-sm-2">
                                                     <a href="{% url 'remove' pk=i.pk %}" class="close"
                                                         aria-hidden="true">&times;</a>

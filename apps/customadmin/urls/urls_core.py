@@ -45,13 +45,4 @@ urlpatterns +=[
     path("notification/<int:pk>/delete/", views.NotificationDeleteView.as_view(), name="notification-delete"),
     path("ajax-notification", views.NotificationAjaxPagination.as_view(), name="notification-list-ajax"),
     path('notification-send/', views.NotificationSendView.as_view(), name='notification-send'),
-
-#------------------------------------------------------------------------------------------------------
-   #UserNotification
-    path("usernotification/", views.UserNotificationListView.as_view(), name="usernotification-list"),
-    path("usernotification/create/", views.UserNotificationCreateView.as_view(), name="usernotification-create"),
-    path("usernotification/<int:pk>/update/", views.UserNotificationUpdateView.as_view(), name="usernotification-update"),
-    path("usernotification/<int:pk>/delete/", views.UserNotificationDeleteView.as_view(), name="usernotification-delete"),
-    path("ajax-usernotification", views.UserNotificationAjaxPagination.as_view(), name="usernotification-list-ajax"),
-
 ]

@@ -14,7 +14,7 @@ from django_datatables_too.mixins import DataTableMixin
 
 from customadmin.forms import NotificationChangeForm, NotificationCreationForm
 from django.shortcuts import reverse, render
-from notification.models import Notification, Group, GroupUser, UserNotification
+from notification.models import Notification, Group, GroupUser
 from customadmin.models import User
 
 from pyfcm import FCMNotification
@@ -153,14 +153,6 @@ class NotificationSendView(View):
 
             push_service = FCMNotification(api_key=api_key)
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
-            
-            for i in user_objects:
-                user = User.objects.get(email=i)
-                notification = Notification.objects.get(title=message_title, description=message_body)
-                usernotification = UserNotification()
-                usernotification.user = user
-                usernotification.notification = notification 
-                usernotification.save()
 
         else:
             registration_id = notification.user.credentials
@@ -168,10 +160,6 @@ class NotificationSendView(View):
             push_service = FCMNotification(api_key=api_key)
             result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
 
-            usernotification = UserNotification()
-            usernotification.user = User.objects.get(email=notification.user.email)
-            usernotification.notification = Notification.objects.get(title=message_title, description=message_body)
-            usernotification.save()
 
         flag = False
         if result['success'] > 0:

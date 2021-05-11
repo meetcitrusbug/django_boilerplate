@@ -3,14 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from notification.models import UserNotification
+from notification.models import Notification, GroupUser
 from django.views import View
 
 class IndexView(View):
     def get(self, request):
-        notifications = UserNotification.objects.filter(user__pk=request.user.pk)
-        unread_notification = UserNotification.objects.filter(user__pk=request.user.pk, read=False).count()
-        all_notification = UserNotification.objects.filter(user__pk=request.user.pk).count()
+        notifications = Notification.objects.filter(user=request.user.pk)
+        unread_notification = Notification.objects.filter(user=request.user.pk, is_read=False).count()
+        all_notification = Notification.objects.filter(user=request.user.pk).count()
         return render(request, 'django_template/index.html',{"notifications":notifications, 'unread_notification':unread_notification, 'all_notification':all_notification})
 
 
@@ -42,25 +42,25 @@ def userlogout(request):
 
 class UserReadView(View):
     def get(self, request, pk):
-        UserNotification.objects.filter(pk=pk).update(read=True)
+        Notification.objects.filter(pk=pk).update(is_read=True)
         return redirect('/')
 
 
 class UserReadAllView(View):
     def get(self, request):
-        UserNotification.objects.filter(user=request.user, read=False).update(read=True)
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         return redirect('/')
 
 
 class UserRemoveView(View):
     def get(self, request, pk):
-        removable = UserNotification.objects.filter(pk=pk)
+        removable = Notification.objects.filter(pk=pk)
         removable.delete()
         return redirect('/')
 
 
 class UserRemoveAllView(View):
     def get(self, request):
-        removable = UserNotification.objects.filter(user=request.user)
+        removable = Notification.objects.filter(user=request.user)
         removable.delete()
         return redirect('/')

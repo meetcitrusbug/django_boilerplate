@@ -2,7 +2,7 @@
 
 from django import forms
 
-from notification.models import Notification
+from notification.models import Notification, GroupUser
 
 
 # -----------------------------------------------------------------------------
@@ -57,12 +57,27 @@ class NotificationCreationForm(forms.ModelForm):
             self.cleaned_data['group'] = None
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        if commit:
-            instance.save()
-
-        return instance
+        cleaned_data = super(NotificationCreationForm, self).clean()
+        is_singleuser = cleaned_data.get("is_singleuser")
+        instance = None
+        if is_singleuser == False:
+            groupuser = GroupUser.objects.filter(group_name=cleaned_data.get("group"))
+            for i in groupuser:
+                notification = Notification()
+                notification.title = cleaned_data.get("title")
+                notification.description = cleaned_data.get("description")
+                notification.is_read = cleaned_data.get("is_read")
+                notification.is_singleuser = cleaned_data.get("is_singleuser")
+                notification.group = cleaned_data.get("group")
+                notification.user = i.user
+                notification.save()
+                instance = notification
+            return instance
+        else:
+            instance = super().save(commit=False)
+            if commit:
+                instance.save()
+                return instance
 
 
 class NotificationChangeForm(forms.ModelForm):
