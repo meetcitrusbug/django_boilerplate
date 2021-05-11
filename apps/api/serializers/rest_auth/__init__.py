@@ -7,3 +7,4 @@ This __init__ file works same as a default __init__ method in any class OR funct
 """
 
 from .register import RegisterSerializer
+from .login import JwtSerializer

@@ -23,7 +23,7 @@ try:
 except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 
-from social.utils import CustomValidation
+# from social.utils import CustomValidation
 
 # -----------------------------------------------------------------------------
 # Register serializer

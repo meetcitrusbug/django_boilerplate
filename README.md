@@ -19,7 +19,7 @@ Key: *leave empty*
 Sites: localhost:8000/
 
 NOTE: Use this url (http://127.0.0.1:8000/api/v1/rest-auth/facebook/) with postman or browser.
-NOTE: For Facebook API Testing use access token given in credentials.txt
+NOTE: For Facebook API Testing create a test user (account details are given in credentials.txt)
 NOTE: For Facebook Templating use url localhost:8000/ insted of 127.0.0.1:8000/ 
 
 
