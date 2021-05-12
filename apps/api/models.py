@@ -9,13 +9,10 @@ class User(AbstractUser):
     apple_token = models.TextField(_("Apple Token"), blank=True, null=True)
 
     class Meta:
-        """Provide some extra information here"""
         verbose_name = "User"
         verbose_name_plural = "Users"
 
     def get_absolute_url(self):
-        """Redirect to the absolute url on successful action with specified data"""
-
         return reverse("core:user-list", kwargs={"username": self.username})
 
     def __str__(self):

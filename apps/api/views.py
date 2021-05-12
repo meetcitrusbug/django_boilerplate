@@ -1,15 +1,10 @@
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
-from allauth.socialaccount.providers.apple.views import AppleOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.social_serializers import TwitterLoginSerializer
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
-
-import random
-import string
 from rest_auth.app_settings import JWTSerializer
 from rest_auth.utils import jwt_encode
 from rest_framework.permissions import AllowAny
