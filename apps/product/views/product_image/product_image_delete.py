@@ -6,6 +6,5 @@ from django_boilerplate.views.generic import MyDeleteView
 class ProductImageDeleteView(MyDeleteView):
     
     model = ProductImage
-    # form_class = AddCategoryForm
     template_name = "confirm_delete.html"
     permission_required = ("delete_productimage")
