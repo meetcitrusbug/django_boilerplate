@@ -21,3 +21,6 @@
 
 ## Check server is running
 - python manage.py runserver
+
+## Postman collection
+https://www.getpostman.com/collections/fb529394f97461e0fc6b
