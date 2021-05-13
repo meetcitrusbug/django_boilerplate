@@ -139,6 +139,7 @@
                     Remove all items
                 </a>
                 <button id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Checkout</button>
+                {% include 'authentication.html' %}
         </div>
     </nav>
 
@@ -182,7 +183,11 @@
                         <h4 class="mr-1">${{item.product.price}}</h4>  <!-- <span class="strike-text">$20.99</span> -->
                     </div>
                     <h6 class="text-success">{{item.product.product_shipping_method | title }}  </h6>
-                    <h6 class="text-success">{{item.quantity}} Qty</h6>
+                    <h6 class="text-success">
+                        <a class="btn btn-sm btn-primary" href="{% url 'add-to-cart' item.product.pk %}?next={{request.path}}{{request.GET.urlencode}}">+</a>
+                        {{item.quantity}} Qty
+                        <a class="btn btn-sm btn-primary" href="{% url 'cart-item-remove' item.product.pk %}?next={{request.path}}{{request.GET.urlencode}}">-</a>
+                    </h6>
                     <div class="d-flex flex-column mt-4">
                         <a  href="{% url 'cart-remove' item.product.id %}" class="btn btn-danger btn-sm">Remove</a>
                         <!-- <a href="#" class="btn btn-outline-primary btn-sm mt-2" type="button">Add to cart</a> -->

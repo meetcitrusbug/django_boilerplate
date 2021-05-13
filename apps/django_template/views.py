@@ -1,11 +1,36 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm    
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views import View
 from cart.models import Cart
 from product.models import Product
+from .forms import RegistrationForm
+
+
+
+
+class RegistrationView(View):
+    
+    form = RegistrationForm
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('products')
+        return render(request=request, template_name="django_template/registration.html", context={"form":self.form})
+
+    def post(self, request):
+        form = self.form(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+        else:
+            return render(request=request, template_name="django_template/registration.html", context={"form":self.form})
+            
+        
+
+
 
 class LoginPageView(View):
     def get(self, request):
