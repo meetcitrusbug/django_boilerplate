@@ -5,7 +5,6 @@ from django.urls import reverse
 
 
 class User(AbstractUser):
-    email = models.EmailField(_('email address'), blank=True, null=True, unique=True)
     apple_token = models.TextField(_("Apple Token"), blank=True, null=True)
 
     class Meta:

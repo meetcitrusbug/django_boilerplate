@@ -38,74 +38,47 @@ class AppleLoginAPIView(MyAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
-        success_message = "User verified successfully!"
-        unsuccess_message = "Invalid token!"
         try:
             token = request.data["access_token"]
-            if "email" in request.data and request.data["email"] != "":
-                email = request.data["email"]
-
-                user_data = User.objects.filter(email=email, apple_token=token)
-                if user_data.exists():
-                    user = user_data.get()
-                    token = jwt_encode(user)
-                    data = {
-                        'user': user,
-                        'token': token
-                    }
-                    serializer = JWTSerializer(instance=data)
-                    return Response({
-                        "status": "OK",
-                        "message": success_message,
-                        "data": serializer.data
-                    })
-
-                else:
-                    instance = User()
-                    instance.email = email
-                    instance.apple_token = token
-                    instance.save()
-                    user = User.objects.get(id=instance.id)
-                    token = jwt_encode(user)
-                    data = {
-                        'user': user,
-                        'token': token
-                    }
-                    serializer = JWTSerializer(instance=data)
-                    return Response({
-                        "status": "OK",
-                        "message": success_message,
-                        "data": serializer.data
-                    })
-
+            username = request.data["username"]
+            email = request.data["email"]
+            user_data = User.objects.filter(username=username, email=email, apple_token=token)
+            if user_data.exists():
+                user = user_data.get()
+                token = jwt_encode(user)
+                data = {
+                    'user': user,
+                    'token': token
+                }
+                serializer = JWTSerializer(instance=data)
+                return Response({
+                    "status": "OK",
+                    "message": "User verified successfully!",
+                    "data": serializer.data
+                })
             else:
-                user_data = User.objects.filter(apple_token=token)
-                if user_data.exists():
-                    user = user_data.get()
-                    token = jwt_encode(user)
-                    data = {
-                        'user': user,
-                        'token': token
-                    }
-                    serializer = JWTSerializer(instance=data)
-                    return Response({
-                        "status": "OK",
-                        "message": success_message,
-                        "data": serializer.data
-                    })
-
-                else:
-                    return Response({
-                        "status": "FAIL",
-                        "message": unsuccess_message,
-                        "data": serializer.data
-                    })
-
+                instance = User()
+                instance.apple_token = token
+                instance.username = username
+                instance.email = email
+                instance.save()
+                user = User.objects.get(id=instance.id)
+                token = jwt_encode(user)
+                data = {
+                    'user': user,
+                    'token': token
+                }
+                serializer = JWTSerializer(instance=data)
+                return Response({
+                    "status": "OK",
+                    "message": "User registered successfully!",
+                    "data": serializer.data
+                })
 
         except Exception as inst:
             print(inst)
             return Response({
                 "status": "FAIL",
-                "message": unsuccess_message,
+                "message": "Please try with correct email address and token!",
                 "data": []
             })

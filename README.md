@@ -46,4 +46,4 @@ Step3: {
 }
 Step4: Send
 
-Postman collection link: https://www.getpostman.com/collections/c40f3eccc6fdedf23073
+Postman collection link: https://www.getpostman.com/collections/a7c077063764511bb4ea
