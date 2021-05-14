@@ -17,10 +17,7 @@ class CategoryListView(MyListView):
     ordering = ["id"]
     permission_required = ("view_category",)
     
-    # def get(self, request, *args, **kwargs):
-        
-    #     return render(request, self.template, context=self.get_context())
-    
+   
     
 class CategoryDataTablesAjaxPagination(DataTableMixin, View):
     
