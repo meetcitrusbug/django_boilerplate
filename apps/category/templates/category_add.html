@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="ibox float-e-margins">
 
@@ -12,16 +13,68 @@
             <div class="ibox-content">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        {{form.name | attr:'required' |as_crispy_field}}
+                        {{form.name | as_crispy_field}}
+                        {{form.name.errors.as_p }}
                     </div>
                 </div>
-                <div class="row align-items-center">
+
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+
+            {% include "partials/ibox_title.html" with ibox_title="Sub category " icon_class="fas fa-user" only %}
+
+            <div class="ibox-content">
+                <div class="row">
                     <div class="col-sm-6">
-                        {{form.image | attr:'required' |as_crispy_field}}
+                  
+                        {% for formset in inlines %}
+                            <div  class="form-group">
+                                <table>
+                                    
+                                    {{ formset.management_form|crispy }}
+                                    
+                                    {% for form in formset.forms %}
+                                            <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
+                                                {% for field in form.visible_fields %}
+                                                <td>
+                                                    {# Include the hidden fields in the form #}
+                                                    {% if forloop.first %}
+                                                        {% for hidden in form.hidden_fields %}
+                                                            {{ hidden }}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    {{ field.errors.as_ul }}
+                                                    {{ field|as_crispy_field }}
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                    {% endfor %}  
+                                </table>
+                            </div>
+                    {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
         {% include "partials/form_footer.html" %}
 </form>
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'customadmin/js/jquery.formset.js' %}"></script>
+<script>
+    $(function() {
+        $('.formset_row-subcategory_set').formset({
+            addText: 'Add Another',
+            deleteText: 'Remove',
+            prefix: 'subcategory_set',
+            addCssClass: 'add-row btn btn-success',
+            deleteCssClass: 'hidden btn-delete btn btn-danger',
+
+        });
+    });
+</script>
 {% endblock %}

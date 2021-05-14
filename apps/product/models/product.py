@@ -1,7 +1,6 @@
 from django.db import models
 from django_boilerplate.models import ActivityTracking
 from django.utils.translation import ugettext_lazy as _
-from apps.utils.get_user_model import get_user_model
 from product.models.product_image import ProductImage
 
 class Product(ActivityTracking):
@@ -22,7 +21,7 @@ class Product(ActivityTracking):
     )
     
     name = models.CharField(_('name'), max_length=255)
-    user = models.ForeignKey(get_user_model(), db_index=True, on_delete=models.CASCADE, 
+    user = models.ForeignKey('django_boilerplate.User', db_index=True, on_delete=models.CASCADE, 
                                         null=True, blank=True)
     product_number = models.CharField( max_length=25, null=True, blank=True)
     description = models.TextField(_("description"), blank=True, null=True)

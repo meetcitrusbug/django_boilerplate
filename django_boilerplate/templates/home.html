@@ -60,7 +60,7 @@
           <ul class="nav navbar-top-links navbar-right">
             {% if request.user.is_authenticated %}
             <li>
-                <a href="{% url 'core:user-update' pk=request.user.pk %}">
+                <a href="{% url 'user-update' pk=request.user.pk %}">
                 <i class="fa fa-user"></i> {{ request.user }}
                 </a>
             </li>

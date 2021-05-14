@@ -20,12 +20,12 @@
                 </a>
             </li>
 
-            <li class="{% if 'subcategory' in request.path %}active{% endif %}">
+            <!-- <li class="{% if 'subcategory' in request.path %}active{% endif %}">
                 <a href="{% url 'subcategory-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Sub Category</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="{% if 'product' in request.path and 'tag' not in request.path and 'image' not in request.path  %}active{% endif %}">
                 <a href="{% url 'product-list' %}">
@@ -34,7 +34,7 @@
                 </a>
             </li>
 
-            <li class="{% if 'image' in request.path   %}active{% endif %}">
+            <!-- <li class="{% if 'image' in request.path   %}active{% endif %}">
                 <a href="{% url 'productimage-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Product Image</span>
@@ -46,7 +46,7 @@
                     <i class="fa fa-user fa-fw fa-2x"></i>
                     <span class="nav-label">Product Tag</span>
                 </a>
-            </li>
+            </li> -->
         </ul>
 
     </div>

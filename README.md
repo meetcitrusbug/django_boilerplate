@@ -5,9 +5,9 @@
 - install vertualenv (python -m venv venv)
 
 ## Install requirement
-- pip install -r requirement/development.txt
+- pip install -r requirements/development.txt
   or
-  pip install -r requirement/production.txt
+  pip install -r requirements/production.txt
 
 ## Make .env file
 -  Make .env file in root of project
@@ -21,3 +21,6 @@
 
 ## Check server is running
 - python manage.py runserver
+
+## Postman collection
+https://www.getpostman.com/collections/fb529394f97461e0fc6b

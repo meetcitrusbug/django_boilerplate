@@ -2,9 +2,9 @@
 
 {% if has_add_permission %}
     {% if opts.model_name == 'podcast' %}
-        <a href="{% url 'core:podcastpart-create' %}?id={{ o.pk }}" title="Add" class="btn btn-secondary btn-xs"><i class="fas fa-plus-circle"></i></a>
+        <a href="{% url 'podcastpart-create' %}?id={{ o.pk }}" title="Add" class="btn btn-secondary btn-xs"><i class="fas fa-plus-circle"></i></a>
     {% elif opts.model_name == 'plan' %}
-        <a href="{% url 'core:planfeature-create' %}?id={{ o.pk }}" title="Add" class="btn btn-secondary btn-xs"><i class="fas fa-plus-circle"></i></a>
+        <a href="{% url 'planfeature-create' %}?id={{ o.pk }}" title="Add" class="btn btn-secondary btn-xs"><i class="fas fa-plus-circle"></i></a>
     {% else %}
         <a href="{% url opts|admin_urlname:'create' %}?id={{ o.pk }}{% if pk %}?pk={{pk}} {% endif %}" title="Add" class="btn btn-secondary btn-xs"><i class="fas fa-plus-circle"></i></a>
     {% endif %}

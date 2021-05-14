@@ -10,7 +10,7 @@
 }
 
 .nav.metismenu > li.active {
-  border-left: 4px solid #FAE1B1;
+  border-left: 4px solid #cd1b1c;
 }
 
 .nav.metismenu > li.nav-header {
@@ -170,9 +170,9 @@ ul.nav.navbar-top-links.text-center h5 span.color-span {
 }
 
 .navbar.navbar-static-top .navbar-header .btn.btn-primary {
-  border-color: #FAE1B1;
-  background-color: #FAE1B1;
-  color: black;
+  border-color: black;
+  background-color: black;
+  color: white;
 }
 
 .footer.fixed {

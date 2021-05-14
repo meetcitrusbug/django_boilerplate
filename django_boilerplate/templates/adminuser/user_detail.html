@@ -6,11 +6,11 @@
 
 {% block current_breadcrumb %}
     <li class="breadcrumb-item">
-        <a href="{% url 'core:index' %}">{% trans 'Home' %}</a>
+        <a href="{% url 'index' %}">{% trans 'Home' %}</a>
     </li>
 
     <li class="breadcrumb-item">
-        <a href="{% url 'core:user-list' %}">{% trans 'Users' %}</a>
+        <a href="{% url 'user-list' %}">{% trans 'Users' %}</a>
     </li>
 
     <li class="breadcrumb-item active">
@@ -34,7 +34,7 @@
             </div>
 
             <div class="float-right lead">
-                <a href="{% url 'core:user-update' user.id %}" class="btn btn-primary btn-lg"><i class="fa fa-pencil-alt"></i> Update Details</a>
+                <a href="{% url 'user-update' user.id %}" class="btn btn-primary btn-lg"><i class="fa fa-pencil-alt"></i> Update Details</a>
             </div>
         </div>
     </header>

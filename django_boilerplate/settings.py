@@ -65,6 +65,7 @@ INSTALLED_APPS += [
     'product',   
     'cart',
     'django_template',
+    'django_boilerplate'
 ]
 
 MIDDLEWARE = [
@@ -175,3 +176,4 @@ REST_FRAMEWORK = {
 }
 
 LOGIN_URL = 'admin:index'
+AUTH_USER_MODEL = 'django_boilerplate.User'

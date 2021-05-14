@@ -5,7 +5,7 @@ from django_boilerplate.models import ActivityTracking
 
 class Cart(ActivityTracking):
     
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, db_index=True)
+    user = models.ForeignKey('django_boilerplate.User', on_delete=models.CASCADE, null=True, db_index=True)
     product =  models.ForeignKey('product.Product', on_delete=models.CASCADE, db_index=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=0)
     
