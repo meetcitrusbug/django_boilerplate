@@ -5,7 +5,7 @@ from django import forms
 class AddProductForm(forms.ModelForm):
     
     product_number = forms.CharField(required=True)
-    
+
     class Meta:
         model = Product
         fields = ['name', 'user', 'product_number', 'description', 'sub_category',
