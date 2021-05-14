@@ -14,36 +14,36 @@
 
     {% if  opts.verbose_name_plural == 'Users' %}
     <!-- <div class="float-right margin-custom-u01 lead" style="margin-left: 10px;">      
-      <a href="{% url 'core:export_user_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+      <a href="{% url 'export_user_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div> -->
 
     {% elif  opts.verbose_name_plural == 'Item List' %}
     <div class="float-right lead" style="margin-left: 10px;">      
-      <a href="{% url 'core:export_product_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+      <a href="{% url 'export_product_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div>
 
 
     {% elif opts.verbose_name_plural == 'Leads' %}
 
     <div class="float-right lead" style="margin-left: 10px;">      
-      <a href="{% url 'core:export_product_intrest_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+      <a href="{% url 'export_product_intrest_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div>
 
     {% elif opts.verbose_name_plural == 'Groups' %}
     <div class="float-right lead" style="margin-left: 10px;">      
-      <a href="{% url 'core:export_group_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+      <a href="{% url 'export_group_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div>
 
     {% elif opts.verbose_name_plural == 'Events' %}
 
     <div class="float-right lead" style="margin-left: 10px;">      
-      <a href="{% url 'core:export_event_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+      <a href="{% url 'export_event_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div>
 
     {% elif opts.verbose_name_plural == 'Event Registrations' %}
 
   <div class="float-right lead" style="margin-left: 10px;">      
-            <a href="{% url 'core:export_event_registration_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
+            <a href="{% url 'export_event_registration_csv' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Export CSV</a>
     </div>
 
     {% endif %}
@@ -64,7 +64,7 @@
      
       {% elif opts.verbose_name_plural == 'Flash Deal' %}
 
-      <a href="{% url 'core:master-flash-deal' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Flash Deal Sync</a>
+      <a href="{% url 'master-flash-deal' %}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> Flash Deal Sync</a>
 
 
      

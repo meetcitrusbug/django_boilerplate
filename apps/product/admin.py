@@ -1,6 +1,7 @@
 from django.contrib import admin
 from rest_framework.authtoken.models import Token
 from . import models
+
 # Register your models here.
 
 class ProductAdmin(admin.ModelAdmin):

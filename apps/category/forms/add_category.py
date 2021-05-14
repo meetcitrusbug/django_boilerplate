@@ -5,4 +5,4 @@ class AddCategoryForm(forms.ModelForm):
     
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image']
+        fields = ['id', 'name']
