@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
 #Local apps
 INSTALLED_APPS += [
+    'django_boilerplate'
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+AUTH_USER_MODEL = 'django_boilerplate.User'
