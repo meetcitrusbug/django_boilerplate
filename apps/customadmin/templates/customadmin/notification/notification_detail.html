@@ -31,10 +31,12 @@
                             <hr>
                             <b> Is single user? :</b> {{notification_detail.is_singleuser}}
                             <hr>
+
                             {% if notification_detail.group %}
-                            <b> Group:</b><br> {% if group_detail %}
+                            <b> Group:</b> {{notification_detail.group}}<br>
+                            {% if group_detail %}
                             {% for i in group_detail %}
-                            Members: {{i.user}}<br>
+                            <i>Members: {{i.user}}</i><br>
                             {% endfor %}
                             {% endif %}
 

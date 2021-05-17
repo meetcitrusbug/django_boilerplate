@@ -103,7 +103,7 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'notification',
+        'NAME': 'notification_firebase',
         'USER': 'postgres',
         'HOST': 'localhost',
         'PASSWORD': '1234',
