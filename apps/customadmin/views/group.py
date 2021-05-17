@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 from customadmin.mixins import HasPermissionsMixin
 from customadmin.views.generic import (
-    MyCreateView,
+    MyNewFormsetCreateView,
     MyDeleteView,
     MyListView,
     MyLoginRequiredView,
-    MyUpdateView,
+    MyNewFormsetUpdateView
 )
 from django.db.models import Q
 from django.template.loader import get_template
 from django_datatables_too.mixins import DataTableMixin
 
-from customadmin.forms import GroupChangeForm, GroupCreationForm
+from customadmin.forms import GroupChangeForm, GroupCreationForm, GroupUserChangeForm, GroupUserCreationForm
 from django.shortcuts import reverse
-
-from notification.models import Group
+from notification.models import Group, GroupUser
+from extra_views import InlineFormSetFactory
 
 # -----------------------------------------------------------------------------
 # Group
@@ -32,10 +32,19 @@ class GroupListView(MyListView):
     def get_queryset(self):
         return self.model.objects.all().exclude(is_active=False)
 
-class GroupCreateView(MyCreateView):
+class GroupUserCreateInline(InlineFormSetFactory):
+    """Inline view to show Material within the Parent View"""
+
+    model = GroupUser
+    form_class = GroupUserCreationForm
+    factory_kwargs = {'extra': 1, 'max_num': 100, 'can_order': False, 'can_delete': True}
+
+class GroupCreateView(MyNewFormsetCreateView):
     """View to create Group"""
     
     model = Group
+    inline_model = GroupUser
+    inlines = [GroupUserCreateInline,]
     form_class = GroupCreationForm
     template_name = "customadmin/group/group_form.html"
     permission_required = ("customadmin.add_group",)
@@ -43,10 +52,19 @@ class GroupCreateView(MyCreateView):
     def get_success_url(self):
         return reverse("customadmin:group-list")
 
-class GroupUpdateView(MyUpdateView):
+class GroupUserUpdateInline(InlineFormSetFactory):
+    """View to update Material which is a inline view"""
+
+    model = GroupUser
+    form_class = GroupUserChangeForm
+    factory_kwargs = {'extra': 1, 'max_num': 100, 'can_order': False, 'can_delete': True}
+
+class GroupUpdateView(MyNewFormsetUpdateView):
     """View to update Group"""
 
     model = Group
+    inline_model = GroupUser
+    inlines = [GroupUserUpdateInline,]
     form_class = GroupChangeForm
     template_name = "customadmin/group/group_form.html"
     permission_required = ("customadmin.change_group",)

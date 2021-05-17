@@ -11,7 +11,6 @@ from notification.models import GroupUser
 
 class GroupUserCreationForm(forms.ModelForm):
     """Custom GroupUserCreationForm"""
-
     class Meta():
         model = GroupUser
         fields = [
@@ -34,21 +33,25 @@ class GroupUserCreationForm(forms.ModelForm):
         if not user :
             raise forms.ValidationError(
                 "Please add a user!"
-            )        
+            )
         if GroupUser.objects.filter(group_name=group_name, user=user).exists():
             raise forms.ValidationError(
-                "User already exist in this group!"
+                f"{user} is already exist in this {group_name}!"
             )
 
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        if commit:
-            instance.save()
-
+        cleaned_data = super(GroupUserCreationForm, self).clean()
+        group_name = cleaned_data.get("group_name")
+        user = cleaned_data.get("user")
+        instance = None
+        groupuser = GroupUser()
+        if not GroupUser.objects.filter(group_name=group_name, user=user).exists():
+            groupuser.group_name = group_name
+            groupuser.user = user
+            groupuser.save()
+            instance = groupuser
         return instance
-
 
 class GroupUserChangeForm(forms.ModelForm):
     """Custom form to change GroupUser"""
@@ -76,9 +79,14 @@ class GroupUserChangeForm(forms.ModelForm):
             )
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        if commit:
-            instance.save()
-
+        cleaned_data = super(GroupUserChangeForm, self).clean()
+        group_name = cleaned_data.get("group_name")
+        user = cleaned_data.get("user")
+        instance = None
+        groupuser = GroupUser()
+        if not GroupUser.objects.filter(group_name=group_name, user=user).exists():
+            groupuser.group_name = group_name
+            groupuser.user = user
+            groupuser.save()
+            instance = groupuser
         return instance

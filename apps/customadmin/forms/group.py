@@ -2,7 +2,7 @@
 
 from django import forms
 
-from notification.models import Group
+from notification.models import Group, GroupUser
 
 
 # -----------------------------------------------------------------------------

@@ -71,8 +71,11 @@ class GroupUser(ActivityTracking):
         )
     user = models.ForeignKey(
         "customadmin.User",
+        null=True,
+        blank=True,
         on_delete=models.CASCADE
     )
+
     def __str__(self):
         return self.group_name.group_name
 
