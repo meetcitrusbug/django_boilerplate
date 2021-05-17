@@ -32,6 +32,7 @@ class NotificationDetailView(MyDetailView):
 
     def get(self, request, pk):
         self.context['notification_detail'] = Notification.objects.filter(pk=pk).first()
+        self.context['group_detail'] = GroupUser.objects.filter(group_name=self.context['notification_detail'].group)
         return render(request, self.template_name, self.context)
         
 class NotificationListView(MyListView):

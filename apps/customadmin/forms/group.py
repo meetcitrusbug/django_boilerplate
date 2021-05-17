@@ -2,7 +2,7 @@
 
 from django import forms
 
-from notification.models import Group, GroupUser
+from notification.models import Group
 
 
 # -----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ class GroupCreationForm(forms.ModelForm):
         
         if Group.objects.filter(group_name__iexact=group_name).exists():
             raise forms.ValidationError(
-                "Group name already exists!"
+                f"{group_name} is already exists!"
             )
 
     def save(self, commit=True):

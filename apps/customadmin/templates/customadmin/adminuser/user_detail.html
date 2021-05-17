@@ -27,8 +27,12 @@
                     </tr>
                     <tr class="text-left">
                         <td class="text-center" height="400px" width="400px">
+                            {% if user_detail.profile_image %}
                             <img src="{{MEDIA_URL}}{{user_detail.profile_image.url}}" alt="" height="400px"
                                 width="400px">
+                            {% else %}
+                            <img alt="No PROFILE IMAGE" height="400px" width="400px">
+                            {% endif %}
                         </td>
                         <td class="h6">
                             Fullname : {{user_detail.first_name}} {{user_detail.last_name}}

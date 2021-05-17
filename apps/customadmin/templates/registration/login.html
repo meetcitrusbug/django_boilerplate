@@ -3,7 +3,7 @@
   <div class="container">
     <div class="middle-box text-center loginscreen animated fadeInDown">
       <div class="login-logo">
-        <img src="{% static 'customadmin/img/logo.png' %}" alt="no logo" class="animated fadeInDown" />
+        <img src="{% static 'customadmin/img/django-logo-negative.svg' %}" alt="no logo" class="animated fadeInDown" />
       </div>
       {% comment %} <object type="image/svg+xml" data="{% static '\2' %}" class="animated fadeInDown"></object> {% endcomment %} {% if form.errors %}
       <div class="alert alert-danger" role="alert">{% for field, errors in form.errors.items %} {% for error in errors %} {{ error }} {% endfor %} {% endfor %}</div>
