@@ -101,14 +101,7 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'notification_firebase',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PASSWORD': '1234',
-        'PORT': '5432'
-    }
+    'default': env.db('DATABASE_URL')
 }
 
 # Password validation
@@ -182,3 +175,5 @@ LOGIN_URL = "auth:auth_login"
 LOGIN_REDIRECT_URL = "/customadmin/notification/"
 AUTH_USER_MODEL = 'customadmin.User'
 LOGOUT_REDIRECT_URL = "auth:auth_login"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
