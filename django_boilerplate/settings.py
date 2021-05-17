@@ -106,7 +106,7 @@ DATABASES = {
         'NAME': 'notification',
         'USER': 'postgres',
         'HOST': 'localhost',
-        'PASSWORD': 'admin',
+        'PASSWORD': '1234',
         'PORT': '5432'
     }
 }
@@ -179,5 +179,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'customadmin.User'
 
 LOGIN_URL = "auth:auth_login"
+LOGIN_REDIRECT_URL = "/customadmin/notification/"
 AUTH_USER_MODEL = 'customadmin.User'
 LOGOUT_REDIRECT_URL = "auth:auth_login"
