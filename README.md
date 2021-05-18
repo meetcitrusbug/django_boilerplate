@@ -21,5 +21,4 @@ To remove a notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/re
 To remove all notifications: (DELETE) http://127.0.0.1:8000/api/v1/notification/remove/
 To send notification: (POST) http://127.0.0.1:8000/api/v1/notification/send/
 
-
-Postman collection link: https://www.getpostman.com/collections/b06160de7411f328a7a4
+Postman collection link: https://www.getpostman.com/collections/4ca56f085c0938346b77
