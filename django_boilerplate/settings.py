@@ -104,6 +104,8 @@ DATABASES = {
     'default': env.db('DATABASE_URL')
 }
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -169,7 +171,6 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-AUTH_USER_MODEL = 'customadmin.User'
 
 LOGIN_URL = "auth:auth_login"
 LOGIN_REDIRECT_URL = "/customadmin/notification/"

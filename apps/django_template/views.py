@@ -30,9 +30,9 @@ class LoginPageView(View):
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect('/')
             else:
-                return redirect('userlogin')
+                return redirect('login')
         else:
-            return redirect('userlogin')
+            return redirect('login')
 
 
 def userlogout(request):
