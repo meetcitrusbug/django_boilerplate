@@ -18,7 +18,7 @@ from django_datatables_too.mixins import DataTableMixin
 
 from ..forms import UserChangeForm, UserCreationForm
 from django.shortcuts import reverse, render
-from customadmin.models import User
+from django_boilerplate.models import User
 
 import csv
 

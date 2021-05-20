@@ -604,30 +604,4 @@ var userroles = {
       });
     },
   },
-  // ------------------------------------------------------------------------
-  // usernotification
-  // ------------------------------------------------------------------------
-  usernotification: {
-    index: function () {
-      $("#usernotification-table").DataTable({
-        pageLength: 10,
-        responsive: true,
-        columnDefs: [
-          {
-            orderable: false,
-            targets: -1,
-          },
-        ],
-      });
-    },
-
-    details: function () {
-      $(".permissions-select").bootstrapDualListbox({
-        nonSelectedListLabel: "Available user permissions",
-        selectedListLabel: "Chosen user permissions",
-        preserveSelectionOnMove: "moved",
-        moveOnSelect: false,
-      });
-    },
-  },
 };

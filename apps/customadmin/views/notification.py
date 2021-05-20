@@ -15,7 +15,7 @@ from django_datatables_too.mixins import DataTableMixin
 from customadmin.forms import NotificationChangeForm, NotificationCreationForm
 from django.shortcuts import reverse, render
 from notification.models import Notification, Group, GroupUser
-from customadmin.models import User
+from django_boilerplate.models import User
 
 from pyfcm import FCMNotification
 from django.views import View

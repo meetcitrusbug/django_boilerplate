@@ -3,7 +3,7 @@ import os
 from django.db import models
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-from customadmin.models import User
+from django_boilerplate.models import User
 
 @receiver(models.signals.post_delete, sender=User)
 def auto_delete_file_on_delete(sender, instance=None, **kwargs):

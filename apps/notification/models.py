@@ -1,8 +1,7 @@
 from django.db import models
 from django_boilerplate.models import ActivityTracking
 from django.utils.translation import gettext as _
-from django.contrib.auth import get_user_model
-from customadmin.models import User
+from django_boilerplate.models import User
 
 class Notification(ActivityTracking):
     title = models.CharField(
@@ -32,7 +31,7 @@ class Notification(ActivityTracking):
         on_delete=models.CASCADE
     )
     user = models.ForeignKey(
-        "customadmin.User",
+        "django_boilerplate.User",
         null=True,
         blank=True,
         on_delete=models.CASCADE
@@ -70,7 +69,7 @@ class GroupUser(ActivityTracking):
         on_delete=models.CASCADE
         )
     user = models.ForeignKey(
-        "customadmin.User",
+        "django_boilerplate.User",
         null=True,
         blank=True,
         on_delete=models.CASCADE
