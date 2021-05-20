@@ -10,9 +10,13 @@ urlpatterns = [
 ]
 
 urlpatterns +=[
+    path('mediaimage-list/', views.MediaImageListAPIView.as_view(), name='mediaimage-list-api'),
     path('mediaimage-create/', views.MediaImageAddAPIView.as_view(), name='mediaimage-create-api'),
     path('mediaimage-delete/<int:id>/', views.MediaImageDeleteAPIView.as_view(), name="mediaimage-delete-api"),
+    path('mediaimage-update/<int:id>/', views.MediaImageUpdateAPIView.as_view(), name="mediaimage-update-api"),
 
+    path('mediavideo-list/', views.MediaVideoListAPIView.as_view(), name='mediavideo-list-api'),
     path('mediavideo-create/', views.MediaVideoAddAPIView.as_view(), name='mediavideo-create-api'),
     path('mediavideo-delete/<int:id>/', views.MediaVideoDeleteAPIView.as_view(), name="mediavideo-delete-api"),
+    path('mediavideo-update/<int:id>/', views.MediaVideoUpdateAPIView.as_view(), name="mediavideo-update-api"),
 ]

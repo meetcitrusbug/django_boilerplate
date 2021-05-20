@@ -1,13 +1,24 @@
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import (
+    ListAPIView, 
+    CreateAPIView, 
+    UpdateAPIView, 
+    DestroyAPIView
+)
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from django_boilerplate.helpers import custom_response
-from .serializer import MediaCategoryListSerializer, MediaCategoryDetailsSerializer, MediaCategoryCreateSerializer, MediaCategoryUpdateSerializer, MediaImageSerializer, MediaVideoSerializer
+from .serializer import (
+    MediaCategoryListSerializer, 
+    MediaCategoryDetailsSerializer, 
+    MediaCategoryCreateSerializer, 
+    MediaCategoryUpdateSerializer, 
+    MediaImageSerializer, 
+    MediaVideoSerializer,
+    MediaImageUpdateSerializer,
+    MediaVideoUpdateSerializer,
+    )
 from .models import MediaCategory, MediaImage, MediaVideo
-from .utils.pagination import CategoryPagination
 from django.db.models import Q
-
 
 
 class MediaCategoryListAPIView(ListAPIView):
@@ -20,7 +31,6 @@ class MediaCategoryListAPIView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
-        
         return Response({
             "status":True,
             "code":status.HTTP_200_OK,
@@ -30,7 +40,6 @@ class MediaCategoryListAPIView(ListAPIView):
 
     def filter_queryset(self, queryset):
         queryset = queryset.filter(is_active=True)
-        
         search = self.request.query_params.get('search')
         sort = self.request.query_params.get('sort')
 
@@ -38,7 +47,6 @@ class MediaCategoryListAPIView(ListAPIView):
             queryset = queryset.filter(Q(category__icontains=search))
         if sort:
             queryset = queryset.order_by(sort)
-
         return queryset
 
 class MediaCategoryDetailAPIView(ListAPIView):
@@ -49,7 +57,6 @@ class MediaCategoryDetailAPIView(ListAPIView):
     def list(self, request, id, *args, **kwargs):
         queryset = MediaCategory.objects.filter(pk=id)
         serializer = self.get_serializer(queryset, many=True)
-        
         return Response({
             "status":True,
             "code":status.HTTP_200_OK,
@@ -66,7 +73,6 @@ class MediaCategoryCreateAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request':request})
         is_valid = serializer.is_valid()
-        
         if not is_valid:
             return  Response({
                 "status":False,
@@ -76,7 +82,6 @@ class MediaCategoryCreateAPIView(CreateAPIView):
                 }, status.HTTP_200_OK )
                     
         self.perform_create(serializer)
-
         return  Response({
                     "status":True,
                     "code":status.HTTP_200_OK,
@@ -111,7 +116,6 @@ class MediaCategoryUpdateAPIView(UpdateAPIView):
     serializer_class = MediaCategoryUpdateSerializer
     lookup_field = 'id'
 
-
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -126,10 +130,6 @@ class MediaCategoryUpdateAPIView(UpdateAPIView):
                             }, status.HTTP_200_OK )
             
         self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            instance._prefetched_objects_cache = {}
-
         return  Response({ "status":True,
                         "code":status.HTTP_200_OK,
                         "message":"Category updated successfully",
@@ -139,6 +139,21 @@ class MediaCategoryUpdateAPIView(UpdateAPIView):
 
 
 # =================== Images API =================== # 
+class MediaImageListAPIView(ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = MediaImageSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = MediaImage.objects.all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "status":True,
+            "code":status.HTTP_200_OK,
+            "message":"All images fetched successfully!",
+            "data":serializer.data
+        }, status.HTTP_200_OK )
+
+
 class MediaImageAddAPIView(CreateAPIView):
     
     permission_classes = (AllowAny,)
@@ -148,7 +163,6 @@ class MediaImageAddAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request':request})
         is_valid = serializer.is_valid()
-        
         if not is_valid:
             return  Response({
                 "status":False,
@@ -166,13 +180,12 @@ class MediaImageAddAPIView(CreateAPIView):
                     }, status.HTTP_200_OK )
 
 
-
 class MediaImageDeleteAPIView(DestroyAPIView):
     
     permission_classes = (AllowAny,)
     queryset = MediaImage.objects.all()
     lookup_field = 'id'
-    
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
@@ -184,8 +197,51 @@ class MediaImageDeleteAPIView(DestroyAPIView):
         }, status.HTTP_200_OK )
 
 
+class MediaImageUpdateAPIView(UpdateAPIView):
+    
+    permission_classes = (AllowAny,)
+    queryset = MediaImage.objects.all()
+    serializer_class = MediaImageUpdateSerializer
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        is_valid = serializer.is_valid()
+        
+        if not is_valid: 
+            return  Response({"status":False,
+                            "code":status.HTTP_200_OK,
+                            "message":"Please fill missing field or solve error",
+                            "data":serializer.errors,
+                            }, status.HTTP_200_OK )
+            
+        self.perform_update(serializer)
+        return  Response({ "status":True,
+                        "code":status.HTTP_200_OK,
+                        "message":"Media image updated successfully!",
+                        "data":serializer.data,
+                        }, status.HTTP_200_OK )
+
+
 
 # =================== Videos API =================== # 
+class MediaVideoListAPIView(ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = MediaVideoSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = MediaVideo.objects.all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "status":True,
+            "code":status.HTTP_200_OK,
+            "message":"All videos fetched successfully!",
+            "data":serializer.data
+        }, status.HTTP_200_OK )
+
+
 class MediaVideoAddAPIView(CreateAPIView):
     
     permission_classes = (AllowAny,)
@@ -213,7 +269,6 @@ class MediaVideoAddAPIView(CreateAPIView):
                     }, status.HTTP_200_OK )
 
 
-
 class MediaVideoDeleteAPIView(DestroyAPIView):
     
     permission_classes = (AllowAny,)
@@ -229,3 +284,31 @@ class MediaVideoDeleteAPIView(DestroyAPIView):
             "message":"Media video deleted successfully!",
             "data":{}
         }, status.HTTP_200_OK )
+
+
+class MediaVideoUpdateAPIView(UpdateAPIView):
+    
+    permission_classes = (AllowAny,)
+    queryset = MediaVideo.objects.all()
+    serializer_class = MediaVideoUpdateSerializer
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        is_valid = serializer.is_valid()
+        
+        if not is_valid: 
+            return  Response({"status":False,
+                            "code":status.HTTP_200_OK,
+                            "message":"Please fill missing field or solve error",
+                            "data":serializer.errors,
+                            }, status.HTTP_200_OK )
+            
+        self.perform_update(serializer)
+        return  Response({ "status":True,
+                        "code":status.HTTP_200_OK,
+                        "message":"Media video updated successfully!",
+                        "data":serializer.data,
+                        }, status.HTTP_200_OK )
