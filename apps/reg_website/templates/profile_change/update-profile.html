@@ -1,0 +1,105 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6 style">
+        <div class="jumbotron">
+            <h4 style="text-align:center">Hello {{user.username}},<br><p>&nbsp;</p>Change Profile</h4>
+            <p>&nbsp;</p>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" class="form-control" id="email" value="{%if user.email%}{{user.email}}{%endif%}" required="" readonly>
+            </div>
+            <div class="form-group">
+                <label for="phone_no">Phone</label>
+                <input type="text" name="phone_no" class="form-control" id="phone_no" value="{%if user.phone%}{{user.phone}}{%endif%}" required="" {%if user.phone%}readonly{%endif%}>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" class="form-control" id="username" value="{%if user.username%}{{user.username}}{%endif%}" required="" readonly>
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" class="form-control" value="{%if user.first_name%}{{user.first_name}}{%endif%}" id="first_name">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" class="form-control" value="{%if user.last_name%}{{user.last_name}}{%endif%}" id="last_name">
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea name="address" class="form-control" cols="40" rows="10" id="address">{%if user.address%}{{user.address}}{%endif%}</textarea>
+            </div>
+            <div class="error-message-bottom-all">
+                    <span class="text-span" id="change-form-error"></span>
+            </div>
+            <form enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <button class="btn btn-primary btn-lg form-control" id="change-btn">Change Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock javascript %}
+<script>
+$(document).ready(function (){
+  // Submit form
+  $("#change-btn").unbind().click(function (e){
+      e.preventDefault();
+      $(".error-group").removeClass("error-group");
+      var csrf_token = $("[name='csrfmiddlewaretoken']").val();
+      var first_name = $("#first_name").val();
+      var last_name = $("#last_name").val();
+      var address = $("#address").val();
+      var flag = 0;
+
+      if (first_name == "") {
+        $("#first_name").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (last_name == "") {
+        $("#last_name").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (address == "") {
+        $("#address").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (flag == 1) {
+        $("#change-form-error").text("Please fill all required fields.");
+        return;
+      }
+      else {
+        $.ajax({
+          url: "{% url 'reg_website:profile_view' %}",
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: csrf_token,
+            first_name: first_name,
+            last_name: last_name,
+            address : address
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#change-form-error").text(response["message"]);
+              $("#change-form-error").css("color", "green");
+              setTimeout("location.reload(true)", 10000);
+              window.location = "{% url 'reg_website:profile_view' %}";
+              return true;
+            }
+            $("#change-form-error").text(response["message"]);
+            return false;
+          },
+          error: function (err)
+          {
+            $("#change-form-error").text(err);
+          },
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

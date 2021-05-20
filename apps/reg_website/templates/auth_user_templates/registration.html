@@ -1,0 +1,280 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+<style>
+    input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  }
+  .inline-div{
+    display:inline-block;
+  }
+
+
+
+</style>
+<div class="row justify-content-center">
+    <div class="col-6 style">
+        <div class="jumbotron">
+            <h4 style="text-align:center">Register User</h4>
+            <p>&nbsp;</p>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                {{form.email}}
+            </div>
+            <div class="form-group">
+                <div class="inline-div">
+                    <label for="phone">Phone Number *</label>
+                    {{form.phone_no}}
+                </div>
+                <div class="inline-div">
+                    <a class="btn btn-outline-success col-12" role="button" id="otp-register">Send OTP</a>
+                </div>
+                <div class="inline-div">
+                    <label for="otp-enter" id="otp-label" style="display:none">OTP</label>
+                    <input type="number" name="OTP" style="display:none" class="form-control" id="otp-number">
+                </div>
+                 <div class="inline-div">
+                    <a class="btn btn-outline-success col-12" role="button" id="otp-verify-button" style="display:none">Verify</a>
+                 </div>
+            </div>
+            <div class="error-message-bottom-all">
+                 <span class="text-span" id="verify-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="username">Username *</label>
+                {{form.username}}
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name *</label>
+                {{form.first_name}}
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name *</label>
+                {{form.last_name}}
+            </div>
+            <div class="form-group">
+                <label for="password">Password *</label>
+                {{form.password}}
+            </div>
+            <div class="form-group">
+                <label for="c_password">Confirm Password *</label>
+                {{form.confirm_password}}
+            </div>
+            <p>* Required Fields</p>
+            <form>
+                {% csrf_token %}
+                <div class="col-lg-12 col-md-12">
+                    <div class="btn-auth-div">
+                        <button type="button" id="sign-up-btn" class="btn btn-primary min-width-160"> Sign Up
+                        </button>
+                        <div class="error-message-bottom-all">
+                            <span class="text-span" id="sign-up-error"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock javascript %}
+<script>
+$(document).ready(function (){
+  function isNumeric(value) {
+       return /^-?\d+$/.test(value);
+  }
+  function isValidEmailAddress(emailAddress)
+  {
+    var pattern = new RegExp(
+      /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+    );
+    return pattern.test(emailAddress);
+  }
+  function isValidPhoneNumber(phone)
+  {
+    var len = phone.length
+    if (isNumeric(phone)===false){
+        return false
+    }
+    if (len<10){
+        return false
+    }
+    else{
+        return true
+    }
+  }
+  var phone_verified = false
+  $("#otp-verify-button").click(function(){
+      var otp = $("#otp-number").val()
+      $.ajax({
+          url: "{% url 'reg_website:verify_phone' %}",
+          type: "GET",
+          data: {
+            otp: otp,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              phone_verified = true
+              $("#verify-error").text(response["message"]);
+              $("#verify-error").css("color", "green");
+              return;
+            }
+            phone_verified = false
+            $("#verify-error").text(response["message"]);
+            return false;
+          },
+          error: function (err)
+          {
+            $("#verify-error").text(err);
+          },
+      });
+  });
+
+  $("#otp-register").click(function (){
+    var phone = $("#phone").val();
+    var flag_p=0
+    if (phone == "") {
+        $("#phone").parent().parent().addClass("error-group");
+        flag_p = 1;
+      }
+    if (isValidPhoneNumber(phone) == false && phone != ""){
+        $("#phone").parent().parent().addClass("error-group");
+        $("#verify-error").text("Enter valid Phone Number.");
+        return;
+      }
+    if (flag_p == 1) {
+        $("#verify-error").text("Please Enter Phone Number.");
+        return;
+    }
+    else{
+    $.ajax({
+          url: "{% url 'reg_website:send_otp_verification' %}",
+          type: "GET",
+          data: {
+            phone: phone,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#otp-label").css("display", "block");
+              $("#otp-number").css("display", "block");
+              $("#otp-verify-button").css("display", "block");
+              $("#verify-error").text(response["message"]);
+              $("#verify-error").css("color", "green");
+              return;
+            }
+            $("#verify-error").text(response["message"]);
+            return false;
+          },
+          error: function (err) {
+            $("#verify-error").text(err);
+          },
+    });
+    }
+  });
+
+  // Submit contact form
+  $("#sign-up-btn").unbind().click(function (e){
+      e.preventDefault();
+      $(".error-group").removeClass("error-group");
+      var csrf_token = $("[name='csrfmiddlewaretoken']").val();
+      var first_name = $("#first_name").val();
+      var last_name = $("#last_name").val();
+      var phone = $("#phone").val();
+      var email = $("#email").val();
+      var username = $("#username").val();
+      var password = $("#password").val();
+      var confirm_password = $("#confirm_password").val();
+      var flag = 0;
+
+      if (first_name == "") {
+        $("#first_name").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (last_name == "") {
+        $("#last_name").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (email == "") {
+        $("#email").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (username == "") {
+        $("#username").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (phone == "") {
+        $("#phone").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (isValidEmailAddress(email) == false && email != "") {
+        $("#email").parent().parent().addClass("error-group");
+        $("#sign-up-error").text("Enter valid email address.");
+        return;
+      }
+      if (isValidPhoneNumber(phone) == false && phone != ""){
+        $("#phone").parent().parent().addClass("error-group");
+        $("#sign-up-error").text("Enter valid Phone Number.");
+        return;
+      }
+      if (password == "") {
+        $("#password").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (confirm_password == "") {
+        $("#confirm_password").parent().parent().addClass("error-group");
+        flag = 1;
+      }
+      if (password != confirm_password) {
+        $("#confirm_password").parent().parent().addClass("error-group");
+        $("#sign-up-error").text("Passwords do not match");
+        return;
+      }
+      if (flag == 1) {
+        $("#sign-up-error").text("Please fill all required fields.");
+        return;
+      }
+      if (phone_verified == false) {
+        $("#sign-up-error").text("Phone Verification is remaining.");
+        return;
+      }
+      else {
+        $.ajax({
+          url: "{% url 'reg_website:register' %}",
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: csrf_token,
+            first_name: first_name,
+            last_name: last_name,
+            username: username,
+            phone: phone,
+            email: email,
+            password: password,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#sign-up-error").text(response["message"]);
+              $("#sign-up-error").css("color", "green");
+              setTimeout("location.reload(true)", 10000);
+              window.location = "{% url 'reg_website:email_login' %}";
+              return true;
+            }
+            $("#sign-up-error").text(response["message"]);
+            return false;
+          },
+          error: function (err)
+          {
+            $("#sign-up-error").text(err);
+          },
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6 style">
+        <div class="jumbotron">
+            <p>Wait here till it is completed</p>
+            {% if status %}
+                User verification successfully completed
+            {% else %}
+            <a href="#">Send link again</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

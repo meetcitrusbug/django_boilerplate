@@ -21,7 +21,6 @@ environ.Env.read_env(str(".env"))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,10 +51,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'crispy_forms',
+    'widget_tweaks',
 ]
 
 #Local apps
 INSTALLED_APPS += [
+    'api',
+    'reg_website',
+    'customadmin',
 ]
 
 MIDDLEWARE = [
@@ -73,9 +78,12 @@ ROOT_URLCONF = 'django_boilerplate.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [path.join(BASE_DIR, 'django_boilerplate', 'templates'),],
         'OPTIONS': {
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader'
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -88,6 +96,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -96,7 +105,7 @@ DATABASES = {
     'default': env.db('DATABASE_URL')
 }
 
-
+AUTH_USER_MODEL = 'reg_website.User'
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -151,12 +160,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
-        'rest_framework.authentication.BasicAuthentication',
     ),
 }
+LOGIN_URL = "auth:auth_login"
+
+TWILIO_ACCOUNT_SID = env.str('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = env.str('TWILIO_AUTH_TOKEN')
+TWILIO_MOBILE = env.str('TWILIO_PHONE')
+
+
+SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'  # this is exactly the value 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

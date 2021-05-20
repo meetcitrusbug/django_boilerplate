@@ -1,0 +1,117 @@
+{% extends 'main.html' %}
+{% block content %}
+<style>
+    input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  }
+  .inline-div{
+    display:inline-block;
+  }
+
+</style>
+<div class="row justify-content-center">
+    <div class="col-6 style">
+        <div class="jumbotron">
+            <h4 style="text-align:center">Log-In With OTP</h4>
+            <p>&nbsp;</p>
+                <div class="inline-div col-8">
+                    <label for="phone">Phone Number</label>
+                    <input type="number" id="phone" name="phone" class="form-control" placeholder="Enter Phone Number" />
+                </div>
+                <div class="inline-div col-2">
+                    <a class="btn btn-outline-success" role="button" id="otp-send">Send OTP</a>
+                </div>
+                <div class="form-group inline-div col-8">
+                    <label for="otp">OTP</label>
+                    <input type="number" id="OTP" name="OTP" class="form-control col-8" placeholder="Enter OTP Number" />
+                </div>
+                <div class="error-message-bottom-all">
+                 <span class="text-span" id="verify-error"></span>
+                </div>
+            <form>
+                {% csrf_token %}
+                <div class="form-group inline-div col-8">
+                    <button class="btn btn-primary btn-md" id="login-otp">Sign In</button>
+                </div>
+            </form>
+            <a href="{% url 'reg_website:email_login' %}" class="col-8 inline-div">Login with Email</a>
+        </div>
+    </div>
+</div>
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock javascript %}
+<script>
+$("#login-otp").unbind().click(function (e){
+    e.preventDefault();
+    var csrf_token = $("[name='csrfmiddlewaretoken']").val();
+    var phone = $("#phone").val();
+    var OTP = $("#OTP").val();
+    var flag_p = 0
+    if (phone == "") {
+        $("#phone").parent().parent().addClass("error-group");
+        flag_p = 1;
+     }
+     if (OTP == "") {
+        $("#OTP").parent().parent().addClass("error-group");
+        flag_p = 1;
+      }
+      if (flag_p == 1) {
+        $("#verify-error").text("Please Enter Phone Number.");
+        return;
+        }
+    $.ajax({
+          url: "{% url 'reg_website:otp_login' %}",
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: csrf_token,
+            phone: phone,
+            OTP:OTP,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#verify-error").text(response["message"]);
+              $("#verify-error").css("color", "green");
+              setTimeout("location.reload(true)", 2000);
+              window.location = "{% url 'reg_website:profile_view' %}";
+              return true;
+            }
+            $("#verify-error").text(response["message"]);
+            return false;
+          },
+          error: function (err) {
+            $("#verify-error").text(err);
+          },
+    });
+});
+
+$("#otp-send").click(function (){
+    var phone = $("#phone").val();
+    $.ajax({
+          url: "{% url 'reg_website:send_login_otp' %}",
+          type: "GET",
+          data: {
+            phone: phone,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#verify-error").text(response["message"]);
+              $("#verify-error").css("color", "green");
+              return;
+            }
+            $("#verify-error").text(response["message"]);
+            return false;
+          },
+          error: function (err) {
+            $("#verify-error").text(err);
+          },
+    });
+});
+</script>
+{% endblock %}

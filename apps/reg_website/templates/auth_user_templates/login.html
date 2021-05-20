@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6 style">
+        <div class="jumbotron">
+            <h4 style="text-align:center">SignIn</h4>
+            <p>&nbsp;</p>
+            <div class="form-group">
+                <label for="email">Email OR Username</label>
+                <input type="text" id="login-email_or_username" name="email_or_username" class="form-control" placeholder="Enter email or username" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="login-password" name="password" class="form-control" placeholder="Enter Password" />
+            </div>
+            <div class="error-message-bottom-all">
+                 <span class="text-span" id="verify-error"></span>
+            </div>
+            <form>
+            {% csrf_token %}
+                <div class="form-group">
+                    <button class="btn btn-primary" id="sign-in">Sign In</button>
+                </div>
+            </form>
+            <a href="{% url 'reg_website:signup' %}">Not Have An Account?, Register here</a><br>
+            <a href="{% url 'reg_website:forgot_password' %}">Forgot Password?</a><br>
+            <a href="{% url 'reg_website:otp_login' %}">Login with OTP</a>
+        </div>
+    </div>
+</div>
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock javascript %}
+<script>
+$(document).ready(function (){
+  $("#sign-in").unbind().click(function(e){
+    e.preventDefault();
+    var flag = 0;
+    var csrf_token = $("[name='csrfmiddlewaretoken']").val();
+    var email_or_username = $("#login-email_or_username").val();
+    var password = $("#login-password").val();
+    console.log('email_or_username:',email_or_username)
+    console.log('password:',password)
+    if (email_or_username == "") {
+        $("#login-email_or_username").parent().parent().addClass("error-group");
+        flag = 1;
+    }
+    if (password == "") {
+        $("#login-password").parent().parent().addClass("error-group");
+        flag = 1;
+    }
+    if (flag == 1) {
+        $("#verify-error").text("Please Enter Both Details.");
+        return;
+    }
+    else{
+    console.log('email_or_username:',email_or_username)
+    console.log('password:',password)
+        $.ajax({
+          url: "{% url 'reg_website:email_login' %}",
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: csrf_token,
+            email_or_username: email_or_username,
+            password:password,
+          },
+          success: function (response) {
+            if (response["status"] == true) {
+              $("#verify-error").text(response["message"]);
+              $("#verify-error").css("color", "green");
+              setTimeout("location.reload(true)", 2000);
+              window.location = "{% url 'reg_website:profile_view' %}";
+              return true;
+            }
+            $("#verify-error").text(response["message"]);
+            return false;
+            console.log(response["message"])
+          },
+          error: function (err) {
+            $("#verify-error").text(err);
+          },
+        });
+    }
+  });
+});
+</script>
+{% endblock %}
