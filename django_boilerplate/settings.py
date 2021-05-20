@@ -60,7 +60,8 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'notification',
     'customadmin',
-    'django_template',   
+    'django_template',
+    'django_boilerplate',
 
     'widget_tweaks',
     'crispy_forms',
@@ -103,7 +104,6 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 DATABASES = {
     'default': env.db('DATABASE_URL')
 }
-
 
 
 # Password validation
@@ -174,7 +174,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = "auth:auth_login"
 LOGIN_REDIRECT_URL = "/customadmin/notification/"
-AUTH_USER_MODEL = 'customadmin.User'
+AUTH_USER_MODEL = 'django_boilerplate.User'
 LOGOUT_REDIRECT_URL = "auth:auth_login"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
