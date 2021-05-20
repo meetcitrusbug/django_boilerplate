@@ -5,4 +5,4 @@ step2: Copy environment.txt's data and create .env file at root and paste.
 Step3: Now migrate the migration (python manage.py migrate)
 step4: Now create superuser
 
-Postman collection link:
+Postman collection link: https://www.getpostman.com/collections/ee23edd733499dd15f46

@@ -8,6 +8,16 @@ class MediaCategoryListSerializer(serializers.ModelSerializer):
         model = MediaCategory
         fields = ('id', 'category', 'created_at')
 
+class MediaImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaImage
+        fields = ['id', 'image', 'category']
+
+
+class MediaVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaVideo
+        fields = ['id', 'video', 'category']
 
 
 # ===================== Detail ===================== #
@@ -36,19 +46,6 @@ class MediaCategoryDetailsSerializer(serializers.ModelSerializer):
                 videos.append(vid.video.url)
             return videos
         return ''
-
-    
-class MediaImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MediaImage
-        fields = ['id', 'image', 'category']
-
-
-class MediaVideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MediaVideo
-        fields = ['id', 'video', 'category']
-
 
 
 # ===================== Create ===================== #

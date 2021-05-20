@@ -1,4 +1,3 @@
-from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -7,38 +6,19 @@ from django_boilerplate.helpers import custom_response
 from .serializer import MediaCategoryListSerializer, MediaCategoryDetailsSerializer, MediaCategoryCreateSerializer, MediaCategoryUpdateSerializer, MediaImageSerializer, MediaVideoSerializer
 from .models import MediaCategory, MediaImage, MediaVideo
 from .utils.pagination import CategoryPagination
+from django.db.models import Q
 
 
 
-class MediaCategoryListAPIView(APIView):
+class MediaCategoryListAPIView(ListAPIView):
     
     permission_classes = (AllowAny,)
     serializer_class = MediaCategoryListSerializer
-
-    def get(self, request):
-        categories = MediaCategory.objects.all().order_by('-id')
-        serializer = self.serializer_class(categories, many=True, context= {"request": request})
-        result={}
-        result['categories'] = serializer.data
-        message = "All media categories fetched successfully!"
-        return custom_response(True, status.HTTP_200_OK, message, result)
-
-
-class MediaCategoryDetailAPIView(ListAPIView):
-
-    permission_classes = (AllowAny,)
-    serializer_class = MediaCategoryDetailsSerializer
-    pagination_class = CategoryPagination
     model = MediaCategory
     queryset = model.objects.all()
-    
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(queryset, many=True)
         
         return Response({
@@ -47,24 +27,34 @@ class MediaCategoryDetailAPIView(ListAPIView):
             "message":"All categories fetched successfully!",
             "data":serializer.data
         }, status.HTTP_200_OK )
-        
+
     def filter_queryset(self, queryset):
         queryset = queryset.filter(is_active=True)
+        
+        search = self.request.query_params.get('search')
+        sort = self.request.query_params.get('sort')
+
+        if search:
+            queryset = queryset.filter(Q(category__icontains=search))
+        if sort:
+            queryset = queryset.order_by(sort)
+
         return queryset
 
+class MediaCategoryDetailAPIView(ListAPIView):
 
-class MediaCategoryDeleteAPIView(DestroyAPIView):
-    queryset = MediaCategory.objects.all()
-    lookup_field = 'id'
+    permission_classes = (AllowAny,)
+    serializer_class = MediaCategoryDetailsSerializer
     
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+    def list(self, request, id, *args, **kwargs):
+        queryset = MediaCategory.objects.filter(pk=id)
+        serializer = self.get_serializer(queryset, many=True)
+        
         return Response({
             "status":True,
             "code":status.HTTP_200_OK,
-            "message":"Category deleted successfully",
-            "data":{}
+            "message":"Details of a category fetched successfully!",
+            "data":serializer.data
         }, status.HTTP_200_OK )
 
 
@@ -74,10 +64,7 @@ class MediaCategoryCreateAPIView(CreateAPIView):
     serializer_class = MediaCategoryCreateSerializer
     
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['user'] = request.user.pk
-        serializer = self.get_serializer(data=data, context={'request':request})
-        serializer = self.get_serializer(context={'request':request})
+        serializer = self.get_serializer(data=request.data, context={'request':request})
         is_valid = serializer.is_valid()
         
         if not is_valid:
@@ -96,6 +83,25 @@ class MediaCategoryCreateAPIView(CreateAPIView):
                     "message":"New category created successfully",
                     "data":serializer.data,
                     }, status.HTTP_200_OK )
+
+
+
+class MediaCategoryDeleteAPIView(DestroyAPIView):
+
+    permission_classes = (AllowAny,)
+    queryset = MediaCategory.objects.all()
+    lookup_field = 'id'
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({
+            "status":True,
+            "code":status.HTTP_200_OK,
+            "message":"Category deleted successfully",
+            "data":{}
+        }, status.HTTP_200_OK )
+
 
 
 class MediaCategoryUpdateAPIView(UpdateAPIView):
@@ -140,9 +146,7 @@ class MediaImageAddAPIView(CreateAPIView):
     serializer_class = MediaImageSerializer
     
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['user'] = request.user.pk
-        serializer = self.get_serializer(data=data, context={'request':request})
+        serializer = self.get_serializer(data=request.data, context={'request':request})
         is_valid = serializer.is_valid()
         
         if not is_valid:
@@ -154,7 +158,6 @@ class MediaImageAddAPIView(CreateAPIView):
                 }, status.HTTP_200_OK )
                     
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         return  Response({
                     "status":True,
                     "code":status.HTTP_200_OK,
@@ -190,9 +193,7 @@ class MediaVideoAddAPIView(CreateAPIView):
     serializer_class = MediaVideoSerializer
     
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['user'] = request.user.pk
-        serializer = self.get_serializer(data=data, context={'request':request})
+        serializer = self.get_serializer(data=request.data, context={'request':request})
         is_valid = serializer.is_valid()
         
         if not is_valid:
@@ -204,7 +205,6 @@ class MediaVideoAddAPIView(CreateAPIView):
                 }, status.HTTP_200_OK )
                     
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         return  Response({
                     "status":True,
                     "code":status.HTTP_200_OK,
