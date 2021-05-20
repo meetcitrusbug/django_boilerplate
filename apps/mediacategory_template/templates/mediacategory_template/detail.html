@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <title>Category Details</title>
+
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            background: teal;
+            padding: 15px;
+        }
+
+        .container img {
+            width: 100%;
+            max-height: 300px;
+            display: block;
+            -webkit-filter: grayscale(1);
+            filter: grayscale(1);
+            transition: all 100ms ease-out;
+        }
+
+        .container img:hover {
+            transform: scale(1.04);
+            -webkit-filter: grayscale(0);
+            filter: grayscale(0);
+        }
+
+        .container video {
+            width: 100%;
+            max-height: 300px;
+            display: block;
+            -webkit-filter: grayscale(1);
+            filter: grayscale(1);
+            transition: all 100ms ease-out;
+        }
+
+        .container video:hover {
+            transform: scale(1.04);
+            -webkit-filter: grayscale(0);
+            filter: grayscale(0);
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="text-center">{{categoryname}}</h1>
+    <h2 class="container text-left" style="background-color: white;">Images</h2>
+    <div class="container">
+        {% if mediaimage %}
+        {% for i in mediaimage %}
+        <div>
+            <a target="_blank" href="{{MEDIA_URL}}{{ i.image.url }}">
+                <img src="{{MEDIA_URL}}{{ i.image.url }}" />
+            </a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div>No image</div>
+        {% endif %}
+    </div>
+    <br>
+    <h2 class="container text-left" style="background-color: white;">Videos</h2>
+    <div class="container">
+        {% if mediavideo %}
+        {% for i in mediavideo %}
+        <div>
+            <video src="{{MEDIA_URL}}{{ i.video.url }}" controls />
+        </div>
+        {% endfor %}
+        {% else %}
+        <div>No video</div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

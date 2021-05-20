@@ -1,0 +1,8 @@
+DATABASE_URL='postgres://postgres:root@localhost:5432/django_boilerplate'
+
+SECRET_KEY="django-insecure-ppis6@_pee!w$mcgfjmeg-3xn07)tron)dqy9d!@5g3ajkb@5y"
+
+#S3 config
+AWS_ACCESS_KEY_ID=AKIASSILB4DVZQRG7MZO
+AWS_SECRET_ACCESS_KEY=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
+AWS_STORAGE_BUCKET_NAME=django-boilerplate-bucket

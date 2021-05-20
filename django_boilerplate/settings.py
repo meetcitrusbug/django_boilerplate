@@ -56,7 +56,14 @@ INSTALLED_APPS = [
 
 #Local apps
 INSTALLED_APPS += [
-    'django_boilerplate'
+    'django_boilerplate',
+    'mediacategory_api',
+    'customadmin',
+    'mediacategory_template',
+
+    'widget_tweaks',
+    'crispy_forms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -143,7 +150,7 @@ STATICFILES_FINDERS = [
 ]
 
 MEDIA_ROOT = (str(BASE_DIR)+ "/media")
-MEDIA_URL = "/media/"
+# MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -162,4 +169,24 @@ REST_FRAMEWORK = {
     ),
 }
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'django_boilerplate.User'
+
+LOGIN_URL = "auth:auth_login"
+LOGIN_REDIRECT_URL = "/customadmin/notification/"
+AUTH_USER_MODEL = 'django_boilerplate.User'
+LOGOUT_REDIRECT_URL = "auth:auth_login"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#S3 BUCKETS CONFIG
+AWS_ACCESS_KEY_ID = env.str('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env.str('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env.str('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = "ap-south-1"
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = 'public-read'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/"

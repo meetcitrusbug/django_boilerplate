@@ -1,0 +1,25 @@
+{% extends 'customadmin/base.html' %}
+
+{% load static %}
+{% load admin_extras %}
+{% load misc_filters %}
+{% load i18n %}
+
+{% load admin_extras %}
+
+{% block title %}Dashboard{% endblock%}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+{% now "Y" as year_arg %}
+{% now "M" as month_arg %}
+{% now "d" as day_arg %}
+
+
+
+</div>
+<!-- /row -->
+
+{% endblock %}
