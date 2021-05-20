@@ -164,20 +164,23 @@
             </div>
         </nav>
     </header>
-    {% if user.is_authenticated %}
-    {% if mediacategory %}
     <div class="container" style="margin-top: 200px;">
-        <h2 class="text-center" style="margin-bottom: 30px;">List of Media Categories</h2>
-        <ul class="list-group">
-            {% for i in mediacategory %}
-            <a href="{% url 'detail' pk=i.pk %}" style="text-decoration: none;">
-                <li class="list-group-item" style="font-size: 18px;">{{i.category}}</li>
-            </a>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    {% endif %}
+        <div class="row">
+            {% if user.is_authenticated %}
+            {% if mediacategory %}
+            <div class="col-lg-12">
+                <h2 class="text-center" style="margin-bottom: 30px;">List of Media Categories</h2>
+                <ul class="list-group">
+                    {% for i in mediacategory %}
+                    <a href="{% url 'detail' pk=i.pk %}" style="text-decoration: none;">
+                        <li class="list-group-item" style="font-size: 18px;">{{i.category}}</li>
+                    </a>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
 
 </body>
 
