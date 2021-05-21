@@ -72,7 +72,9 @@
         {% if mediavideo %}
         {% for i in mediavideo %}
         <div>
-            <video src="{{MEDIA_URL}}{{ i.video.url }}" controls />
+            <a target="_blank" href="{{MEDIA_URL}}{{ i.video.url }}">
+                <video src="{{MEDIA_URL}}{{ i.video.url }}" controls />
+            </a>
         </div>
         {% endfor %}
         {% else %}
