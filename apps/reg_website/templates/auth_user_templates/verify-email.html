@@ -5,9 +5,11 @@
         <div class="jumbotron">
             <p>Wait here till it is completed</p>
             {% if status %}
-                User verification successfully completed
+                {{message}}
+                <a href="{% url 'reg_website:email_login' %}">Login Here</a>
             {% else %}
-            <a href="#">Send link again</a>
+                {{message}}
+                <a href="{% url 'reg_website:resend_email' %}">Send link again</a>
             {% endif %}
         </div>
     </div>

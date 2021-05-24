@@ -44,7 +44,8 @@ input::-webkit-inner-spin-button {
                  </div>
             </div>
             <div class="error-message-bottom-all">
-                 <span class="text-span" id="verify-error"></span>
+                 <span class="text-span" id="otp-success" style="color:green"></span>
+                 <span class="text-span" id="otp-error" style="color:red"></span>
             </div>
             <div class="form-group">
                 <label for="username">Username *</label>
@@ -73,12 +74,13 @@ input::-webkit-inner-spin-button {
                     <div class="btn-auth-div">
                         <button type="button" id="sign-up-btn" class="btn btn-primary min-width-160"> Sign Up
                         </button>
-                        <div class="error-message-bottom-all">
-                            <span class="text-span" id="sign-up-error"></span>
-                        </div>
                     </div>
                 </div>
             </form>
+            <div class="error-message-bottom-all">
+                <span class="text-span" id="sign-up-success" style="color:green"></span>
+                <span class="text-span" id="sign-up-error" style="color:red"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -113,6 +115,8 @@ $(document).ready(function (){
   var phone_verified = false
   $("#otp-verify-button").click(function(){
       var otp = $("#otp-number").val()
+      $('#otp-success').empty();
+      $('#otp-error').empty();
       $.ajax({
           url: "{% url 'reg_website:verify_phone' %}",
           type: "GET",
@@ -122,17 +126,17 @@ $(document).ready(function (){
           success: function (response) {
             if (response["status"] == true) {
               phone_verified = true
-              $("#verify-error").text(response["message"]);
-              $("#verify-error").css("color", "green");
+              $("#otp-success").text(response["message"]);
+              
               return;
             }
             phone_verified = false
-            $("#verify-error").text(response["message"]);
+            $("#otp-error").text(response["message"]);
             return false;
           },
           error: function (err)
           {
-            $("#verify-error").text(err);
+            $("#otp-error").text(err);
           },
       });
   });
@@ -140,17 +144,19 @@ $(document).ready(function (){
   $("#otp-register").click(function (){
     var phone = $("#phone").val();
     var flag_p=0
+    $('#otp-success').empty();
+    $('#otp-error').empty();
     if (phone == "") {
         $("#phone").parent().parent().addClass("error-group");
         flag_p = 1;
       }
     if (isValidPhoneNumber(phone) == false && phone != ""){
         $("#phone").parent().parent().addClass("error-group");
-        $("#verify-error").text("Enter valid Phone Number.");
+        $("#otp-error").text("Enter valid Phone Number.");
         return;
       }
     if (flag_p == 1) {
-        $("#verify-error").text("Please Enter Phone Number.");
+        $("#otp-error").text("Please Enter Phone Number.");
         return;
     }
     else{
@@ -165,15 +171,14 @@ $(document).ready(function (){
               $("#otp-label").css("display", "block");
               $("#otp-number").css("display", "block");
               $("#otp-verify-button").css("display", "block");
-              $("#verify-error").text(response["message"]);
-              $("#verify-error").css("color", "green");
+              $("#otp-success").text(response["message"]);
               return;
             }
-            $("#verify-error").text(response["message"]);
+            $("#otp-error").text(response["message"]);
             return false;
           },
           error: function (err) {
-            $("#verify-error").text(err);
+            $("#otp-error").text(err);
           },
     });
     }
@@ -182,6 +187,8 @@ $(document).ready(function (){
   // Submit contact form
   $("#sign-up-btn").unbind().click(function (e){
       e.preventDefault();
+      $('#sign-up-success').empty();
+      $('#sign-up-error').empty();
       $(".error-group").removeClass("error-group");
       var csrf_token = $("[name='csrfmiddlewaretoken']").val();
       var first_name = $("#first_name").val();
@@ -259,9 +266,7 @@ $(document).ready(function (){
           },
           success: function (response) {
             if (response["status"] == true) {
-              $("#sign-up-error").text(response["message"]);
-              $("#sign-up-error").css("color", "green");
-              setTimeout("location.reload(true)", 10000);
+              $("#sign-up-success").text(response["message"]);
               window.location = "{% url 'reg_website:email_login' %}";
               return true;
             }

@@ -7,7 +7,7 @@ class ChangeProfileSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
-        fields = ['id','token', 'first_name', 'last_name','address']
+        fields = ['id','token', 'first_name', 'last_name','address', 'profile_image']
 
         extra_kwargs = {"password":
                             {"write_only": True}
@@ -23,7 +23,7 @@ class GetProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'token', 'email', 'username', 'first_name', 'last_name', 'phone' ,'address']
+        fields = ['id', 'token', 'email', 'username', 'first_name', 'last_name', 'phone','address','profile_image']
 
     def get_token(self, obj):
         return f"Token {Token.objects.get_or_create(user=obj)[0]}"

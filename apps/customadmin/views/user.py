@@ -36,15 +36,20 @@ def export_user_csv(request):
     query_set = User.objects.all()
 
     #Header
-    writer.writerow(['First Name','Last Name', "Username", 'Email', 'Status','Phone',"User Type","is_staff", "is_superuser"])
+    writer.writerow(['First Name','Last Name', "Username", 'Email', 'Avatar','Status','Phone',"User Type","is_staff", "is_superuser"])
     for user in query_set:
         if user.groups.all():
             gp = user.groups.all()[0].name
         else:
             gp = None
 
+        if user.profile_image:
+            image = user.profile_image.url
+        else:
+            image = None
 
-        output.append([user.first_name, user.last_name, user.username, user.email, user.is_active,user.phone, gp,user.is_staff, user.is_superuser,])
+
+        output.append([user.first_name, user.last_name, user.username, user.email, image, user.is_active,user.phone, gp,user.is_staff, user.is_superuser,])
     #CSV Data
     writer.writerows(output)
     return response

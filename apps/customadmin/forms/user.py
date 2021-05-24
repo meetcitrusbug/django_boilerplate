@@ -123,6 +123,7 @@ class MyUserChangeForm(UserChangeForm):
             "first_name",
             "last_name",
             "phone",
+            "profile_image",
             "address",
             "is_active",
             "is_superuser",
@@ -142,10 +143,6 @@ class MyUserChangeForm(UserChangeForm):
         last_name = cleaned_data.get("last_name")
         phone = cleaned_data.get("phone")
 
-        if not username:
-            raise forms.ValidationError(
-                "Please enter username"
-            )
         if not first_name:
             raise forms.ValidationError(
                 "Please enter first name"
@@ -153,12 +150,4 @@ class MyUserChangeForm(UserChangeForm):
         if not last_name:
             raise forms.ValidationError(
                 "Please enter last name"
-            )
-        if not phone:
-            raise forms.ValidationError(
-                "Please enter Phone Number"
-            )
-        if len(str(phone))<10:
-            raise forms.ValidationError(
-                "Please enter valid Phone Number"
             )

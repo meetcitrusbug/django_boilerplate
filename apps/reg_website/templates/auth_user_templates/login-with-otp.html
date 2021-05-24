@@ -20,26 +20,27 @@ input::-webkit-inner-spin-button {
         <div class="jumbotron">
             <h4 style="text-align:center">Log-In With OTP</h4>
             <p>&nbsp;</p>
-                <div class="inline-div col-8">
-                    <label for="phone">Phone Number</label>
-                    <input type="number" id="phone" name="phone" class="form-control" placeholder="Enter Phone Number" />
-                </div>
-                <div class="inline-div col-2">
-                    <a class="btn btn-outline-success" role="button" id="otp-send">Send OTP</a>
-                </div>
-                <div class="form-group inline-div col-8">
-                    <label for="otp">OTP</label>
-                    <input type="number" id="OTP" name="OTP" class="form-control col-8" placeholder="Enter OTP Number" />
-                </div>
-                <div class="error-message-bottom-all">
-                 <span class="text-span" id="verify-error"></span>
-                </div>
+            <div class="inline-div col-8">
+                <label for="phone">Phone Number</label>
+                <input type="number" id="phone" name="phone" class="form-control" placeholder="Enter Phone Number" />
+            </div>
+            <div class="inline-div col-2">
+                <a class="btn btn-outline-success" role="button" id="otp-send">Send OTP</a>
+            </div>
+            <div class="form-group inline-div col-8">
+                <label for="otp">OTP</label>
+                <input type="number" id="OTP" name="OTP" class="form-control col-8" placeholder="Enter OTP Number" />
+            </div>
             <form>
                 {% csrf_token %}
                 <div class="form-group inline-div col-8">
                     <button class="btn btn-primary btn-md" id="login-otp">Sign In</button>
                 </div>
             </form>
+            <div class="error-message-bottom-all">
+                <span class="text-span" id="verify-phone-success" style="color:green"></span>
+                <span class="text-span" id="verify-phone-error" style="color:red"></span>
+            </div>
             <a href="{% url 'reg_website:email_login' %}" class="col-8 inline-div">Login with Email</a>
         </div>
     </div>
@@ -50,6 +51,8 @@ input::-webkit-inner-spin-button {
 <script>
 $("#login-otp").unbind().click(function (e){
     e.preventDefault();
+    $('#verify-phone-success').empty();
+    $('#verify-phone-error').empty();
     var csrf_token = $("[name='csrfmiddlewaretoken']").val();
     var phone = $("#phone").val();
     var OTP = $("#OTP").val();
@@ -63,7 +66,7 @@ $("#login-otp").unbind().click(function (e){
         flag_p = 1;
       }
       if (flag_p == 1) {
-        $("#verify-error").text("Please Enter Phone Number.");
+        $("#verify-phone-error").text("Please Enter Phone Number.");
         return;
         }
     $.ajax({
@@ -76,22 +79,23 @@ $("#login-otp").unbind().click(function (e){
           },
           success: function (response) {
             if (response["status"] == true) {
-              $("#verify-error").text(response["message"]);
-              $("#verify-error").css("color", "green");
+              $("#verify-phone-success").text(response["message"]);
               setTimeout("location.reload(true)", 2000);
               window.location = "{% url 'reg_website:profile_view' %}";
               return true;
             }
-            $("#verify-error").text(response["message"]);
+            $("#verify-phone-error").text(response["message"]);
             return false;
           },
           error: function (err) {
-            $("#verify-error").text(err);
+            $("#verify-phone-error").text(err);
           },
     });
 });
 
 $("#otp-send").click(function (){
+    $('#verify-phone-success').empty();
+    $('#verify-phone-error').empty();
     var phone = $("#phone").val();
     $.ajax({
           url: "{% url 'reg_website:send_login_otp' %}",
@@ -101,15 +105,14 @@ $("#otp-send").click(function (){
           },
           success: function (response) {
             if (response["status"] == true) {
-              $("#verify-error").text(response["message"]);
-              $("#verify-error").css("color", "green");
+              $("#verify-phone-success").text(response["message"]);
               return;
             }
-            $("#verify-error").text(response["message"]);
+            $("#verify-phone-error").text(response["message"]);
             return false;
           },
           error: function (err) {
-            $("#verify-error").text(err);
+            $("#verify-phone-error").text(err);
           },
     });
 });

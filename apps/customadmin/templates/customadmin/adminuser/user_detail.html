@@ -25,9 +25,9 @@
                             <td class="h5 text-left" colspan="2">User Detail</td>
                         </tr>
                         <tr class="text-left">
-                            {%comment%}<td class="text-center" height="240px" width="480px">
-
-                            </td>{%endcomment%}
+                            <td class="text-center" height="360px" width="480px">
+                                <img src="{{MEDIA_URL}}{{user_detail.profile_image.url}}" alt="" height="360px" width="480px">
+                            </td>
                             <td class="h6">
                                 Fullname : {{user_detail.first_name}} {{user_detail.last_name}}
                                 <hr>

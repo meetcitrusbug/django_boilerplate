@@ -266,7 +266,6 @@ def sendOTPLogin(request):
 
 
 
-
 class ForgotPasswordView(TemplateView):
     template_name = 'auth_user_templates/forgot-password.html'
 
@@ -340,17 +339,53 @@ class EmailVerificationView(TemplateView):
         try:
             user = User.objects.filter(unique_id=uuid)
             if not user:
-                return render(request, self.template_name, {'Title': 'Email Verification', 'status': False})
+                message = "User not exists"
+                return render(request, self.template_name, {'Title': 'Email Verification', 'status': False,'message':message})
             if user[0].email_verified:
-                return redirect('/')
+                message = "Email Already Verified"
+                return render(request, self.template_name, {'Title': 'Email Verification', 'status': True,'message':message})
             user[0].email_verified = True
             user[0].save()
             send_email(user[0], subject=f"WElCOME PROJECT TITLE",
                        text_content=f"WELCOME, YOU HAVE SUCCESSFULLY COMPLETED YOUR EMAIL VERIFICATION")
             message = "User Verified Successfully!!"
-            return render(request, self.template_name, {'Title': 'Email Verification', 'status': True})
+            return render(request, self.template_name, {'Title': 'Email Verification', 'status': True,'message':message})
         except:
-            return render(request, self.template_name, {'Title': 'Email Verification', 'status': False})
+            message = "Error"
+            return render(request, self.template_name, {'Title': 'Email Verification', 'status': False,'message':message})
+
+
+class ReSendVerificationEmailView(View):
+    def get(self,request,*args,**kwargs):
+        if not request.user.is_authenticated:
+            return render(request,"auth_user_templates/resend-email.html")
+        return redirect('reg_website:email_login')
+
+    def post(self, request):
+        current_site = f'http://{get_current_site(request)}/verify-email/'
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email)
+        if user:
+            if user[0].email_verified:
+                response = {
+                    "message": "User Verified Already.",
+                    "status": False
+                }
+                return JsonResponse(response)
+            subject = "Email verification"
+            text_content = f"Hello, \nPlease click the below link to verify your email. \n {current_site}{user[0].unique_id}/"
+            send_email(user[0], subject, text_content)
+            response = {
+                "message": "Verification mail resend Successfully.",
+                "status": True
+            }
+            return JsonResponse(response)
+        else:
+            response = {
+                "message": "User Not Exists.",
+                "status": False
+            }
+            return JsonResponse(response)
 
 
 @cache_control(no_cache=True, must_revalidate=True)

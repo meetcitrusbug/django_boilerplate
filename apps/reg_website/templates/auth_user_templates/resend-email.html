@@ -3,11 +3,11 @@
 <div class="row justify-content-center">
     <div class="col-6 style">
         <div class="jumbotron">
-            <h4 style="text-align:center">Forgot Password</h4>
+            <h4 style="text-align:center">Resend Email</h4>
             <p>&nbsp;</p>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="forgot-password-email" name="email" class="form-control" placeholder="Enter email address" />
+                <input type="email" id="resend-email" name="email" class="form-control" placeholder="Enter email address" />
             </div>
             <form>
                 {% csrf_token %}
@@ -15,8 +15,8 @@
                     <button class="btn btn-primary btn-lg form-control" id="send-email">Send Email</button>
                 </div>
                 <div class="error-message-bottom-all">
-                    <span class="text-span" id="change-password-success" style="color:green"></span>
-                    <span class="text-span" id="change-password-error" style="color:red"></span>
+                    <span class="text-span" id="email-send-success" style="color:green"></span>
+                    <span class="text-span" id="email-send-error" style="color:red"></span>
                 </div>
             </form>
         </div>
@@ -35,28 +35,28 @@ function isValidEmailAddress(emailAddress)
   }
 $("#send-email").unbind().click(function (e){
       e.preventDefault();
+      $('#email-send-success').empty();
+      $('#email-send-error').empty();
       $(".error-group").removeClass("error-group");
-      $('#change-password-success').empty();
-      $('#change-password-error').empty();
       var csrf_token = $("[name='csrfmiddlewaretoken']").val();
-      var email = $("#forgot-password-email").val();
+      var email = $("#resend-email").val();
       var flag = 0;
       if (email == "") {
-        $("#forgot-password-email").parent().parent().addClass("error-group");
+        $("#resend-email").parent().parent().addClass("error-group");
         flag = 1;
       }
       if (isValidEmailAddress(email) == false && email != "") {
         $("#email").parent().parent().addClass("error-group");
-        $("#change-password-error").text("Enter valid email address.");
+        $("#email-send-error").text("Enter valid email address.");
         return;
       }
       if (flag == 1) {
-        $("#change-password-error").text("Please fill all required fields.");
+        $("#email-send-error").text("Please fill all required fields.");
         return;
       }
       else {
         $.ajax({
-          url: "{% url 'reg_website:forgot_password'%}",
+          url: "{% url 'reg_website:resend_email'%}",
           type: "POST",
           data: {
             csrfmiddlewaretoken: csrf_token,
@@ -64,15 +64,15 @@ $("#send-email").unbind().click(function (e){
           },
           success: function (response) {
             if (response["status"] == true) {
-              $("#change-password-success").text(response["message"]);
+              $("#email-send-success").text(response["message"]);
               return;
             }
-            $("#change-password-error").text(response["message"]);
+            $("#email-send-error").text(response["message"]);
             return false;
           },
           error: function (err)
           {
-            $("#change-password-error").text(err);
+            $("#email-send-error").text(err);
           },
         });
       }

@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=40, blank=True)
     address = models.TextField(blank=True, null=True)
     unique_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name=_("Unique Id"))
+    profile_image = models.ImageField(upload_to='profile_image/', null=True, blank=True, default='')
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

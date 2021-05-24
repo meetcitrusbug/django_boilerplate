@@ -17,14 +17,20 @@ class ChangeProfileView(View):
             user = request.user
 
         if user:
-            print(user.id)
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
             address = request.POST['address']
-            user = User.objects.filter(id = user.id)[0]
+            profile_image = request.FILES.get('image')
+            clear_image = request.POST.get('clear',None)
+            user = User.objects.filter(id=user.id)[0]
             user.first_name = first_name
             user.last_name = last_name
             user.address = address
+            if profile_image:
+                user.profile_image = profile_image
+            else:
+                if clear_image:
+                    user.profile_image = None
             user.save()
             response = {
                 "message": "Profile Has Been Changed.",
@@ -41,7 +47,6 @@ class ChangePasswordView(TemplateView):
 
     def post(self, request):
         old_password = request.POST.get('old_password')
-        print(old_password)
         new_password = request.POST.get('new_password')
         if request.user.is_authenticated:
             user = request.user
