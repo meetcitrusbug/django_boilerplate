@@ -28,11 +28,6 @@ class UserAdmin(UserAdmin):
                     "is_active",
                     "is_staff",
                     "profile_image",
-                    "email_verified",
-                    "phone_verified",
-                    "password_reset_link",
-                    "otp_number",
-
                 )
             },
         ),

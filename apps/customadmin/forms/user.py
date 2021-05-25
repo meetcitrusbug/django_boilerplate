@@ -138,10 +138,8 @@ class MyUserChangeForm(UserChangeForm):
 
     def clean(self):
         cleaned_data = super(MyUserChangeForm, self).clean()
-        username = cleaned_data.get("username")
         first_name = cleaned_data.get("first_name")
         last_name = cleaned_data.get("last_name")
-        phone = cleaned_data.get("phone")
 
         if not first_name:
             raise forms.ValidationError(
@@ -151,3 +149,18 @@ class MyUserChangeForm(UserChangeForm):
             raise forms.ValidationError(
                 "Please enter last name"
             )
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        profile_image = instance.profile_image
+        user = User.objects.get(id=instance.id)
+        if commit:
+            if profile_image and user.profile_image.name != profile_image.name:
+                if user.profile_image:
+                    user.delete_profile_image()
+            if profile_image == '':
+                if user.profile_image:
+                    user.delete_profile_image()
+            instance.save()
+
+        return instance

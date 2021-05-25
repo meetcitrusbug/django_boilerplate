@@ -23,9 +23,13 @@ class ChangeProfileAPIView(APIView):
 
     def put(self, request):
         user = get_object(User,request.user.pk)
+        profile_image = request.data.get('profile_image',None)
         if not user:
             message = "User not found!"
             return custom_response(False, status.HTTP_400_BAD_REQUEST, message)
+        if profile_image == '' or profile_image:
+            if user.profile_image:
+                user.delete_profile_image()
         message = "User Profile updated successfully!"
         serializer = self.serializer_class(user, data=request.data, partial=True, context={"request": request})
         response_status, result, message = serialized_response(serializer, message)

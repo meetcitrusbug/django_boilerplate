@@ -13,6 +13,9 @@ from reg_website.models import User
 import random
 import uuid
 
+from datetime import timezone
+import datetime
+
 from twilio.rest import Client
 from django_boilerplate import settings
 
@@ -109,17 +112,26 @@ class SignInOTPAPIView(APIView):
             if not user[0].phone_verified:
                 message = "Phone number is not verified"
                 return custom_response(status_value=False, code=status.HTTP_400_BAD_REQUEST, message=message)
-            if otp == user[0].otp_number:
-                user_auth = User.objects.get(id=user[0].id)
-                login(request, user_auth)
-                user_auth.otp_number = None
-                user_auth.save()
-                serialize = self.serializer_class(user_auth, context={'request': request})
-                return custom_response(status_value=True, code=status.HTTP_200_OK, message="Login Success",
-                                       result=serialize.data)
-            else:
+            if otp != user[0].otp_number:
                 message = "Fail"
                 return custom_response(status_value=False, code=status.HTTP_400_BAD_REQUEST, message=message)
+            current_time = datetime.datetime.now(timezone.utc)
+            expire_time = user[0].otp_number_expire
+            if expire_time:
+                if current_time <= expire_time:
+                    user_auth = User.objects.get(id=user[0].id)
+                    login(request, user_auth)
+                    user_auth.otp_number = None
+                    user_auth.otp_number_expire = None
+                    user_auth.save()
+                    serialize = self.serializer_class(user_auth, context={'request': request})
+                    return custom_response(status_value=True, code=status.HTTP_200_OK, message="Login Success",
+                                           result=serialize.data)
+            user[0].otp_number = None
+            user[0].otp_number_expire = None
+            user[0].save()
+            message = "Not valid otp or OTP has been expired"
+            return custom_response(status_value=False, code=status.HTTP_400_BAD_REQUEST, message=message)
         else:
             message = "Not Recognized User"
             return custom_response(status_value=False, code=status.HTTP_400_BAD_REQUEST, message=message)
@@ -149,6 +161,7 @@ class ForgotPasswordAPIView(APIView):
             return custom_response(False, status.HTTP_400_BAD_REQUEST, message)
         if user:
             user.password_reset_link = uuid.uuid4()
+            user.password_reset_link_expire = datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(minutes=5)
             user.save()
             subject = "Password reset link"
             text_content = f"Hello, \nYou recently requested to reset your password for your account. Please click the below link to change your password. \n {current_site}{user.password_reset_link}/"
@@ -171,11 +184,21 @@ class ResetPasswordAPIView(APIView):
 
         user_exists = User.objects.filter(is_active=True, password_reset_link=uid)
         if user_exists:
-            user_exists[0].set_password(password)
+            time_expire = user_exists[0].password_reset_link_expire
+            if time_expire:
+                current_time = datetime.datetime.now(timezone.utc)
+                if current_time <= time_expire:
+                    user_exists[0].set_password(password)
+                    user_exists[0].password_reset_link = None
+                    user_exists[0].password_reset_link_expire = None
+                    user_exists[0].save()
+                    message="Password reset successful."
+                    return custom_response(True, status.HTTP_200_OK, message)
             user_exists[0].password_reset_link = None
+            user_exists[0].password_reset_link_expire = None
             user_exists[0].save()
-            message="Password reset successful."
-            return custom_response(True, status.HTTP_200_OK, message)
+            message = "Link has been expired."
+            return custom_response(False, status.HTTP_400_BAD_REQUEST, message)
         message="Not a valid Link."
         return custom_response(False, status.HTTP_400_BAD_REQUEST, message)
 
@@ -264,6 +287,7 @@ class SendOTPAPIView(APIView):
             phone_no = '+91' + request.data['phone']
             OTP = random.randint(000000, 999999)
             user.otp_number = OTP
+            user.otp_number_expire = datetime.datetime.now(timezone.utc) + datetime.timedelta(minutes=5)
             user.save()
             client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
             client.messages.create(body=f"Your OTP for login with project is {OTP}", from_=settings.TWILIO_MOBILE,

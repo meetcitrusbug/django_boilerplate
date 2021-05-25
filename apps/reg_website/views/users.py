@@ -17,6 +17,9 @@ from twilio.rest import Client
 from ..forms import SignUpForm
 from ..models import User
 
+from datetime import timezone
+import datetime
+
 import random
 import hashlib
 
@@ -203,13 +206,26 @@ class LoginWithOTPView(TemplateView):
                 }
                 return JsonResponse(response)
 
-            user_auth = User.objects.get(id=user[0].id)
-            login(request, user_auth)
-            user_auth.otp_number = None
-            user_auth.save()
+            current_time = datetime.datetime.now(timezone.utc)
+            expire_time = user[0].otp_number_expire
+            if expire_time:
+                if current_time<=expire_time:
+                    user_auth = User.objects.get(id=user[0].id)
+                    login(request, user_auth)
+                    user_auth.otp_number = None
+                    user_auth.otp_number_expire = None
+                    user_auth.save()
+                    response = {
+                        "message": "Login Success.",
+                        "status": True
+                    }
+                    return JsonResponse(response)
+            user[0].otp_number = None
+            user[0].otp_number_expire = None
+            user[0].save()
             response = {
-                "message": "Login Success.",
-                "status": True
+                "message": "OTP is not valid.",
+                "status": False
             }
             return JsonResponse(response)
 
@@ -230,6 +246,7 @@ def sendOTPLogin(request):
         }
         return JsonResponse(response)
     user = User.objects.filter(phone=phone)
+    print(user)
     if user:
         if user[0].phone_verified:
             phone_no = '+91' + phone
@@ -239,6 +256,7 @@ def sendOTPLogin(request):
                 client.messages.create(body=f"Your OTP for login with project is {OTP}", from_=settings.TWILIO_MOBILE,
                                        to=phone_no)
                 user[0].otp_number = OTP
+                user[0].otp_number_expire = datetime.datetime.now(timezone.utc) + datetime.timedelta(minutes=5)
                 user[0].save()
                 response = {
                     "message": "OTP sent successfully.",
@@ -280,6 +298,7 @@ class ForgotPasswordView(TemplateView):
         user_exists = User.objects.filter(is_active=True, email=email, email_verified=True)
         if user_exists:
             user_exists[0].password_reset_link = uuid.uuid4()
+            user_exists[0].password_reset_link_expire = datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(minutes=5)
             user_exists[0].save()
             current_site = f'http://{get_current_site(request)}/reset-password/'
             subject = "Password reset link"
@@ -302,8 +321,14 @@ class ResetPasswordView(View):
     template_name = 'auth_user_templates/set-password.html'
 
     def get(self, request, uid):
-        context = {"uid": uid}
-        return render(request, self.template_name, context)
+        user_exists = User.objects.filter(is_active=True, password_reset_link=uid)
+        if user_exists:
+            context = {"uid": uid, 'status':True}
+            return render(request, self.template_name, context)
+        else:
+            context = {'status':False}
+            return render(request, self.template_name, context)
+
 
     def post(self, request,uid):
         password = request.POST.get('password')
@@ -317,16 +342,24 @@ class ResetPasswordView(View):
 
         user_exists = User.objects.filter(is_active=True, password_reset_link=uid)
         if user_exists:
-            user_exists[0].set_password(password)
+            time_expire = user_exists[0].password_reset_link_expire
+            if time_expire:
+                current_time = datetime.datetime.now(timezone.utc)
+                if current_time<=time_expire:
+                    user_exists[0].set_password(password)
+                    user_exists[0].password_reset_link = None
+                    user_exists[0].password_reset_link_expire = None
+                    user_exists[0].save()
+                    response = {
+                        "message": "Password reset successful.",
+                        "status": True
+                    }
+                    return JsonResponse(response)
             user_exists[0].password_reset_link = None
+            user_exists[0].password_reset_link_expire = None
             user_exists[0].save()
-            response = {
-                "message": "Password reset successful.",
-                "status": True
-            }
-            return JsonResponse(response)
         response = {
-            "message": "Not a valid Link.",
+            "message": "Link has been expired.",
             "status": False
         }
         return JsonResponse(response)

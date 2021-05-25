@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.contrib.auth import update_session_auth_hash
 from django.views import View
 from django.http import JsonResponse
 from ..models import User
@@ -27,9 +26,12 @@ class ChangeProfileView(View):
             user.last_name = last_name
             user.address = address
             if profile_image:
+                if user.profile_image:
+                    user.delete_profile_image()
                 user.profile_image = profile_image
             else:
                 if clear_image:
+                    user.delete_profile_image()
                     user.profile_image = None
             user.save()
             response = {
@@ -53,7 +55,6 @@ class ChangePasswordView(TemplateView):
             if user.check_password(old_password):
                 user.set_password(new_password)
                 user.save()
-                update_session_auth_hash(request, user)
                 response = {
                     "message": "Password Changed Successfully.",
                     "status": True

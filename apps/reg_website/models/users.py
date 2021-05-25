@@ -3,7 +3,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.utils.translation import gettext as _
-from django_boilerplate.models import ActivityTracking
+
+
+from datetime import timezone
+import datetime
 
 
 class AccountManager(BaseUserManager):
@@ -64,7 +67,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_verified = models.BooleanField(default=False,verbose_name=_("Phone Verification"))
 
     password_reset_link = models.UUIDField(unique=True, null=True, blank=True)
+    password_reset_link_expire = models.DateTimeField(null=True, blank=True)
+
     otp_number = models.CharField(max_length=8,unique=True,null=True,blank=True)
+    otp_number_expire = models.DateTimeField(null=True,blank=True)
 
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,6 +92,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+
+    def delete_profile_image(self):
+        self.profile_image.storage.delete(self.profile_image.name)
+
+    def delete(self, using=None, keep_parents=False):
+        self.profile_image.storage.delete(self.profile_image.name)
+        super().delete()
+
 
     class Meta:
         verbose_name = "User"

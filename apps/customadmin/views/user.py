@@ -57,9 +57,12 @@ def export_user_csv(request):
 class UserDetailView(MyDetailView):
     template_name = "customadmin/adminuser/user_detail.html"
     context = {}
+    model = User
 
     def get(self, request, pk):
         self.context['user_detail'] = User.objects.filter(pk=pk).first()
+        self.context['opts'] = self.model._meta
+        self.context['objects'] = self.context['user_detail']
         return render(request, self.template_name, self.context)
 
 
