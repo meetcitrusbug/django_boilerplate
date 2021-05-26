@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 
 #Local apps
 INSTALLED_APPS += [
+    'django_boilerplate'
 ]
 
 MIDDLEWARE = [
@@ -161,3 +162,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+
+SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
+
+AUTH_USER_MODEL = 'django_boilerplate.User'
+
