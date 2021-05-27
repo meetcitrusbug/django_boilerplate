@@ -15,7 +15,7 @@ class ProductPagination(PageNumberPagination):
         return Response({
             "status":True,
             "code":status.HTTP_200_OK,
-            "message":"Products fetch successfully",
+            "message":"Data fetch successfully",
             "data":OrderedDict([
                     ('links', {
                         'count':self.page.paginator.count,

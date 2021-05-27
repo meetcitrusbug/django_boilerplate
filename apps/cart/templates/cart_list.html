@@ -135,10 +135,16 @@
                     <div class="col-12 align-items-center">
                     </div>
                 </div>
+                <a href="{% url 'cards' %}" class="form-control col-sm-2" >
+                    Cards
+                </a>
+                <a href="{% url 'orders' %}" class="form-control col-sm-2" >
+                    Orders
+                </a>
                 <a href="{% url 'cart-remove-all' %}" class="form-control col-sm-2" >
                     Remove all items
                 </a>
-                <button id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Checkout</button>
+                <a href="{% url 'checkout' %}" id="go_button" class="btn btn-outline-success my-2 my-sm-0" type="button">Checkout</a>
                 {% include 'authentication.html' %}
         </div>
     </nav>

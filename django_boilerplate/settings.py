@@ -65,7 +65,8 @@ INSTALLED_APPS += [
     'product',   
     'cart',
     'django_template',
-    'django_boilerplate'
+    'django_boilerplate',
+    'order'
 ]
 
 MIDDLEWARE = [
@@ -177,3 +178,6 @@ REST_FRAMEWORK = {
 
 LOGIN_URL = 'admin:index'
 AUTH_USER_MODEL = 'django_boilerplate.User'
+
+STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
+CURRENCY='inr'

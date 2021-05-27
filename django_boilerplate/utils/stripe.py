@@ -15,7 +15,7 @@ class MyStripe():
     """
 
     def __init__(self):
-        stripe.api_key = settings.API_KEY
+        stripe.api_key = settings.STRIPE_SECRET_KEY
 
     def createCustomer(self, user):
         """Using this method you can register a new customer"""

@@ -19,6 +19,8 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=40, blank=True)
     profile_image = models.ImageField(upload_to="profile_image", null=True,  blank=True, verbose_name=_("Profile Image"))
     credentials = models.CharField(max_length=200, null=True, blank=True)
+    
+    customer_id = models.CharField(blank=True, max_length=500, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

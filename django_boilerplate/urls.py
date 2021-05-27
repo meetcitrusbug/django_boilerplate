@@ -32,6 +32,7 @@ urlpatterns = [
     path('customadmin/', include('product.urls2')),
     path('customadmin/', include('category.urls')),
     path('customadmin/', include('category.urls2')),
+    path('', include('order.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

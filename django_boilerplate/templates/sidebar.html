@@ -34,6 +34,13 @@
                 </a>
             </li>
 
+            <li class="{% if 'order' in request.path   %}active{% endif %}">
+                <a href="{% url 'order-list' %}">
+                    <i class="fa fa-user fa-fw fa-2x"></i>
+                    <span class="nav-label">Order</span>
+                </a>
+            </li>
+
             <!-- <li class="{% if 'image' in request.path   %}active{% endif %}">
                 <a href="{% url 'productimage-list' %}">
                     <i class="fa fa-user fa-fw fa-2x"></i>

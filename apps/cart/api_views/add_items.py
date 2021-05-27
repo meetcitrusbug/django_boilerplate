@@ -13,6 +13,11 @@ class AddItemsAPIView(ListCreateAPIView):
     model = Cart
     
     def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        
+        for i in  data:
+            i['user'] = request.user.pk
+            
         serializer = self.get_serializer(data=request.data, *args, **kwargs, many=True)
         if serializer.is_valid():
             serializer.save()
