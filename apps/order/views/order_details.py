@@ -4,9 +4,9 @@ from django.shortcuts import render
 from order.models import Order, OrderProduct
 
 
-class OrderDetailsAPIView(View):
+class OrderDetailsView(View):
     
-    template_name = "admin/order_details.html"
+    template_name = "order_details.html"
     model = Order
     kwargs ={}
     request = None

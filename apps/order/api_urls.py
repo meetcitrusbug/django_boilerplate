@@ -1,5 +1,6 @@
 from order.api_views import (OrderPlaceAPIView, GenerateStripeCartToken, PlaceOrderWithCardAPIView, CardListAPIView,
-                            CardDeleteAPIView, OrderListAPIView, OrderStatusUpdateAPIView, OrderDetailsAPIView, CardAddAPIView)
+                            CardDeleteAPIView, OrderListAPIView, OrderStatusUpdateAPIView, OrderDetailsAPIView, CardAddAPIView,
+                            CardDefaultView)
 from django.urls import path
 
 urlpatterns = [
@@ -15,4 +16,6 @@ urlpatterns = [
     path('order/details/<int:pk>', OrderDetailsAPIView.as_view(), name='order-details-api'),
     
     path('stripe/card/token', GenerateStripeCartToken.as_view(), name='stripe-card-token-api'),
+    
+    path('card/default/<int:pk>', CardDefaultView.as_view(), name='card-default-api'),
 ]

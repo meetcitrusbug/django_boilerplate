@@ -4,3 +4,5 @@ from .checkout import CheckoutDetailsView, CheckoutWithCardView
 from .orders  import OrdersList
 from .cards import CardsList, CardDeletView
 from .add_card import AddCardView
+from .order_details import OrderDetailsView
+from .default_card import CardDefaultView

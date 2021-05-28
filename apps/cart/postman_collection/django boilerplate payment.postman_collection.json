@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "5d7533a9-0b8c-41e4-9258-009d0e9a6aff",
+		"name": "django boilerplate payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "{{base_url}}/api/v1/place-order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\":\"tok_1IvNGOBioYe4wt74W5nxT8ht\",\r\n    \"is_save_card\": true,\r\n    \"user\":1,\r\n    \"billing_address\":{\r\n        \"street\":\"street8\",\r\n        \"city\":\"city\",\r\n        \"state\":\"state\",\r\n        \"country\":\"country\",\r\n        \"type\":\"BILLING\"\r\n    },\r\n    \"shipping_address\":{\r\n        \"street\":\"street8\",\r\n        \"city\":\"city\",\r\n        \"state\":\"state\",\r\n        \"country\":\"country\",\r\n        \"type\":\"SHIPPING\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/place-order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"place-order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/stripe/card/token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"number\":\"4000056655665556\",\r\n    \"cvc\":\"123\",\r\n    \"exp_month\":10,\r\n    \"exp_year\":2022,\r\n    \"name\":\"rahul parmar\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/stripe/card/token",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"stripe",
+						"card",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/card/delete/1",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/card/delete/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"card",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/order/list/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/order/list/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"list",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/order-status-update/114",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\":\"COMPLETED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/order-status-update/114",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"order-status-update",
+						"114"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/order/list/",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/order/list/?search=1114&date_gte=2021-05-20&date_lte=2021-06-20",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"list",
+						""
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "1114"
+						},
+						{
+							"key": "date_gte",
+							"value": "2021-05-20"
+						},
+						{
+							"key": "Authorization",
+							"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+							"disabled": true
+						},
+						{
+							"key": "date_lte",
+							"value": "2021-06-20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/card/list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/card/list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"card",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/place/order/with/card",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"card\": 3,\r\n    \"billing_address\":{\r\n        \"street\":\"street8\",\r\n        \"city\":\"city\",\r\n        \"state\":\"state\",\r\n        \"country\":\"country\",\r\n        \"type\":\"BILLING\"\r\n    },\r\n    \"shipping_address\":{\r\n        \"street\":\"street8\",\r\n        \"city\":\"city\",\r\n        \"state\":\"state\",\r\n        \"country\":\"country\",\r\n        \"type\":\"SHIPPING\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/place/order/with/card",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"place",
+						"order",
+						"with",
+						"card"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/order/details/114",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/order/details/114",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"order",
+						"details",
+						"114"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/card/add/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\":\"tok_1Iw5IHBioYe4wt74TLXPYjWi\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/card/add/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"card",
+						"add",
+						""
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base_url}}/api/v1/card/default/26",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/card/default/25",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"card",
+						"default",
+						"25"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Token 9e9f7b833ecf4cd2c7000b9def2136b285c8491e",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

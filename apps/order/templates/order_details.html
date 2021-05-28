@@ -176,68 +176,69 @@ img {
 
   <body>
 	
-	<div class="container">
-        
-        <form method="GET">
-            {% csrf_token %}
-            <input type="text" name="search" value="{{search}}"></input>
-            <input type="submit" value="Go"></input>
-        </form>
-        <a href="{% url 'products' %}">Products</a>
-        |
-        <a href="{% url 'card-add' %}">  Add card</a>
-		<div class="card">
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message.tag}} {{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <table>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <table>
+            <tr>
+                <td><h4>Order deatils</h4></td>
+            </tr>
+            <tr>
+                <td>order_id</td>
+                <td>{{obj.order_id}}</td>
+            </tr>
+            <tr>
+                <td>transaction_id</td>
+                <td>{{obj.transaction_id}}</td>
+            </tr>
+            <tr>
+                <td>user</td>
+                <td>{{obj.user.email}}</td>
+            </tr>
+            <tr>
+                <td>card(last 4)</td>
+                <td>{{obj.card.last4}}</td>
+            </tr>
+            <tr>
+                <td>total_amount</td>
+                <td>{{obj.total_amount}}</td>
+            </tr>
+            <tr>
+                <td>status</td>
+                <td>{{obj.status}}</td>
+            </tr>
+            <tr>
+                <td>billing_address</td>
+                <td>{{obj.billing_address.get_full_address}}</td>
+            </tr>
+            <tr>
+                <td>shipping_address</td>
+                <td>{{obj.shipping_address.get_full_address}}</td>
+            </tr>
+            <tr>
+                <td><h4>Product list</h4></td>
+            </tr>
+            {% for item in items %}
                 <tr>
-                    <th>Card Id</th>
-                    <th>Card holder name</th>
-                    <th>Expiry month</th>
-                    <th>Expiry Year</th>
-                    <th>Date</th>
-                    <th>Default</th>
+                    <td>product name: {{item.product.name}}</td>
                 </tr>
-            {% for obj in list %}
-              <tr>
-                  <th>
-                    {{obj.card_number}}
-                  </th>
-                    <th>
-                    **** **** ****  {{obj.last4}}
-                    </th>
-                    <th>
-                     {{obj.exp_month}}
-                    </th>
-                    <th>
-                     {{obj.exp_year}}
-                    </th>
-                    <th>
-                     {{obj.created_at}}
-                    </th>
-                    <th>
-                     {% if obj.is_default %}
-                      DEFAULT
-                     {% else %}
-                      <a href="{% url 'card-default' obj.pk %}"> <button>Make default</button></a>
-                     {% endif %}
-                    </th>
-                    <th>
-                        <a href="{% url 'card-delete' obj.pk %}"><button>Delete</button></a>
-                    </th>
-              </tr>
+                <tr>
+                    <td>product number : {{item.product.product_number}}</td>
+                </tr>
+                <tr>
+                    <td>
+                    Quantity {{item.quantity}}
+                </td>
+                </tr>
+                <tr>
+                    <td>Amount {{item.amount}}</td>
+                </tr>
+                <td>
+                    <image src="{{item.product.image}}" height="100" width="100"/>
+                </td>
             {% endfor %}
-            </table>
-          </div>
-				</div>
-			</div>
-		</div>
-	</div>
+        </table>
+    </div>
+</div>
   <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
   <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
   </body>

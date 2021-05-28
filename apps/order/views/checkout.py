@@ -52,6 +52,9 @@ class CheckoutDetailsView(View):
                 messages.success(request, "Order place successfully")
                 return redirect('checkout')    
             except Exception as e:
+                print(e.__traceback__.tb_lineno)
+                print(e.args)
+                print(e.with_traceback)
                 messages.error(request, str(e))
 
             context_data = self.get_context_data()
@@ -102,7 +105,6 @@ class CheckoutWithCardView(View):
                 messages.success(request, "Order place successfully")
                 return redirect('checkout')    
             except Exception as e:
-                print('============',e)
                 messages.error(request, str(e))
 
             context_data = self.get_context_data()

@@ -7,6 +7,8 @@ import stripe
 from order.models import Order, OrderProduct, Address, UserCard
 from cart.models import Cart
 from django_boilerplate.models import User
+from order.serializers.order_place import OrderProductSerializer
+from product.models import Product
 
 
 class AddressForm(forms.ModelForm):
@@ -37,29 +39,31 @@ class CheckoutForm(forms.Form):
         user = User.objects.filter(pk=validated_data['user']).first()
         user = self.create_stripe_user(user)
         validated_data['user'] = user
-        
-        products = validated_data.pop('products', [])
+        products = self.get_products(user)
         is_save_card = validated_data.pop('save_card', False)
-        
-       
+
         #Save order
         instance = Order()
         instance.transaction_id = self.generate_token(validated_data)
         instance.user = validated_data['user']
         instance.total_amount = validated_data['total_amount']
+
+        
+            
+        if is_save_card:
+            instance = self.process_payment_with_saving_card(instance)
+        else:
+            instance = self.process_payment_with_token(instance)
+
+        instance.save()
         
         #Save order product list
         for product in products:
             product['order'] = instance
             product['amount'] = product['product'].price
             OrderProduct.objects.create(**product)
-            
-        if is_save_card:
-            instance = self.process_payment_with_saving_card(instance)
-        else:
-            instance = self.process_payment_with_token(instance)
         
-        instance.save()  
+          
         
         self.clear_cart(instance.user)
         
@@ -113,6 +117,13 @@ class CheckoutForm(forms.Form):
             raise ValidationError(e)
         
         return instance
+    
+    
+    def get_products(self, user):
+        products = Cart.objects.filter(user=user).values('product','quantity')
+        for product in products:
+            product['product'] = Product.objects.filter(pk=product['product']).first()
+        return list(products)
     
         
     def process_payment_with_token(self, instance):
@@ -176,7 +187,7 @@ class CheckoutCardForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         validated_data= self.cleaned_data.copy()
                 
-        products = validated_data.pop('products', [])
+        products = self.get_products(validated_data['user'])
                
         #Save order
         instance = Order()
@@ -231,3 +242,9 @@ class CheckoutCardForm(forms.ModelForm):
             return UserCard.objects.get(pk=pk)
         except Exception as e:
             raise ValidationError(e)
+        
+    def get_products(self, user):
+        products = Cart.objects.filter(user=user).values('product','quantity')
+        for product in products:
+            product['product'] = Product.objects.filter(pk=product['product']).first()
+        return list(products)

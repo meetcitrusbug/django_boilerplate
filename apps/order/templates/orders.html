@@ -196,7 +196,7 @@ img {
             {% for obj in list %}
               <tr>
                   <th>
-                    {{obj.order_id}}
+                    <a href="{% url 'order-detail' obj.pk %}">{{obj.order_id}}</a>
                   </th>
                     <th>
                      {{obj.status}}
