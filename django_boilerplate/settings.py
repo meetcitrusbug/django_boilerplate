@@ -98,18 +98,8 @@ WSGI_APPLICATION = 'django_boilerplate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': env.db('DATABASE_URL')
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'boiler_plate_django',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PASSWORD': 'root',
-        'PORT': '5432'
-    }
+    'default': env.db('DATABASE_URL')
 }
 
 # Password validation
@@ -188,5 +178,5 @@ AUTH_USER_MODEL = 'django_boilerplate.User'
 
 CURRENCY = 'INR'
 
-STRIPE_PUBLIC_KEY = "pk_test_51IqB7USAWJc5b1avi82qs9p8qAMutMzvpvpwjEIBN9toLaqiSPS32njTyY3fCa5Fk9Cr437W0RRPlSgkL7cmdaUO00DUw4U0AT"
-STRIPE_SECRET_KEY = "sk_test_51IqB7USAWJc5b1avefH83xXQ5fPhy36hAjTS8hKl8RR2YYTkPuYap4CJoKs6cuED6HjcA8g5jMhbNZJoWoyUMYvm00QwKWrqUm"
+STRIPE_PUBLIC_KEY = env.str('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY')
