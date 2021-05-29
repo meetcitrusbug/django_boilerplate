@@ -10,4 +10,10 @@ urlpatterns = [
     path('card/add/', views.AddCardView.as_view(), name="card-add"),
     path('checkout-card/<int:pk>', views.CheckoutWithCardView.as_view(), name="checkout-card"),
     path('cancel-subscription/', views.CancelSubscriptionView.as_view(), name="cancel-subscription"),
+
+    # Cron job testing urls
+    path('one-week/', views.OneWeekView.as_view(), name="one-week"),
+    path('two-week/', views.TwoWeekView.as_view(), name="two-week"),
+    path('one-month/', views.OneMonthView.as_view(), name="one-month"),
+    
 ]

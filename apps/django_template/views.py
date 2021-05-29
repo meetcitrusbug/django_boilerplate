@@ -1,6 +1,6 @@
 from functools import total_ordering
 import re
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 import stripe
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -18,6 +18,7 @@ from customadmin.stripe import MyStripe
 from django_boilerplate.models import User
 import datetime
 from dateutil import relativedelta
+from .cronjob import cronjob_for_one_week, cronjob_for_two_week, cronjob_for_one_month
 
 
 class IndexView(View):
@@ -273,3 +274,19 @@ class CancelSubscriptionView(View):
 
         except Exception as e:
             return JsonResponse({"status": "FAIL", "message": str(e), "data": []})
+
+class OneWeekView(View):
+    def get(self, request):
+        one_week = cronjob_for_one_week()
+        return HttpResponse(one_week)
+    
+class TwoWeekView(View):
+    def get(self, request):
+        two_week = cronjob_for_two_week()
+        return HttpResponse(two_week)
+   
+class OneMonthView(View):
+    def get(self, request):
+        one_month = cronjob_for_one_month()
+        return HttpResponse(one_month)
+   
