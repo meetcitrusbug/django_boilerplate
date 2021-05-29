@@ -1,0 +1,79 @@
+{% extends 'django_template/base.html' %} {% load static %} {% block content %}
+
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Pricing</h1>
+</div>
+<form method="POST">
+{% for plan in plans %}
+<div class="container">
+  <div class="card-deck mb-3 text-center">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">
+          Plan Name:- <strong>{{plan.name}}</strong>
+        </h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">
+          {{currency}} {{plan.plan_amount}}
+          <small class="text-muted">/ {{plan.duration_in_months}} month</small>
+        </h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          {% for feature in plan.plan_features %}
+          <li>{{feature}}</li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'checkout-card' pk=plan.pk %}"><button type="button" id="subscribe{{plan.pk}}" pk={{plan.pk}} plan_amount={{plan.plan_amount}} class="btn btn-lg btn-block btn-outline-primary subscribe">
+          Subscribe
+        </button></a>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+{% endfor %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+$(document).ready(function () {
+  // Approve button
+  $("..subscribe")
+    .unbind()
+    .click(function (e) {
+      e.preventDefault();
+      // $(".error-group").removeClass("error-group");
+      var plan = $(this).attr("pk");
+      var csrf_token = $("[name='csrfmiddlewaretoken']").val()
+      var flag = 0;
+      console.log(plan, amount)
+
+      if (flag == 1) {
+        return;
+      } else {
+        $.ajax({
+          url: '/checkout-card/',
+          type: 'POST',
+          data:{
+            csrfmiddlewaretoken: csrf_token,
+            plan:plan,
+          },
+          success: function (response) {
+            window.location="/checkout-card/";
+              
+          },
+          error: function (err) {
+              console.log(err);
+              $("#brand_error").append(
+                  '<span class="text-danger">'
+                  + err.data + '</span>'
+              );
+          }
+        });
+      }
+    });
+
+  });
+
+</script>
+{% endblock %}

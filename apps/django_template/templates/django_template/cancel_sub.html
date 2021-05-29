@@ -1,0 +1,58 @@
+{% extends 'django_template\base.html' %}
+
+{% block content %}
+<div>
+    <input type="hidden" id="plan_id" value="{{user_plan.subscription.pk}}">
+    {% csrf_token %}
+    Your current plan is :   {{user_plan.subscription.name}}<br>
+    Your current plan amount is :  {{currency}} {{user_plan.subscription.plan_amount}}<br>
+
+    <button class="btn btn-danger" id="cancel_plan">Cancel Plan</button>
+</div>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
+<script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>    
+<script>
+     $(document).ready(function () {
+  // Approve button
+  $("#cancel_plan")
+    .unbind()
+    .click(function (e) {
+      e.preventDefault();
+      // $(".error-group").removeClass("error-group");
+      var plan = $('#plan_id').val();
+      var csrf_token = $("[name='csrfmiddlewaretoken']").val()
+      var flag = 0;
+      if(plan==''){
+        flag=1
+      }
+      console.log(plan)
+
+      if (flag == 1) {
+        return;
+      } else {
+        $.ajax({
+          url: '/cancel-subscription/',
+          type: 'POST',
+          data:{
+            csrfmiddlewaretoken: csrf_token,
+            plan:plan,
+          },
+          success: function (response) {
+            console.log('in successs')
+            window.location="/";
+              
+          },
+          error: function (err) {
+              console.log(err);
+              $("#brand_error").append(
+                  '<span class="text-danger">'
+                  + err.data + '</span>'
+              );
+          }
+        });
+      }
+    });
+
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends 'django_template\base.html' %}
+{% load static %}
+
+  {% block style %}
+<style>
+/*****************globals*************/
+body {
+  font-family: 'open sans';
+  overflow-x: hidden; }
+
+
+
+.card {
+  margin-top: 50px;
+  background: #eee;
+  padding: 3em;
+  line-height: 1.5em; }
+
+@media screen and (min-width: 997px) {
+  .wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; } }
+
+.details {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+
+.colors {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1; }
+
+.product-title, .price, .sizes, .colors {
+  text-transform: UPPERCASE;
+  font-weight: bold; }
+
+.checked, .price span {
+  color: #ff9f1a; }
+
+.product-title, .rating, .product-description, .price, .vote, .sizes {
+  margin-bottom: 15px; }
+
+.product-title {
+  margin-top: 0; }
+
+.size {
+  margin-right: 10px; }
+  .size:first-of-type {
+    margin-left: 40px; }
+
+.color {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  height: 2em;
+  width: 2em;
+  border-radius: 2px; }
+  .color:first-of-type {
+    margin-left: 20px; }
+
+.add-to-cart, .like {
+  background: #ff9f1a;
+  padding: 1.2em 1.5em;
+  border: none;
+  text-transform: UPPERCASE;
+  font-weight: bold;
+  color: #fff;
+  -webkit-transition: background .3s ease;
+          transition: background .3s ease; }
+  .add-to-cart:hover, .like:hover {
+    background: #b36800;
+    color: #fff; }
+
+.not-available {
+  text-align: center;
+  line-height: 2em; }
+  .not-available:before {
+    font-family: fontawesome;
+    content: "\f00d";
+    color: #fff; }
+
+.orange {
+  background: #ff9f1a; }
+
+.green {
+  background: #85ad00; }
+
+.blue {
+  background: #0076ad; }
+
+.tooltip-inner {
+  padding: 1.3em; }
+
+@-webkit-keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+@keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+    </style>
+{% endblock %}
+
+	{% block content %}
+	<div class="container">
+		<div class="card">
+			<div class="container-fliud">
+				<div class="wrapper row">
+					<div class="details col-md-12 center">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message.tag}} {{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% for key, value in  form.errors.items %}
+              <ul class="messages">
+                <li>{{key}}{{value}}</li>
+              </ul>
+            {% endfor %}
+					</div>
+					<div class="details col-md-12" style="text-align: right;">
+						<h6 class="price"><a href="#">Subscription PLan</a></h6>
+					</div>
+					<div class="details col-md-12">
+						<h4 class="price">Total amount: <span>${{plan.plan_amount}}</span></h4>
+					</div>
+          <div class="details col-md-12">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="details col-md-12" style="margin: 10px;">
+                Plan Name: {{plan.name}}
+              </div>
+              <div class="details col-md-12" style="margin: 10px;">
+                Plan duration: {{plan.duration_in_months}}
+              </div>
+            </form>
+            <form>
+              {%  csrf_token %}
+            <input type="hidden" value="{{request.user.pk}}" id="user"/>
+            <input type="hidden" value="{{plan.pk}}" id="plan"/>
+            <div class="details col-md-4" style="margin: 10px;">
+              <select id="dropdown" required>
+                  <option value="">Select card</option>
+                  {% for card in cards %}
+                    <option value="{{card.pk}}">**** **** **** {{card.last4}}</option>
+                    {% endfor %}
+              </select>
+            </div>
+            <p id="select_card_error" style="color: red;"></p>
+            <div class="details col-md-4"  style="margin: 10px;">
+              <button id="checkoutwithcard">Checkout with card</button>
+            </div>
+            </form>
+          </div>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
+  <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+  // Approve button
+  $("#checkoutwithcard")
+    .unbind()
+    .click(function (e) {
+      e.preventDefault();
+      $('#select_card_error').empty()
+      // $(".error-group").removeClass("error-group");
+      var plan = $('#plan').val();
+      var user = $('#user').val();
+      var card = $('#dropdown').children("option:selected").val();
+      var csrf_token = $("[name='csrfmiddlewaretoken']").val()
+      var flag = 0;
+      if(plan==''){
+        flag=1
+      }
+      if(user==''){
+        flag=1
+      }
+      if(card==''){
+        flag=1
+        $('#select_card_error').append('Please seelct card')
+      }
+      console.log(plan, user, card)
+
+      if (flag == 1) {
+        return;
+      } else {
+        $.ajax({
+          url: '/checkout-card/'+plan,
+          type: 'POST',
+          data:{
+            csrfmiddlewaretoken: csrf_token,
+            plan:plan,
+            user:user,
+            card:card
+          },
+          success: function (response) {
+            window.location="/";
+            console.log('in successs')
+              
+          },
+          error: function (err) {
+              console.log(err);
+              $("#brand_error").append(
+                  '<span class="text-danger">'
+                  + err.data + '</span>'
+              );
+          }
+        });
+      }
+    });
+
+  });
+
+  </script> 
+  {% endblock %}

@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{{title}}</title>
+
+    <!-- bootstrap file -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'django_template/css/pricing.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    {% block style %} {% endblock %}
+    <!-- main css -->
+    <style>
+      .container {
+        padding: 2px 16px;
+      }
+
+      @-webkit-keyframes spin-topbar {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin-topbar {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
+    <!-- message here -->
+
+    {% if messages %} {% for message in messages %}
+
+    <script>
+      alert("{{ message }}");
+    </script>
+
+    {% endfor %} {% endif %}
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="{% url 'index' %}">Subscription Module</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'cards' %}">Card list <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'card-add' %}">Add new Card</a>
+          </li>
+          {% if user_plan.subscription %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cancel-subscription' %}">Cancel Subscription</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'userlogout' %}">Logout <span class="glyphicon glyphicon-user"></span> &nbsp;
+              {{user}}</a>
+          </li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'login' %}">Login <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+        {% endif %}
+        <form class="form-inline my-2 my-lg-0" style="color: white;">
+          {% if user_plan.subscription %}
+          Current Plan: {{user_plan.subscription.name}}
+          {% else %}    
+          No plan active 
+          {% endif %}
+        </form>
+      </div>
+    </nav>
+    {% if user.is_authenticated %}
+    {% block content %}{% endblock %}
+    {% endif %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- bootstrap file-->
+
+    <!-- jQuery -->
+    <!-- <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script> -->
+    <script src="{% static 'django_template/js/script.js' %}"></script>
+  </body>
+</html>

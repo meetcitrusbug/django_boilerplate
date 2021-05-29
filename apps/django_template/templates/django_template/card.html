@@ -1,0 +1,82 @@
+{% extends 'django_template/base.html' %}
+{% load static %}
+{% block style %}
+<style>
+/*****************globals*************/
+/* body {
+  font-family: 'open sans';
+  overflow-x: hidden; } */
+
+@media screen and (min-width: 997px) {
+  .wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; } }
+
+@-webkit-keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+@keyframes opacity {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(3);
+            transform: scale(3); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+          </style>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="card">
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message.tag}} {{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      <table>
+          <tr>
+              <th>Card Id</th>
+              <th>Card holder name</th>
+              <th>Expiry Date</th>
+              <th>Card create at Date</th>
+          </tr>
+      {% for obj in list %}
+        <tr>
+            <th>
+              {{obj.user.first_name}}
+            </th>
+              <th>
+              **** **** ****  {{obj.last4}}
+              </th>
+              <th>
+                {{obj.card_expiration_date}}
+              </th>
+              <th>
+                {{obj.created_at}}
+              </th>
+              <th>
+                  <a href="{% url 'card-delete' obj.pk %}"><button>Delete</button></a>
+              </th>
+        </tr>
+      {% endfor %}
+      
+      </table>
+    </div>
+    <a href="{% url 'card-add' %}" class="btn btn-primary">  Add card</a>
+    <a href="{% url 'index' %}" class="btn btn-primary">  Back</a>
+	</div>
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
+{% endblock %}
