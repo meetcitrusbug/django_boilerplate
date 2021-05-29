@@ -74,9 +74,6 @@ class ChangeCurrentSubscriptionAPI(MyAPIView):
 
             try:
                 stripe = MyStripe()
-                nextmonth = datetime.datetime.today() + relativedelta.relativedelta(
-                    months=1
-                )
                 user_obj = User.objects.filter(id=request.user.id).first()
                 user_plan = UserProfile.objects.filter(user__id=request.user.id).first()
                 subscription = Plan.objects.filter(
@@ -110,6 +107,7 @@ class ChangeCurrentSubscriptionAPI(MyAPIView):
                     subscription.stripe_plan_id,
                     card.stripe_card_id,
                 )
+                nextmonth = datetime.datetime.today() + relativedelta.relativedelta(months=subscription.duration_in_months)
 
                 if subscribe_new_plan["status"] == "active":
 

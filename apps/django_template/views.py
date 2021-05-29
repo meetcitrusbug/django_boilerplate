@@ -17,6 +17,7 @@ from django.db.models import F
 from customadmin.stripe import MyStripe
 from django_boilerplate.models import User
 import datetime
+from dateutil import relativedelta
 
 
 class IndexView(View):
@@ -172,7 +173,6 @@ class CheckoutWithCardView(View):
     def post(self, request, pk):
         stripe = MyStripe()
         subscription=Plan.objects.get(pk=pk)
-        nextmonth = datetime.datetime.today()
         card = Card.objects.get(pk=request.POST.get('card'))
         user_obj = User.objects.filter(id=request.user.id).first()
         user_plan = UserProfile.objects.filter(user__id=request.user.id).first()
@@ -183,7 +183,7 @@ class CheckoutWithCardView(View):
                 subscription.stripe_plan_id,
                 card.stripe_card_id,
             )
-        print(subscribe_new_plan)
+        nextmonth = datetime.datetime.today() + relativedelta.relativedelta(months=subscription.duration_in_months)
         if subscribe_new_plan["status"] == "active":
             if user_plan.subscription:
                 subscription_order = SubscriptionOrder.objects.filter( user__id=user_obj.id,
