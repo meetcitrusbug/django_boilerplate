@@ -21,18 +21,18 @@ import datetime
 
 class IndexView(View):
     def get(self, request):
-        plans = Plan.objects.all().order_by('created_at')
-        user_plan = UserProfile.objects.filter(user=request.user).first()
-        for plan in plans:
-            plan.plan_features = PlanFeature.objects.filter(plan=plan)
-        # unread_notification = Notification.objects.filter(user=request.user.pk, is_read=False).count()
-        # all_notification = Notification.objects.filter(user=request.user.pk).count()
-        context = {
-            'plans':plans,
-            'currency':CURRENCY,
-            'user_plan':user_plan
-        }
-        return render(request, 'django_template/index.html', context)
+        if request.user.is_authenticated:
+            plans = Plan.objects.all().order_by('created_at')
+            user_plan = UserProfile.objects.filter(user=request.user).first()
+            for plan in plans:
+                plan.plan_features = PlanFeature.objects.filter(plan=plan)
+            context = {
+                'plans':plans,
+                'currency':CURRENCY,
+                'user_plan':user_plan
+            }
+            return render(request, 'django_template/index.html', context)
+        return redirect('login')
 
 
 class LoginPageView(View):
@@ -58,7 +58,7 @@ class LoginPageView(View):
 
 def userlogout(request):
     logout(request)
-    return redirect('/')
+    return redirect('login')
 
 
 class AddCardView(View):
