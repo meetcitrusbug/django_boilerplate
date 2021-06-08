@@ -8,4 +8,6 @@ urlpatterns = [
     path('blogdetail/<str:blog_id>',views.BlogDetailView.as_view(),name='blog-detail'),
     path('blogupdate/<str:blog_id>',views.BlogUpdateView.as_view(),name='blog-update'),
     path('blog-search/',views.BlogSearchView.as_view(),name='blog-search'),
+    path('login',views.LoginPageView.as_view(),name='login'),
+    path('logout',views.userlogout,name='logout'),
 ]

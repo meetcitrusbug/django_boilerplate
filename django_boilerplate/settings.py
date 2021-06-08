@@ -52,7 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'Blog'
+    'Blog',
+    'customadmin',
+    'widget_tweaks',
+    'crispy_forms'
 ]
 
 #Local apps
@@ -164,7 +167,13 @@ REST_FRAMEWORK = {
 }
 
 
-SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
 
 AUTH_USER_MODEL = 'django_boilerplate.User'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+AUTH_USER_MODEL = 'django_boilerplate.User'
+
+LOGIN_URL = "auth:auth_login"
+LOGIN_REDIRECT_URL = "/customadmin/notification/"
+AUTH_USER_MODEL = 'django_boilerplate.User'
+LOGOUT_REDIRECT_URL = "auth:auth_login"

@@ -1,3 +1,2 @@
-from .blog import Blog
+from .blog import Blog, BlogKeyword
 from.category import Category
-from.author import Author

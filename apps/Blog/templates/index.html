@@ -1,5 +1,22 @@
 {% extends "base.html" %} 
 {% load static %}
+{% block login %}
+{% if user.is_authenticated %}
+{% if user.profile_image %}
+<div style="margin: 0 10px;">
+    <img id="profile_img" src="{{ user.profile_image.url }}" alt="No Image">
+    <p><span style="color: rgba(255,255,255,.5);;">{{ user.username }}</span></p>
+</div>
+{% endif %}
+<li class="nav-item text-black">
+    <a class="nav-link text-black font-weight-bold" href="{% url 'logout' %}">Logout</a>
+</li>
+{% else %}
+<li class="nav-item text-black">
+    <a class="nav-link text-black font-weight-bold" href="{% url 'login' %}">Login</a>
+</li>
+{% endif %}
+{% endblock %}
 {% block content %}
 
 <div class="container">
@@ -7,70 +24,107 @@
         <div class="col-lg-12 col-md-6 col-md-10 mx-auto">
             <div class="site-heading">
                 <div class="col-lg-12 col-md-6 search">
-                    <input id="blog_content" type="text" placeholder="Blog title, keyword, Year">
+                    <input id="blog_content" style="padding-left: 10px;" type="text" placeholder="Blog title, keyword">
                     <button id="search_btn" class="btn btn-primary" type="button">Search</button>
+                    <a href="{% url 'blog-listing' %}" id="reset_btn" class="btn btn-warning">Reset</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-lg-6 col-md-6 dropdown">
             <label for="category-Filter">Filter By Category:</label>
             <select id="category-Filter">
-                <option value="History">History</option>
-                <option value="Travel">Travel</option>
-                <option value="Food">Food</option>
-                <option value="Technology">Technology</option>
-                <option value="Sports">Sports</option>
-                <option value="Gaming">Gaming</option>
-                <option value="Science">Science</option>
-                <option value="Fitness">Fitness</option>
-                <option value="Photography">Photography</option>
-                <option value="Music">Music</option>
+                <option value="">All</option>
+                {% for cat in category %}
+                <option value="{{ cat.id }}">{{ cat.category }}</option>
+                {% endfor %}
             </select>
-        </div>
-        <div class="col-lg-6 col-md-6 dropdown">
-            <label for="category-Filter">Filter By Month:</label>
-            <select id="month-Filter">
-                <option value="01">January</option>
-                <option value="02">February</option>
-                <option value="03">March</option>
-                <option value="04">April</option>
-                <option value="05">May</option>
-                <option value="06">June</option>
-                <option value="07">July</option>
-                <option value="08">August</option>
-                <option value="09">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-            </select>
+        </div> -->
+        <!-- <div class="col-lg-6 col-md-6 dropdown">
+            <label for="rangeDate">Choose a week</label>
+            <input type="text" id="rangeDate" placeholder="Please select Date Range" data-input>
             <a href="{% url 'blog-listing' %}" id="reset_btn" class="btn btn-warning">Reset</a>
-        </div>
+        </div> -->
     </div>
 </div>
 <div class="container">
     <div class="maindiv">
-        <div class="row blog-list">
-            {% for blog in blog %}
-            <div class="col-lg-4 col-md-6">
-                <div class="card mb-2">
-                    <a href="{% url 'blog-detail' blog.id %}"><img class="card-img-top" style="height: 250px;" src="{{ blog.image.url }}"></a>
-                    <div class="card-body">
-                        <h5 class="card-title" style="font-size: 25px;font-weight: 600;">{{ blog.blog_title }}</h5>
-                        <p style="font-size: 12px;font-weight: 600;">{{ blog.author }}|{{ blog.publish }}</p>
-                        <p style="font-size: 17px;font-weight: 600;opacity: 0.6;" class="card-text">{{ blog.blog|slice:200 }}</p>
-                        <a href="{% url 'blog-detail' blog.id %}"
-                            class="btn btn-primary">
-                            Read More
-                        </a>
+        <div class="row">
+            <div class="col-lg-8">
+                {% if blog %}
+                <div class="row blog-list">
+                    {% for blog in blog %}
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card mb-2">
+                            <a href="{% url 'blog-detail' blog.id %}"><img class="card-img-top" style="height: 250px;" src="{{ blog.image.url }}"></a>
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 25px;font-weight: 600;">{{ blog.blog_title }}</h5>
+                                <p style="font-size: 12px;font-weight: 600;">{{ blog.author }}|{{ blog.created_at }}</p>
+                                <p style="font-size: 17px;font-weight: 600;opacity: 0.6;" class="card-text">{{ blog.blog|slice:200 }}</p>
+                                <a href="{% url 'blog-detail' blog.id %}"
+                                    class="btn btn-primary">
+                                    Read More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {% block nocontent %}{% endblock %}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <div class="row" style="justify-content: center;">
+                    <div class="col-lg-4 col-md-6 d-flex" style="justify-content: center;">
+                        <div>
+                            <h1>Category</h1>
+                            <div id="category-filter">
+                                {% for cat in category %}
+                                <li>
+                                <a href="#" category_id="{{ cat.id }}">{{ cat.category }}</a>
+                                </li>
+                                {% endfor %}
+                                <input type="hidden" id="cat_value">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="justify-content: center;">
+                    <div>
+                        <h1>Year</h1>
+                        <select id="yearselect"></select>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
     </div>
 </div>
 <script src="{% static 'js/jquery-3.5.1.js' %}"></script>
 <script src="{% static 'js/blog_search.js' %}"></script>
+
+<script>
+    for(y = 2000; y <= 2030; y++) {
+            var optn = document.createElement("OPTION");
+            optn.text = y;
+            optn.value = y;
+            
+            // if year is 2015 selected
+            if (y == 2021) {
+                optn.selected = true;
+            }
+            
+            document.getElementById('yearselect').options.add(optn);
+    }
+    $('#category-filter li a').on('click',function(){
+        $('#cat_value').val($(this).attr('category_id'))
+        $(this).css('background-color','grey')
+    })
+    // $('#search_btn').on('click',function(){
+    //     var category_id = $('#cat_value').val()
+    //     var year = $('#yearselect').val()
+    //     window.location= '/blog-search/?category='+category_id+'&year='+year
+    // })
+    </script>
 {%endblock%}

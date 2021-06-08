@@ -7,7 +7,7 @@
     <div class="col-lg-10 col-md-8 card mb-4  mt-3 left  top">
       <div class="card-body">
         <h1 style="font-weight: 600;">{% block title %} {{ blog.blog_title }} {% endblock title %}</h1>
-        <p class=" text-muted" style="font-weight: 600;">{{ blog.author }} | {{ blog.publish }}</p>
+        <p class=" text-muted" style="font-weight: 600;">{{ blog.author }} | {{ blog.created_at }}</p>
         <img class="card-img-top" style="max-height: 400px;margin-bottom: 30px;" src="{{ blog.image.url }}">
         <p class="card-text" style="font-size: 25px;font-family: auto;">{{ blog.blog | safe }}</p>
       </div>
@@ -17,11 +17,19 @@
             <a href="{% url 'blog-listing' %}" class="btn btn-warning">Back</a>
           </div>
         </li>
+        {% if user == blog.user %}
         <li>
           <div class="col-sm-offset-2 col-sm-10">
             <a href="{% url 'blog-update' blog.id %}" class="btn btn-info">Update</a>
           </div>
         </li>
+        {% else %}
+        <li>
+          <div class="col-sm-offset-2 col-sm-10">
+            <a href="#" class="btn btn-info disabled">Update</a>
+          </div>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>

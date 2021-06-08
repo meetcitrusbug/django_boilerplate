@@ -9,6 +9,6 @@ class BlogForm(forms.ModelForm):
                   'category':forms.Select(attrs={'class':'form-control','placeholder':'category'}),
                   'language':forms.TextInput(attrs={'class':'form-control','placeholder':'language'}),
                   'blog':forms.Textarea(attrs={'class':'form-control','placeholder':'Blog'}),
-                  'author':forms.Select(attrs={'class':'form-control','placeholder':'Author'}),
+                  'author':forms.TextInput(attrs={'class':'form-control','placeholder':'Author'}),
                   'keyword':forms.TextInput(attrs={'class':'form-control','placeholder':'Keywords','id':"keyword"})
                 }
